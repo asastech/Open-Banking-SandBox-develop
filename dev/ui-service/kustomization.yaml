@@ -1,5 +1,0 @@
-resources:
-- developer-portal-ui-pod.yaml
-- developer-portal-ui-service.yaml
-- xs2a-tpp-ui-pod.yaml
-- xs2a-tpp-ui-service.yaml
