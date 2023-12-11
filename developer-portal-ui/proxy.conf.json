@@ -1,0 +1,20 @@
+{
+  "/xs2a-proxy/*": {
+    "target": "http://localhost:8089",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/xs2a-proxy": ""
+    }
+  },
+  "/aspsp-proxy/*": {
+    "target": "http://localhost:48080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/aspsp-proxy": ""
+    }
+  }
+}

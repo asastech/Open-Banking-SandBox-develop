@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container"><markdown [src]="pathToFile"></markdown></div>
+
+<!-- Any questions section -->
+<div class="any-questions" *ngIf="contactInfo">
+  <div class="divider"></div>
+  <h1 class="any-questions-title">{{ 'CONTACT.TITLE_1' | translate }}</h1>
+  <span class="any-questions-subtitle">{{ 'CONTACT.SUBTITLE' | translate }}</span>
+  <div class="person-card">
+    <div class="person-card-image-wrapper"><img [src]="contactInfo?.img" alt="" /></div>
+    <div class="person-card-info">
+      <div class="main-personal-info">
+        <span>{{ contactInfo?.name }}</span> <span>{{ contactInfo?.position }}</span>
+      </div>
+      <div class="sub-personal-info" *ngIf="contactInfo?.email">
+        <a [href]="'mailto:' + contactInfo?.email">{{ contactInfo?.email }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contacts section -->
+<div class="contacts-wrapper" *ngIf="officesInfo">
+  <div class="divider"></div>
+  <h1 class="contacts-title">{{ 'CONTACT.TITLE_2' | translate }}</h1>
+
+  <div class="contacts-card">
+    <div class="contacts-content" *ngFor="let office of officesInfo">
+      <div class="main-personal-info">
+        <span>{{ office?.city }}</span> <span>{{ office?.company }}</span> <span>{{ office?.addressFirstLine }}</span>
+        <span>{{ office?.addressSecondLine }}</span>
+      </div>
+      <div class="sub-personal-info">
+        <div *ngIf="office?.phone">
+          <a [href]="'tel:' + office?.phone"> <i class="fas fa-phone"></i>{{ office?.phone }} </a>
+        </div>
+
+        <div *ngIf="office?.email">
+          <a [href]="'mailto:' + office?.email"> <i class="fas fa-envelope"></i>{{ office?.email }} </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

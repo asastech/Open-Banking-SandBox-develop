@@ -1,0 +1,10 @@
+{
+  "payment": {
+    "paymentId": "KFv0mqGbQUUo0xtEcKSV9E",
+    "paymentProduct": "sepa-credit-transfers",
+    "psuIdDatas": [],
+    "paymentType": "bulk-payments"
+  },
+  "authorisationId": "da6d82fe-92fd-4145-9b0f-a9fee8aa4471",
+  "tppOkRedirectUri": "localhost:4400"
+}

@@ -1,0 +1,98 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.psd2.sandbox</groupId>
+        <artifactId>online-banking</artifactId>
+        <version>5.15-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+	<artifactId>consent-psu-rest-client</artifactId>
+
+	<properties>
+		<ruleset.basedir>../..</ruleset.basedir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.adorsys.psd2</groupId>
+			<artifactId>consent-psu-api</artifactId>
+			<version>${xs2a.version}</version>
+		</dependency>
+
+        <dependency>
+            <groupId>de.adorsys.psd2</groupId>
+            <artifactId>consent-aspsp-api</artifactId>
+            <version>${xs2a.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
+
+		<!-- spring dependencies -->
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven-enforcer-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>enforce-banned-dependencies</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<bannedDependencies>
+									<excludes>
+										<exclude>de.adorsys.ledgers:xs2a-connector</exclude>
+										<exclude>de.adorsys.ledgers:gateway-app</exclude>
+										<exclude>de.adorsys.ledgers:online-banking-app</exclude>
+									</excludes>
+								</bannedDependencies>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+

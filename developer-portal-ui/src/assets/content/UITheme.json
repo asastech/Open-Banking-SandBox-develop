@@ -1,0 +1,61 @@
+{
+  "globalSettings": {
+    "supportedLanguagesDictionary": {
+      "en": "united-kingdom.png",
+      "de": "germany.png",
+      "es": "spain.png",
+      "ua": "ukraine.png"
+    },
+    "googleAnalyticsTrackingId": "UA-160845388-1"
+  },
+  "pagesSettings": {
+    "contactPageSettings": {
+      "contactInfo": {
+        "img": "Rene.png",
+        "name": "René Pongratz",
+        "position": "Software Architect & Expert for API Management",
+        "email": "psd2@adorsys.de"
+      },
+      "officesInfo": [
+        {
+          "city": "Nürnberg",
+          "company": "adorsys GmbH & Co. KG",
+          "addressFirstLine": "Fürther Str. 246a, Gebäude 32 im 4.OG",
+          "addressSecondLine": "90429 Nürnberg",
+          "phone": "+49(0)911 360698-0",
+          "email": "psd2@adorsys.de"
+        },
+        {
+          "city": "Frankfurt",
+          "company": "adorsys GmbH & Co. KG",
+          "addressFirstLine": "Frankfurter Straße 63 - 69",
+          "addressSecondLine": "65760 Eschborn",
+          "email": "frankfurt@adorsys.de"
+        }
+      ]
+    },
+    "homePageSettings": {
+      "contactInfo": {
+        "img": "Rene.png",
+        "name": "René Pongratz",
+        "position": "Software Architect & Expert for API Management",
+        "email": "psd2@adorsys.de"
+      },
+      "showProductHistory": true,
+      "showSlider": true
+    },
+    "navigationBarSettings": {
+      "allowedNavigationSize": 5,
+      "logo": "Logo_XS2ASandbox.png"
+    },
+    "playWithDataSettings": {
+      "fundConfirmationSupported": true,
+      "supportedApproaches": ["redirect", "embedded"],
+      "examplesCurrency": "EUR",
+      "tppSettings": {
+        "tppDefaultNokRedirectUrl": "https://www.google.com",
+        "tppDefaultRedirectUrl": "https://adorsys-platform.de/solutions/xs2a-sandbox/"
+      }
+    }
+  }
+}

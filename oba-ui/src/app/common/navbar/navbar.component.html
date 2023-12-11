@@ -1,0 +1,63 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<nav class="navbar navbar-light py-3">
+  <div class="navbar">
+    <a class="navbar-brand text-primary mr-4" routerLink="/">
+      <img class="logo" [src]="customizeService.getLogo()" />
+    </a>
+    <span class="ml-3 navbar-brand">
+      <span *ngIf="!customizeService.isCustom()">adorsys</span>
+      {{ title }}
+    </span>
+  </div>
+  <ul class="nav">
+    <li class="dropdown ml-auto" (click)="showDropdown()">
+      <a
+        class="nav-item dropdown-toggle mr-3 no-underline clickable"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        *ngIf="obaUser?.login"
+        >{{ obaUser?.login }}
+      </a>
+      <div
+        class="dropdown-menu dropdown-menu-right"
+        [ngClass]="{ show: toggleFlag }"
+      >
+        <a routerLink="/profile" class="dropdown-item py-2">
+          <div>
+            <img src="./assets/icons/user.svg" />
+            <span>Profile</span>
+          </div>
+        </a>
+        <a
+          (click)="onLogout()"
+          [routerLinkActive]="['active']"
+          class="dropdown-item clickable pb-2"
+        >
+          <div>
+            <img src="./assets/icons/sign_out.svg" />
+            <span class="nav__title"> Sign out</span>
+          </div>
+        </a>
+      </div>
+    </li>
+  </ul>
+</nav>

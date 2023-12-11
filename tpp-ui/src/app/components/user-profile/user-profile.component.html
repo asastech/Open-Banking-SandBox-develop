@@ -1,0 +1,246 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body--large">
+      <div class="header__title">
+        <mat-icon>account_circle</mat-icon>
+        {{ tppUser?.userRoles.includes('SYSTEM') ? 'Admin' : 'TPP' }} User
+        Details
+      </div>
+      <div class="row">
+        <div class="col-4 col-md-3">Login</div>
+        <div class="col-8 col-md-9 text-muted">{{ tppUser?.login }}</div>
+      </div>
+      <div class="row" *ngIf="!admin">
+        <div class="col-12 col-md-3">TPP ID</div>
+        <div class="col-12 col-md-9 text-muted">{{ tppUser?.id }}</div>
+      </div>
+
+      <div class="row" *ngIf="countries && tppUser?.login !== 'admin'">
+        <div class="col-12 col-md-3">Country</div>
+        <div class="col-12 col-md-9 text-muted">
+          {{ countryService.getCountryByTppId(countries, tppUser?.id) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-3">Email</div>
+        <div class="col-12 col-md-9 text-muted">{{ tppUser?.email }}</div>
+      </div>
+      <div class="row" *ngIf="admin">
+        <div class="col-12 col-md-3">State</div>
+        <div class="col-12 col-md-9 text-muted">
+          {{ tppUser?.blocked ? 'Blocked' : 'Active' }}
+        </div>
+      </div>
+      <div class="row" *ngIf="admin && tppUser?.login !== 'admin'">
+        <div class="col-12 col-md-3">Users</div>
+        <div class="col-12 col-md-9 text-muted">
+          <a
+            [routerLink]="['/users/all']"
+            [queryParams]="{ tppId: tppUser?.id }"
+          >
+            {{ userAmount || 0 }}
+          </a>
+        </div>
+      </div>
+      <div class="row" *ngIf="admin && tppUser?.login !== 'admin'">
+        <div class="col-12 col-md-3">Accounts</div>
+        <div class="col-12 col-md-9 text-muted">
+          <a [routerLink]="['/accounts']" [queryParams]="{ tppId: tppUser.id }">
+            {{ tppUser?.accountAccesses?.length || 0 }}
+          </a>
+        </div>
+      </div>
+      <div
+        class="row d-flex justify-content-between"
+        *ngIf="tppUser?.login !== 'admin'"
+      >
+        <div class="mr-3">
+          <button
+            mat-raised-button
+            class="btn btn-sm btn-outline-secondary"
+            (click)="handleBackNavigation()"
+            queryParamsHandling="preserve"
+          >
+            < Back
+          </button>
+          <button
+            mat-raised-button
+            class="btn btn-primary mr-2 ml-3"
+            [routerLink]="['/edit/' + tppUser?.id]"
+            type="button"
+          >
+            Edit
+          </button>
+
+          <button
+            mat-raised-button
+            class="btn btn-primary mr-4 ml-3"
+            (click)="resetPasswordViaEmail(tppUser.login)"
+            type="button"
+          >
+            Send password update link
+          </button>
+
+          <button
+            mat-raised-button
+            class="btn btn-primary mr-2"
+            type="button"
+            (click)="openModalWithComponent()"
+            *ngIf="!admin"
+          >
+            Create State
+          </button>
+
+          <button
+            mat-raised-button
+            class="btn btn-outline-danger mr-2 ml-1"
+            (click)="openConfirmation(blockConfirmation, 'block')"
+            *ngIf="admin"
+            type="button"
+          >
+            {{ tppUser.blocked ? 'Unblock' : 'Block' }}
+          </button>
+
+          <ng-template #blockConfirmation let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title-1">TPP blocking</h4>
+              <button
+                mat-raised-button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to
+              {{ tppUser.blocked ? 'Unblock TPP' : 'Block TPP' }} this TPP?
+            </div>
+            <div class="modal-footer">
+              <button
+                mat-raised-button
+                type="button"
+                class="btn btn-outline-secondary mr-2"
+                (click)="modal.dismiss('cancel click')"
+              >
+                Cancel
+              </button>
+              <button
+                mat-raised-button
+                type="button"
+                class="btn btn-danger"
+                (click)="modal.close('Ok click')"
+              >
+                {{ tppUser.blocked ? 'Unblock TPP' : 'Block TPP' }}
+              </button>
+            </div>
+          </ng-template>
+        </div>
+
+        <button
+          mat-raised-button
+          matTooltip="Delete TPP"
+          [matTooltipPosition]="position.value"
+          aria-label="Delete TPP"
+          (click)="openConfirmation(deleteConfirmationModal, 'delete')"
+          class="btn btn-danger mr-3"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+
+        <ng-template #deleteConfirmationModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">TPP deletion</h4>
+            <button
+              mat-raised-button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="modal.dismiss('Cross click')"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this TPP?
+          </div>
+          <div class="modal-footer">
+            <button
+              mat-raised-button
+              type="button"
+              class="btn btn-outline-secondary mr-2"
+              (click)="modal.dismiss('cancel click')"
+            >
+              Cancel
+            </button>
+            <button
+              mat-raised-button
+              type="button"
+              class="btn btn-danger"
+              (click)="modal.close('Ok click')"
+            >
+              Delete
+            </button>
+          </div>
+        </ng-template>
+      </div>
+      <table class="table mr-2" *ngIf="!admin">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th scope="col">Ledgers State</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let point of ngxsrecoveryPoint | async; let i = index">
+            <td>
+              {{ i + 1 }}
+            </td>
+            <td>
+              <div>
+                {{ point?.description }}
+              </div>
+            </td>
+            <td class="flex va-m">
+              <button
+                mat-raised-button
+                class="btn btn-primary mr-2"
+                (click)="rollbackRecoveryPointById(point?.id)"
+              >
+                Rollback State
+              </button>
+              <button
+                mat-raised-button
+                class="btn btn-danger"
+                (click)="deleteRecoveryPointById(point?.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,280 @@
+/*!
+ * Copyright 2018-2022 adorsys GmbH & Co KG
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or (at
+ * your option) any later version. This program is distributed in the hope that
+ * it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ *
+ * This project is also available under a separate commercial license. You can
+ * contact us at psd2@adorsys.com.
+ */
+
+.play-with-data-wrapper {
+  padding: 2vw;
+  position: relative;
+
+  .request-method {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 2vw;
+  }
+
+  select {
+    font-size: 1em;
+    box-shadow: none;
+  }
+
+  select:focus {
+    outline: unset !important;
+  }
+
+  .payment-id {
+    font-size: 1em;
+    margin: 0.5em !important;
+    width: 8vw;
+    padding: 0.2vw 0.2vw 0.2vw 0.2vw !important;
+    border: none;
+    color: #3b4151;
+    background: rgba(255, 0, 0, 0.1);
+  }
+
+  .filled {
+    font-size: 1em;
+    margin: 0.5em;
+    width: 8vw;
+    padding: 0.2vw 0.2vw 0.2vw 0.2vw;
+    border: none;
+    color: #3b4151;
+    background: rgba(12, 255, 6, 0.1);
+  }
+
+  .payment-id:focus {
+    outline: unset !important;
+    background: ghostwhite;
+  }
+
+  .full-path {
+    margin-bottom: 2vw;
+
+    span {
+      padding-top: 0.5vw;
+      padding-bottom: 0.5vw;
+      color: #3b4151 !important;
+      background: #f7f7f7;
+    }
+
+    span:first-child {
+      font-weight: bold;
+      padding-left: 0.5vw;
+      padding-right: 0.35vw;
+    }
+
+    span:last-child {
+      padding-right: 0.5vw;
+    }
+  }
+
+  .line-command-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e8e8ea;
+    padding: 0.5%;
+    margin-right: 0.5vw;
+    border-radius: 3px;
+
+    span {
+      color: #fff;
+    }
+  }
+
+  .play-with-data-table {
+    display: flex;
+    align-items: center;
+    padding: 1em 0.5em 1em 1em;
+
+    border-bottom: var(--tableBorderStyleBottom);
+    border-left: var(--tableBorderStyleLeft);
+    border-right: var(--tableBorderStyleRight);
+    border-top: var(--tableBorderStyleTop);
+
+    span:not(.checkmark) {
+      width: 40%;
+    }
+
+    input,
+    select {
+      outline: none;
+      width: 100%;
+      font-size: 1em;
+      padding: 0.2vw 0.5vw;
+      margin: 0;
+    }
+
+    div {
+      width: 100%;
+    }
+  }
+
+  .send-body {
+    textarea {
+      display: block;
+      width: 100% !important;
+      font-size: 1em;
+      resize: vertical;
+      padding: 1vw;
+      margin-top: 1em;
+    }
+  }
+
+  .send-body-title {
+    margin: 2vw 0;
+    display: block;
+    font-size: 1.5rem;
+  }
+
+  .response-status {
+    .status-style {
+      margin: 2vw 0;
+      display: block;
+      font-size: 1.5rem;
+    }
+
+    .response-status-wrapper {
+      background-color: #f3f3f3;
+      padding: 0.5vw 0 0.5vw 1vw;
+
+      span {
+        &:first-of-type {
+          margin-right: 2vw;
+          font-weight: 800;
+        }
+      }
+    }
+
+    .clear-button {
+      min-height: 1.5rem;
+      padding: 5px 25px 5px 25px;
+      float: right;
+      cursor: pointer;
+      font-size: 0.8rem;
+      outline: none;
+
+      &:hover {
+        -webkit-transition: background-color 1s ease-out;
+        transition: background-color 1s ease-out;
+      }
+    }
+  }
+
+  .response-body {
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: break-all;
+
+    span {
+      margin: 2vw 0;
+      display: block;
+      font-size: 1.5rem;
+    }
+
+    .response-body-text {
+      padding: 0.7vw;
+      color: #3b4151;
+      background-color: #eeeeee;
+      white-space: pre-wrap;
+      line-height: 1.3em !important;
+    }
+  }
+
+  table {
+    width: 100%;
+
+    .copy-field-wrapper {
+      div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .copy-label {
+          width: 7vw;
+
+          label {
+            display: block;
+          }
+        }
+
+        .copy-field {
+          width: calc(100% - 20vw);
+
+          input {
+            width: 100%;
+            display: block;
+            height: 2vw;
+            padding-left: 0.5vw;
+            font-size: 1em;
+          }
+        }
+
+        .copy-btn {
+          display: block;
+          width: 10vw;
+          height: 2.5vw;
+          font-size: 1rem;
+          font-family: var(--fontFamily);
+          outline: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .submit-btn {
+      width: 10vw;
+      height: 2.5vw;
+      font-size: 1rem;
+      margin-top: 2.5vw;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .redirect-btn {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      padding: 0.596vw 0;
+      width: 9.8vw;
+      font-size: 1rem;
+      margin-top: 2.5vw;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+
+.url {
+  display: table;
+  overflow: hidden;
+}
+
+.top-line,
+select {
+  display: inline;
+  vertical-align: inherit;
+}
+.example-form-field {
+  width: 100%;
+}

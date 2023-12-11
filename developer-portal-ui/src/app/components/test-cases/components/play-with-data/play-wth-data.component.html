@@ -1,0 +1,283 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="play-with-data-wrapper">
+  <div class="request-method">
+    <span
+      class="line-command-wrapper"
+      [ngStyle]="
+        method === 'POST'
+          ? { 'background-color': '#4acb91' }
+          : method === 'GET'
+          ? { 'background-color': '#007db8' }
+          : method === 'PUT'
+          ? { 'background-color': '#ffa93f' }
+          : method === 'DELETE'
+          ? { 'background-color': '#b22f3f' }
+          : null
+      "
+    >
+      <span>{{ method }}</span>
+    </span>
+    <div class="url">
+      <span class="top-line">{{ url }}</span>
+      <select
+        id="paymentService"
+        *ngIf="paymentServiceFlag"
+        [(ngModel)]="paymentService"
+        (ngModelChange)="handlePaymentServiceChanged($event)"
+      >
+        <option [value]="ps" *ngFor="let ps of paymentServiceSelect">{{ ps }}</option>
+      </select>
+      <span class="top-line" *ngIf="paymentProductFlag || accountIdFlag">/</span>
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="accountIdFlag"
+        [(ngModel)]="accountId"
+        [ngClass]="{ filled: accountId, 'payment-id': !accountId }"
+      />
+      <select
+        id="paymentProduct"
+        *ngIf="paymentProductFlag"
+        [(ngModel)]="paymentProduct"
+        (ngModelChange)="handlePaymentProductChanged($event)"
+      >
+        <option [value]="'/' + pp" *ngFor="let pp of paymentProductSelect" [selected]="'/' + pp == paymentProduct">{{ pp }}</option>
+      </select>
+      <span class="top-line" *ngIf="paymentIdFlag || consentIdFlag">/</span>
+
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="paymentIdFlag"
+        [(ngModel)]="paymentId"
+        [ngClass]="{ filled: paymentId, 'payment-id': !paymentId }"
+      />
+
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="consentIdFlag"
+        [(ngModel)]="consentId"
+        [ngClass]="{ filled: consentId, 'payment-id': !consentId }"
+      />
+
+      <span class="top-line" *ngIf="variablePathEnd">{{ variablePathEnd }}</span>
+      <span class="top-line" *ngIf="authorisationIdFlag || cancellationIdFlag || transactionIdFlag">/</span>
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="authorisationIdFlag"
+        [(ngModel)]="authorisationId"
+        [ngClass]="{
+          filled: authorisationId,
+          'payment-id': !authorisationId
+        }"
+      />
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="cancellationIdFlag"
+        [(ngModel)]="cancellationId"
+        [ngClass]="{
+          filled: cancellationId,
+          'payment-id': !cancellationId
+        }"
+      />
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="transactionIdFlag"
+        [(ngModel)]="transactionId"
+        [ngClass]="{
+          filled: transactionId,
+          'payment-id': !transactionId
+        }"
+      />
+      <span class="top-line" *ngIf="dateFromFlag">?</span> <span class="top-line" *ngIf="dateFromFlag">dateFrom=</span>
+      <input
+        type="text"
+        class="payment-id"
+        *ngIf="dateFromFlag"
+        [(ngModel)]="dateFrom"
+        [ngClass]="{ filled: dateFrom, 'payment-id': !dateFrom }"
+      />
+      <span class="top-line" *ngIf="bookingStatusFlag">&bookingStatus=</span>
+      <select
+        id="bookingStatus"
+        *ngIf="bookingStatusFlag"
+        [(ngModel)]="bookingStatus"
+        [ngClass]="{
+          filled: bookingStatus,
+          'payment-id': !bookingStatus
+        }"
+      >
+        <option [value]="bs" *ngFor="let bs of bookingStatusSelect">{{ bs }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="full-path" *ngIf="false">
+    <span>Full path:</span> <span>{{ url }}</span> <span *ngIf="paymentService">{{ paymentService }}</span>
+    <span *ngIf="paymentProduct">{{ paymentProduct }}</span> <span *ngIf="paymentId">{{ '/' + paymentId }}</span>
+    <span *ngIf="accountId">{{ '/' + accountId }}</span> <span *ngIf="consentIdFlag">{{ '/' + consentId }}</span>
+    <span *ngIf="variablePathEnd">{{ variablePathEnd }}</span> <span *ngIf="transactionId">{{ '/' + transactionId }}</span>
+    <span *ngIf="dateFrom">{{ '?dateFrom=' + dateFrom }}</span> <span *ngIf="bookingStatus">{{ '&bookingStatus=' + bookingStatus }}</span>
+    <span *ngIf="authorisationId">{{ '/' + authorisationId }}</span> <span *ngIf="cancellationId">{{ '/' + cancellationId }}</span>
+  </div>
+
+  <div class="play-with-data-table bg th">
+    <span style="width: 60%">{{ 'TEST_CASES.COMPONENTS.TH.TH_1' | translate }}</span>
+    <div>{{ 'TEST_CASES.COMPONENTS.TH.TH_2' | translate }}</div>
+  </div>
+
+  <div class="play-with-data-table" *ngIf="acceptFlag">
+    <label class="check-container">
+      Accept
+      <input type="checkbox" id="acceptHeaderCheckbox" name="acceptHeaderCheckbox" checked class="checkbox" />
+      <span class="checkmark"></span>
+    </label>
+    <select [(ngModel)]="acceptHeader" (ngModelChange)="onClear()">
+      <option *ngFor="let type of acceptTypes">{{ type }}</option>
+    </select>
+  </div>
+
+  <div
+    class="play-with-data-table"
+    *ngFor="let item of headers | keyvalue; let i = index; trackBy: trackByFn"
+    [ngClass]="acceptFlag ? (i % 2 ? null : 'bg') : i % 2 ? 'bg' : null"
+  >
+    <label class="check-container">
+      {{ item.key }}
+      <input
+        type="checkbox"
+        (change)="disableHeader($event)"
+        [value]="item.key"
+        [checked]="item.key !== 'TPP-QWAC-Certificate' || !default"
+        class="checkbox"
+      />
+      <span class="checkmark"></span>
+    </label>
+    <select
+      [id]="item.key"
+      *ngIf="isBooleanValue(item); else regularInput"
+      [(ngModel)]="item.value"
+      (change)="changeBooleanHeader(item.key, $event.target.value)"
+    >
+      <option *ngFor="let boolean of booleanValues" [value]="boolean">{{ boolean }}</option>
+    </select>
+
+    <ng-template #regularInput>
+      <div class="input-group mb-3">
+        <input
+          [(ngModel)]="headers[item.key]"
+          type="text"
+          [id]="item.key"
+          class="form-control"
+          [disabled]="item.key === 'TPP-QWAC-Certificate' && default"
+        />
+      </div>
+      <app-pop-up
+        class="ml-1 pb-3"
+        [default]="default"
+        *ngIf="item.key === 'TPP-QWAC-Certificate'"
+        [certificate]="headers['TPP-QWAC-Certificate']"
+        (editCertificate)="updateCertificate($event)"
+      ></app-pop-up>
+    </ng-template>
+  </div>
+
+  <div class="send-body" *ngIf="body">
+    <span class="send-body-title">Body</span>
+
+    <div class="play-with-data-table bg" *ngIf="consentTypeFlag">
+      <span>Select consent type</span>
+      <mat-form-field appearance="fill" style="width: 24vw">
+        <mat-select id="consentTypeSelector" [(ngModel)]="selectedConsentType" (ngModelChange)="handleConsentSelected($event)">
+          <mat-option *ngFor="let consent of consentTypes | keyvalue; let i = index" [value]="consent.key">{{ consent.key }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <textarea name="" id="textAreaXml" cols="30" rows="10" *ngIf="body && xml" [value]="body"></textarea>
+    <textarea name="" id="textArea" cols="30" rows="10" *ngIf="body && !xml" [value]="body | json"></textarea>
+  </div>
+
+  <ng-container *ngIf="response">
+    <div *ngIf="response.status || response.statusText" class="response-status">
+      <button mat-button-raised class="clear-button" (click)="onClear()">Clear</button> <span class="status-style">Status</span>
+      <div class="response-status-wrapper">
+        <span>{{ response.status }}</span> <span>{{ getStatusText(response.status) }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="response['error']" class="response-body">
+      <span class="status-style">Error details</span>
+      <p class="response-body-text" *ngIf="!acceptHeader || acceptHeader == 'application/json'">{{ response['error'] | json }}</p>
+      <p class="response-body-text" *ngIf="acceptHeader == 'application/xml'">{{ response['error'] }}</p>
+    </div>
+
+    <div *ngIf="response.body" class="response-body">
+      <span>Response body</span>
+      <p class="response-body-text" *ngIf="!acceptHeader || acceptHeader == 'application/json'">{{ response.body | json }}</p>
+      <p class="response-body-text" *ngIf="acceptHeader == 'application/xml'">{{ response.body }}</p>
+    </div>
+
+    <div *ngIf="(fieldsToCopy || resourceIds) && response.body">
+      <table>
+        <tr class="copy-field-wrapper" *ngFor="let field of fieldsToCopy; let i = index">
+          <div *ngIf="copyService.getCopyValue(i, fieldsToCopy, response, paymentId)">
+            <td class="copy-label">
+              <label [for]="'input-' + i">{{ field }}</label>
+            </td>
+            <td class="copy-field">
+              <input type="text" [value]="copyService.getCopyValue(i, fieldsToCopy, response, paymentId)" [id]="'input-' + i" />
+            </td>
+            <td><button class="copy-btn" (click)="copyService.copyThis(i, fieldsToCopy)">Copy</button></td>
+          </div>
+        </tr>
+
+        <tr class="copy-field-wrapper" *ngFor="let resourceId of resourceIds; let i = index">
+          <div>
+            <td class="copy-label">
+              <label [for]="'input-' + i">resourceId {{ i + 1 }}</label>
+            </td>
+            <td class="copy-field"><input type="text" [value]="resourceId" [id]="'input-' + i" /></td>
+            <td><button class="copy-btn" (click)="copyService.copyThis(i, resourceIds, 'resourceId ' + (i + 1))">Copy</button></td>
+          </div>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
+
+  <ngx-loading
+    [show]="dataService.getIsLoading()"
+    [config]="{
+      backdropBackgroundColour: 'rgba(255,255,255,0.5)',
+      backdropBorderRadius: '10px',
+      primaryColour: '#000',
+      secondaryColour: '#000',
+      tertiaryColour: '#000'
+    }"
+  ></ngx-loading>
+
+  <div class="btns">
+    <button class="submit-btn" (click)="sendRequest()">Submit</button>
+    <a [href]="redirectUrl" target="_blank" class="redirect-btn" *ngIf="redirectUrl"> Redirect Url </a>
+  </div>
+</div>

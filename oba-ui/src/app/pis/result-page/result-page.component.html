@@ -1,0 +1,127 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="d-md-flex align-items-center bg-white h-md-100">
+  <div class="col">
+    <div class="d-md-flex align-items-center h-100 p-4 justify-content-center">
+      <div class="d-md-flex align-items-center">
+        <div class="card w-100">
+          <div class="card-body">
+            <ng-template [ngIf]="scaStatus" [ngIfElse]="scaStatusEmpty">
+              <div [ngSwitch]="scaStatus">
+                <div *ngSwitchCase="'finalised'">
+                  <div *ngIf="!multilevelSca">
+                    <h3 class="card-title font-weight-bold">Success</h3>
+                    <p class="card-text text-muted">
+                      <small>Your payment has been successfully executed</small>
+                    </p>
+                  </div>
+
+                  <div *ngIf="multilevelSca">
+                    <h3 class="card-title font-weight-bold">Partial success</h3>
+                    <p class="card-text text-muted">
+                      <small>
+                        You don't have enough permission to fully sign the
+                        payment, so the payment now is in partially accepted
+                        state, and you have to ask another empowered user or
+                        users to sign it. After the payment is signed by all
+                        owners of the account, it will be successfully executed.
+                      </small>
+                    </p>
+                  </div>
+                </div>
+
+                <div *ngSwitchCase="'unconfirmed'">
+                  <div *ngIf="!multilevelSca">
+                    <h3 class="card-title font-weight-bold">Success</h3>
+                    <p class="card-text text-muted">
+                      <small>Your payment has been successfully executed</small>
+                    </p>
+                  </div>
+
+                  <div *ngIf="multilevelSca">
+                    <h3 class="card-title font-weight-bold">Partial success</h3>
+                    <p class="card-text text-muted">
+                      <small>
+                        You don't have enough permission to fully sign the
+                        payment, so the payment now is in partially accepted
+                        state, and you have to ask another empowered user or
+                        users to sign it. After the payment is signed by all
+                        owners of the account, it will be successfully executed.
+                      </small>
+                    </p>
+                  </div>
+                </div>
+
+                <div *ngSwitchCase="'exempted'">
+                  <h3 class="card-title font-weight-bold">Success</h3>
+                  <p class="card-text text-muted">
+                    <small>Your payment has been successfully executed</small>
+                  </p>
+                </div>
+                <div *ngSwitchCase="'scaMethodSelected'">
+                  <h3 class="card-title font-weight-bold">
+                    Check your Mobile phone
+                  </h3>
+                  <p class="card-text text-muted">
+                    <small>
+                      Decoupled notification was sent to your mobile device.
+                      Please finish you authorisation at your mobile device
+                      application.</small
+                    >
+                  </p>
+                </div>
+
+                <div *ngSwitchDefault>
+                  <h3 class="card-title font-weight-bold">Sorry</h3>
+                  <p class="card-text text-muted">
+                    <small>Payment execution has failed</small>
+                  </p>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template #scaStatusEmpty>
+              <div>
+                <h3 class="card-title font-weight-bold">Sorry</h3>
+                <p class="card-text text-muted">
+                  <small>Error occurred</small>
+                </p>
+              </div>
+            </ng-template>
+
+            <div class="form-group my-3 d-flex">
+              <a
+                class="btn btn-secondary button-icon d-flex align-items-center mr-2"
+                (click)="redirectToDevPortal()"
+              >
+                <span>To Developer portal</span>
+              </a>
+              <a
+                class="btn btn-primary button-icon d-flex align-items-center"
+                (click)="redirectToTpp()"
+              >
+                <span>Back to TPP page</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

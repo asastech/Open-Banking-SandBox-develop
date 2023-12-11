@@ -1,0 +1,119 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container-fluid">
+  <div class="header__title mb-4">Update TPP User Details</div>
+
+  <div class="card card--small">
+    <div class="card-body--large">
+      <form
+        novalidate
+        [formGroup]="userForm"
+        (ngSubmit)="onSubmit()"
+        autocomplete="off"
+      >
+        <div class="mb-4">
+          <label for="username">Login</label>
+          <input
+            [ngClass]="{
+              'is-invalid':
+                (formControl['username'].touched || submitted) &&
+                formControl['username'].errors
+            }"
+            autocomplete="off"
+            class="form-control"
+            id="username"
+            placeholder="Enter login"
+            type="text"
+            formControlName="username"
+          />
+          <div
+            *ngIf="
+              (formControl['username'].touched || submitted) &&
+              formControl['username'].hasError('required')
+            "
+            class="invalid-feedback"
+          >
+            Username is required
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="email">Email</label>
+          <input
+            [ngClass]="{
+              'is-invalid':
+                (formControl['email'].touched || submitted) &&
+                formControl['email'].errors
+            }"
+            autocomplete="off"
+            class="form-control"
+            id="email"
+            placeholder="Enter Email"
+            type="email"
+            formControlName="email"
+          />
+          <div
+            *ngIf="
+              (formControl['email'].touched || submitted) &&
+              formControl['email'].hasError('required')
+            "
+            class="invalid-feedback"
+          >
+            Email is required
+          </div>
+          <div
+            *ngIf="
+              (formControl['email'].touched || submitted) &&
+              formControl['email'].hasError('email')
+            "
+            class="invalid-feedback"
+          >
+            Email is invalid
+          </div>
+        </div>
+        <div class="mb-4">
+          <button
+            class="btn btn-primary"
+            (click)="resetPasswordViaEmail(user.login)"
+            type="button"
+          >
+            Send password update link
+          </button>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button
+            class="btn btn-outline-danger"
+            type="button"
+            (click)="location.back()"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="userForm.invalid"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

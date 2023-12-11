@@ -1,0 +1,494 @@
+{
+  "HOME": {
+    "FEATURES": {
+      "SLIDES": {
+        "SLIDE_1": {
+          "TITLE": "Plug and Play",
+          "CONTENT": "Einfach zu installierende Lösung"
+        },
+        "SLIDE_2": {
+          "TITLE": "Detaillierte Dokumentation",
+          "CONTENT": "Ausführliche Dokumentation online"
+        },
+        "SLIDE_3": {
+          "TITLE": "Zuverlässige Testmöglichkeiten",
+          "CONTENT": "Erstellen von TPP-Testzertifikaten und unterstützen von NISP Tests"
+        },
+        "SLIDE_4": {
+          "TITLE": "Anpassbare UI",
+          "CONTENT": "TPP-UI für Nutzer und bankspezifische Kontenverwaltung"
+        },
+        "SLIDE_5": {
+          "TITLE": "Nutzer orientiert",
+          "CONTENT": "Kundenorientiert, flexible Lösung und Support"
+        },
+        "SLIDE_6": {
+          "TITLE": "Realistische Simulation",
+          "CONTENT": "Echte Bankensystemmodellierungen mit integrierter XS2A-API"
+        },
+        "SLIDE_7": {
+          "TITLE": "Vielseitiger Service",
+          "CONTENT": "Buchhaltungs-, Sicherheits- und Zahlungsdienst"
+        },
+        "SLIDE_8": {
+          "TITLE": "Open source",
+          "CONTENT": "Stetig sich weiterentwickelndes Open Source Projekt in GitHub"
+        }
+      }
+    },
+    "HISTORY": {
+      "TITLE": "Entwicklungsablauf",
+      "PRODUCT": {
+        "POINT_1": {
+          "TITLE": "Projekt Kick-Off mit zwei Teammitgliedern",
+          "CONTENT": ""
+        },
+        "POINT_2": {
+          "TITLE": "PreDemo von MVP 1.0",
+          "CONTENT": "Embedded Ansatz: PIS, AIS, PIIS"
+        },
+        "POINT_3": {
+          "TITLE": "DEMO von MVP 1.0",
+          "CONTENT": "Embedded und redirected Ansätze"
+        },
+        "POINT_4": {
+          "TITLE": "Release ModelBank Ver. 1.0",
+          "CONTENT": "Unterstützen von embedded und redirected Ansätzen: TPP-UI, Online Banking"
+        },
+        "POINT_5": {
+          "TITLE": "Release XS2ASandbox Ver. 1.1",
+          "CONTENT": "Multilevel SCA, Multi-Währungs-Konto"
+        }
+      }
+    },
+    "QUESTIONS": {
+      "TITLE": "Noch Fragen?",
+      "ASK": "Fragen Sie unseren Experten!"
+    }
+  },
+  "TEST_CASES": {
+    "INTRODUCTION": {
+      "TITLE": "EINLEITUNG",
+      "REDIRECT": "Redirect Ansatz",
+      "EMBEDDED": "Embedded Ansatz",
+      "TESTING": "Testabläufe",
+      "MENU": {
+        "LI_1": "Swagger testing",
+        "SUBMENU": {
+          "LI_0": "Festgelegte Werte für alle Tests (TAN und PIN)",
+          "LI_1": "Redirect:",
+          "LIST_1": {
+            "LI_1": "Ablauf der Zahlungsinitiierung",
+            "LI_2": "Ablauf der Zahlungsstornierung",
+            "LI_3": "Einwilligungsbestätigung"
+          },
+          "LI_2": "Embedded:",
+          "LI_3": " Kontoinformationen:",
+          "LIST_2": {
+            "LI_1": "Ausgeben der Kontoliste",
+            "LI_2": "Ausgeben der Kontodetails",
+            "LI_3": "Ausgeben des Saldos",
+            "LI_4": "Ausgeben der Transaktionsliste",
+            "LI_5": "Ausgeben der Transaktionsdetails"
+          }
+        },
+        "LI_2": "Postman testing"
+      }
+    },
+    "COMPONENTS": {
+      "TABS": {
+        "DOC": "Documentation",
+        "PLAY": "Play with data"
+      },
+      "TH": {
+        "TH_1": "Header",
+        "TH_2": "Value"
+      },
+      "CODE_AREA": {
+        "SHOW": "Show Body",
+        "HIDE": "Hide Body"
+      },
+      "RDCT_PAY_INIT_POST": {
+        "TITLE_1": "SCHRITT 1: Zahlung erstellen",
+        "PART_1": "Öffnen Sie in Swagger den Tab „Payment Initiation Service“ (PIS) und dort den",
+        "PART_2": "2. Drücken Sie ",
+        "ITALIC_SPAN": "Try it out",
+        "PART_3": "und wählen Sie ",
+        "PART_4": "und",
+        "PART_5": "aus. Der Ausgangswert für",
+        "PART_6": "ist",
+        "PART_7": "und für",
+        "PART_8": "ist es ",
+        "PART_9": "3. Nachdem Sie payment-service und payment-product angegeben haben, Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_10": "Anstelle von ",
+        "PART_11": "geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_12": "4. Wenn Sie sich durch den",
+        "PART_13": "",
+        "PART_14": "für eine einfache Zahlung entscheiden, fügen Sie bitte folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_15": "Wenn Sie sich durch den",
+        "PART_16": "",
+        "PART_17": "für eine periodische Zahlung erstellen, fügen Sie bitte folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_18": "Wenn Sie sich durch den",
+        "PART_19": "",
+        "PART_20": "für eine gebündelte Zahlung erstellen, fügen Sie bitte folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_21": "Ändern Sie nun ",
+        "PART_22": " zu der",
+        "PART_23": "des ausgewählten Nutzers an folgender Stelle der Json (die IBAN sollte mit dem oben eingegebenen user login des PSU-ID Kopfes übereinstimmen).",
+        "PART_24": "5. Drücken Sie „Execute“. Es wird Ihnen Code 201 und weitere Informationen ausgegeben.",
+        "TITLE_2": "SCHRITT 2: Autorisieren der Zahlung",
+        "PART_25": "Beginnen Sie mit dem Autorisierungsprozess, folgen Sie hierfür dem",
+        "PART_26": " Link zu der Online Banking Website."
+      },
+      "RDCT_PAY_DELETE": {
+        "TITLE_1": "SCHRITT 1: Zahlung erstellen",
+        "PART_1": "Beginnen Sie mit dem Autorisierungsprozess und folgen Sie dem",
+        "PART_2": " Link zu der Online Banking Seite.",
+        "PART_3": "1.  Leiten Sie die Stornierung der Zahlung ein mit dem",
+        "PART_4": "Achten Sie darauf, dass Sie die gleichen",
+        "PART_5": "und",
+        "PART_6": "wie in ",
+        "STEP": "SCHRITT 1 angeben",
+        "PART_7": "2.  Geben Sie die ausgegebene paymentId aus",
+        "PART_8": "in das entsprechende Feld ein.",
+        "PART_9": "3. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_10": "4. Drücken Sie ",
+        "ITALIC_SPAN": "\"Execute\"",
+        "PART_11": ". Es wird Ihnen Code 200 und weitere Informationen ausgegeben.",
+        "TITLE_2": "SCHRITT 3: Autorisieren der Stornierung",
+        "PART_12": "1. Beginnen Sie mit dem Autorisierungsprozess, folgen Sie hierfür dem",
+        "PART_13": "Link zu der Online Banking Website."
+      },
+      "RDCT_CONS": {
+        "TITLE_1": "SCHRITT 1: Einwilligung erstellen",
+        "PART_1": "1. Öffnen Sie in Swagger den Tab „Account Information Service“ (AIS) und dort den",
+        "PART_2": "2. Drücken Sie ",
+        "ITALIC_SPAN": "\"Try it out\"",
+        "PART_3": "und Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_4": "Anstelle von ",
+        "PART_5": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen)",
+        "PART_6": "3. Fügen Sie bitte folgenden Json Code in das Anforderungsfeld ein:",
+        "STEP": "SCHRITT 1 angeben",
+        "PART_7": "Ändern Sie nun ",
+        "PART_8": " zu der IBAN des ausgewählten Nutzers an folgender Stelle der Json (die IBAN sollte mit dem oben eingegebenen user login des PSU-ID Kopfes übereinstimmen).",
+        "PART_9": "4. Drücken Sie „Execute“. Es wird Ihnen Code 201 und weitere Informationen ausgegeben.",
+        "TITLE_2": "SCHRITT 2: Autorisieren der Einwilligung",
+        "PART_10": "1. Beginnen Sie mit dem Autorisierungsprozess, folgen Sie hierfür dem",
+        "PART_11": "Link zu der Online Banking Website."
+      },
+      "EMB_IN_CR_POST": {
+        "PART_25": "6. Beginnen Sie nun den Autorisierungsprozess.",
+        "PART_26": "Bitte beachten Sie die Auswahl der SCA-Methoden, die dem ausgewählten Nutzer zur Verfügung stehen. Falls dem Nutzer keine SCA-Methoden zugeteilt wurden, testen Sie bitte Zahlungsinitiierung bezüglich der Autorisierung wie in",
+        "ITALIC_1": "\"Zahlungsautorisierung für Nutzer ohne SCA-Methoden\"",
+        "PART_27": ". beschrieben. Für Nutzer mit einer SCA-Methode halten Sie sich an die Beschreibung in",
+        "ITALIC_2": "\"Zahlungsautorisierung für Nutzer mit einer SCA-Methode\"",
+        "PART_28": ", und im Falle, dass es mehrere sind, an",
+        "ITALIC_3": "\"Zahlungsautorisierung für Nutzer mit mehreren SCA-Methoden\""
+      },
+      "EMB_IN_AUTH_POST": {
+        "TITLE": "SCHRITT 2: Autorisieren der Zahlung",
+        "PART_1": "1. Leiten Sie den Autorisierungsprozess ein mit dem",
+        "PART_2": ". Achten Sie darauf, dass Sie die gleichen",
+        "PART_3": "und",
+        "PART_4": "wie in ",
+        "STEP": "SCHRITT 1 angeben",
+        "PART_5": "2. Geben Sie die ausgegebene paymentId aus",
+        "PART_6": "in das entsprechende Feld ein ",
+        "PART_7": "3. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_8": "Anstelle von ",
+        "PART_9": "geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_10": "4. Drücken Sie",
+        "ITALIC_SPAN": "\"Execute\"",
+        "PART_11": "Es wird Ihnen Code 201 und weitere Informationen ausgegeben."
+      },
+      "EMB_IN_PUT": {
+        "TITLE": "SCHRITT 2: Autorisieren der Zahlung",
+        "SUBTITLE_1": "Zahlungsautorisierung für Nutzer ohne SCA-Methoden",
+        "PART_1": "5. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_2": "6. Geben Sie die ausgegebene paymentId aus Schritt 1",
+        "PART_3": "und die zuvor erhaltene authorisationId in das entsprechende Feld ein",
+        "PART_4": "",
+        "PART_5": "7. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_6": "Anstelle von ",
+        "PART_7": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_8": "8. Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_9": "Anstelle von ",
+        "PART_10": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_11": "9. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_12": "und",
+        "PART_13": "ausgegeben.",
+        "SUBTITLE_2": "Zahlungsautorisierung für Nutzer mit einer SCA-Methode",
+        "PART_14": "5. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_15": "6.  Geben Sie die ausgegebene paymentId aus Schritt 1 ",
+        "PART_16": "und die zuvor erhaltene authorisationId in das entsprechende Feld ein",
+        "PART_17": "",
+        "PART_18": "7. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_19": "Anstelle von ",
+        "PART_20": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_21": "8. Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_22": "Anstelle von ",
+        "PART_23": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_24": "9. Drücken Sie „Execute“. Es wird Ihnen ",
+        "PART_25": "und",
+        "PART_26": "ausgegeben.",
+        "PART_27": "10. Führen Sie diesen Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_28": "Der Nutzer hat nur eine SCA Methode, daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_29": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_30": "und",
+        "SUBTITLE_3": "Zahlungsautorisierung für Nutzer mit mehreren SCA-Methoden",
+        "PART_31": "5. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_32": "6. Geben Sie die ausgegebene paymentId aus Schritt 1",
+        "PART_33": "und die zuvor erhaltene athorisationId in das entsprechende Feld ein.",
+        "PART_34": "",
+        "PART_35": "7. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_36": "Anstelle von ",
+        "PART_37": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_38": "8. Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_39": "Anstelle von ",
+        "PART_40": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_41": "9. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_42": " und eine Liste der möglichen Autorisierungsmethoden mit entsprechenden IDs ausgegeben.",
+        "PART_43": "10. Führen Sie diesen Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_44": "Anstelle von",
+        "PART_45": "geben Sie die ID, der von Ihnen ausgewählte Autorisierungsmethode, an. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_46": " und",
+        "PART_47": "11. Führen Sie diesen Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_48": "Da eine Sca-Methode festgelegt wurde, daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_49": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben.",
+        "PART_50": "Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_51": " und"
+      },
+      "EMB_IN_GET": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um Informationen bezüglich der Zahlung zu erhalten. Nutzen Sie den GET Endpunkt ",
+        "PART_3": ", um den aktuellen Status der Zahlung zu erhalten.",
+        "PART_4": "2. Nutzen Sie den GET Endpunkt ",
+        "PART_5": ", um Informationen bezüglich der Autorisierung der Zahlung zu erhalten. Nutzen Sie den GET Endpunkt ",
+        "PART_6": ", um den aktuellen Status der Autorisierung zu erhalten.",
+        "SUBTITLE": "Wichtigsten Schritte:",
+        "PART_7": "1. Wählen Sie die gleichen",
+        "PART_8": "und",
+        "PART_9": "wie in den Schritten zuvor aus.",
+        "PART_10": "2. Nachdem Sie payment-service und payment-product angegeben haben, Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_11": "Anstelle von ",
+        "PART_12": "geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen)."
+      },
+      "EMB_CANCEL_POST": {
+        "PART_25": "6. Wenn die Zahlung nicht autorisiert ist, beginnen Sie nun den Autorisierungsprozess entsprechend der Sca-Methode.",
+        "PART_26": "7. Wenn die Zahlung bereits autorisiert ist, fahren sie mit Zahlungsstornierung durch den DELETE Endpunkt /v1/{payment-service}/{payment-product}/{paymentId} fort.",
+        "PART_27": "Beachten Sie hier den Wert des Attributes",
+        "PART_28": "in dem ASPSP-Profil. Wenn es auf",
+        "PART_29": "gesetzt ist, dann folgen Sie den Anweisungen unter ",
+        "BOLD_1": "Zahlungsstornierung ohne Autorisierung",
+        "PART_30": "",
+        "PART_31": "Wenn der Wert jedoch",
+        "PART_32": "ist, müssen Sie die Auswahl der SCA-Methoden, die dem ausgewählten Nutzer zur Verfügung stehen, beachten. Falls dem Nutzer keine SCA-Methoden zugeteilt wurden, testen Sie bitte Zahlungsstornierung bezüglich der Autorisierung wie in",
+        "BOLD_2": "Zahlungsstornierung autorisieren für Nutzer ohne SCA-Methoden",
+        "PART_33": "beschrieben. Für Nutzer mit einer SCA-Methode halten Sie sich an die Beschreibung in ",
+        "BOLD_3": "Zahlungsstornierung autorisieren für Nutzer mit einer SCA-Methode",
+        "PART_34": "und im Falle, dass es mehrere sind, an",
+        "BOLD_4": "Zahlungsstornierung autorisieren für Nutzer mit mehreren SCA-Methoden"
+      },
+      "EMB_CANS_DELETE": {
+        "TITLE": "SCHRITT 2: Autorisieren der Zahlungsstornierung"
+      },
+      "EMB_CANS_POST": {
+        "TITLE": "SCHRITT 2: Autorisieren der Zahlungsstornierung",
+        "PART_1": "4. Leiten Sie den Autorisierungsprozess ein mit dem",
+        "PART_2": ". Achten Sie darauf, dass Sie die gleichen",
+        "PART_3": "und",
+        "PART_4": "wie in ",
+        "STEP": "SCHRITT 1 angeben.",
+        "PART_5": "5. Geben Sie die ausgegebene paymentId aus Schritt 1 in das entsprechende Feld ein",
+        "PART_6": "",
+        "PART_7": "6. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_8": "Anstelle von  ",
+        "PART_9": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_10": "7. Drücken Sie „Execute“. Es wird Ihnen Code 201 und weitere Informationen ausgegeben."
+      },
+      "EMB_CANS_PUT": {
+        "TITLE": "SCHRITT 2: Autorisieren der Zahlungsstornierung",
+        "SUBTITLE_1": "Zahlungsstornierung autorisieren für Nutzer ohne SCA-Methoden",
+        "PART_1": "8. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_2": "fort. Achten Sie darauf, dass Sie die gleichen",
+        "PART_3": "und",
+        "PART_4": "wie in ",
+        "STEP": "SCHRITT 1",
+        "PART_5": "angeben. Zusätzlich füllen Sie alle Header wie im vorherigen POST Endpunkt aus.",
+        "PART_6": "9. Geben Sie die ausgegebene paymentId aus",
+        "PART_7": "",
+        "PART_8": ". und die zuvor erhaltene cancellationId in das entsprechende Feld ein",
+        "PART_9": "10. Fügen Sie folgenden Json Code in das Anforderungsfeld ein:",
+        "PART_10": "Anstelle von ",
+        "PART_11": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_12": "11.Drücken Sie „Execute“. Es wird Ihnen",
+        "SUBTITLE_2": "Zahlungsstornierung autorisieren für Nutzer mit einer SCA-Methode",
+        "PART_13": "8. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_14": "fort. Achten Sie darauf, dass Sie die gleichen",
+        "PART_15": "und",
+        "PART_16": "wie in ",
+        "PART_17": "angeben. Zusätzlich füllen Sie alle Header wie im vorherigen POST Endpunkt aus.",
+        "PART_18": "9. Geben Sie die ausgegebene paymentId aus",
+        "PART_19": "",
+        "PART_20": "und die zuvor erhaltene cancellationId in das entsprechende Feld ein",
+        "PART_21": "10.  Fügen Sie folgenden Json Code in das Anforderungsfeld ein:",
+        "PART_22": "Anstelle von ",
+        "PART_23": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_24": "11. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_25": "12. Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_26": "Da der Nutzer nur eine Sca-Methode hat, daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_27": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben. Als Antwort sollten Sie erneut",
+        "SUBTITLE_3": "Zahlungsstornierung autorisieren für Nutzer mit mehreren SCA-Methoden",
+        "PART_28": "8. Setzen Sie den Autorisierungsprozess mit dem",
+        "PART_29": "fort. Achten Sie darauf, dass Sie die gleichen ",
+        "PART_30": "und",
+        "PART_31": "wie in ",
+        "PART_32": "angeben. Zusätzlich füllen Sie alle Header wie im vorherigen POST Endpunkt aus.",
+        "PART_33": "9. Geben Sie die ausgegebene paymentId aus",
+        "PART_34": "",
+        "PART_35": "und die zuvor erhaltene cancellationId in das entsprechende Feld ein",
+        "PART_36": "10. Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_37": "Anstelle von ",
+        "PART_38": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_39": "11. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_40": "und eine Liste der möglichen Autorisierungsmethoden mit entsprechenden IDs ausgegeben.",
+        "PART_41": "12. Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_42": "Anstelle von",
+        "PART_43": " geben Sie die ID, der von Ihnen ausgewählte Autorisierungsmethode, an. Als Antwort sollten Sie erneut",
+        "PART_44": "13. Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_45": "Da eine Sca-Methode zuvor festgelegt wurde,daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_46": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben. Als Antwort sollten Sie erneu"
+      },
+      "EMB_CANS_GET": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um den aktuellen Status der Stornierung zu erhalten.",
+        "PART_3": "2. Nutzen Sie den GET Endpunkt",
+        "PART_4": ", um den aktuellen Status der Zahlung zu erhalten. Der Status sollte nach erfolgreichen stornieren CANC sein (CANC steht für „cancelled“)."
+      },
+      "EMB_CONS_AUTH": {
+        "TITLE": "STEP 2: Consent authorisation",
+        "PART_1": "1. Leiten Sie den Autorisierungsprozess ein mit dem",
+        "PART_2": "2. Geben Sie die ausgegebene consentId aus",
+        "STEP": "Schritt 1",
+        "PART_3": " in das entsprechende Feld ein",
+        "PART_4": "3. Nachdem Sie payment-service und payment-product angegeben haben, füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_5": "Anstelle von ",
+        "PART_6": " tgeben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_7": "4. Drücken Sie",
+        "ITALIC": "\"Execute\"",
+        "PART_8": " , um den Autorisierungsprozess zu starten. Es wird Ihnen Code 201 und weitere Informationen ausgegeben."
+      },
+      "EMB_CONS_PUT": {
+        "TITLE": "SCHRITT 2: Autorisieren einer Einwilligung",
+        "SUBTITLE_1": "Einwilligung autorisieren für Nutzer ohne SCA-Methoden",
+        "PART_1": "4. Starten Sie die Autorisierung durch das Drücken von",
+        "ITALIC": "\"Execute\"",
+        "PART_2": "es wird Ihnen Code 201 und weitere Informationen ausgegeben.",
+        "PART_3": "5. Beginnen Sie den Autorisierungsprozess mit dem",
+        "PART_4": "6. Geben Sie die von dem vorigen POST Endpoint ausgegebene",
+        "PART_5": "und die zuvor erhaltene",
+        "PART_6": "in das entsprechende Feld ein.",
+        "PART_7": "7.  Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_8": "8. Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_9": "Anstelle von ",
+        "PART_10": " eben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_11": "9. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_12": "und",
+        "PART_13": "ausgegeben.",
+        "SUBTITLE_2": "Einwilligung autorisieren für Nutzer mit einer SCA-Methode",
+        "PART_14": "5. Beginnen Sie den Autorisierungsprozess mit dem",
+        "PART_15": "6. Geben Sie die von dem vorigen POST Endpoint ausgegebene",
+        "PART_16": "und die zuvor erhaltene",
+        "PART_17": "in das entsprechende Feld ein.",
+        "PART_18": "7. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_19": "Anstelle von ",
+        "PART_20": " geben Sie den Namen des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_21": "8. Fügen Sie folgenden Json Code in das Anforderungsfeld ein:",
+        "PART_22": "Anstelle von ",
+        "PART_23": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_24": "9. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_25": "und",
+        "PART_26": "ausgegeben.",
+        "PART_27": "10. Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_28": "Da der Nutzer nur eine Sca-Methode hat, daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_29": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben.",
+        "PART_30": "Als Antwort sollten Sie",
+        "PART_31": "und",
+        "SUBTITLE_3": "Einwilligung autorisieren für Nutzer mit mehreren SCA-Methoden",
+        "PART_32": "5. Beginnen Sie den Autorisierungsprozess mit dem",
+        "PART_33": "6. Geben Sie die von dem vorigen POST Endpoint ausgegebene",
+        "PART_34": "und die zuvor erhaltene",
+        "PART_35": "in das entsprechende Feld ein.",
+        "PART_36": "7. Füllen Sie die benötigten Felder mit folgenden Daten aus:",
+        "PART_37": "8.  Fügen Sie folgenden Json Code in das Anforderungsfeld ein.",
+        "PART_38": "Anstelle von ",
+        "PART_39": " geben Sie das Passwort des ausgewählten Nutzers an mit dem Sie sich eingeloggt haben. (Sie können Nutzer und deren Daten in der TPP-UI einsehen).",
+        "PART_40": "9. Drücken Sie „Execute“. Es wird Ihnen",
+        "PART_41": "und eine Liste der möglichen Autorisierungsmethoden mit entsprechenden IDs ausgegeben.",
+        "PART_42": "10.  Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_43": "Anstelle von",
+        "PART_44": " geben Sie die ID, der von Ihnen ausgewählte Autorisierungsmethode, an. Als Antwort sollten Sie",
+        "PART_45": "und",
+        "PART_46": "11. Führen Sie diesen PUT Endpunkt erneut durch, fügen Sie nun aber folgenden Json Code in das Anforderungsfeld:",
+        "PART_47": "Da eine Sca-Methode festgelegt wurde, daher wurde die generierte TAN bereits an die angegebene Nutzer-Mail geschickt.",
+        "PART_48": "Diese TAN wird nun in der Json für den auszuführenden PUT Befehl angegeben.",
+        "PART_49": "Als Antwort sollten Sie",
+        "PART_50": "und"
+      },
+      "EMB_CONS_GET": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um Informationen bezüglich der Einwilligung zu erhalten. Nutzen Sie den GET Endpunkt",
+        "PART_3": ", um den aktuellen Status der Einwilligung zu erhalten.",
+        "PART_4": "2. Nutzen Sie den GET Endpunkt",
+        "PART_5": ", um Informationen bezüglich der Autorisierung der Einwilligung zu erhalten. Nutzen Sie den GET Endpunkt",
+        "PART_6": ", um den aktuellen Status der Autorisierung zu erhalten."
+      },
+      "AC_INF_ACS": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um die Konten mit der entsprechenden consent-id zu erhalten.",
+        "PART_3": "Geben Sie anstelle von ",
+        "PART_4": " die consent-id der Konten an, die Sie erhalten möchten. (Sie können Nutzer und deren Daten in der TPP-UI einsehen)."
+      },
+      "AC_INF_AC": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt ",
+        "PART_2": ", um das Konto mit der entsprechenden account-id zu erhalten. ",
+        "PART_3": "Geben Sie anstelle von ",
+        "PART_4": " die consent-id der Konten an, die Sie erhalten möchten. (Sie können Nutzer und deren Daten in der TPP-UI einsehen)."
+      },
+      "AC_INF_BAL": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um die Liste der Salden des Kontos zu erhalten.",
+        "PART_3": "Geben Sie anstelle von ",
+        "PART_4": " die consent-id der Konten an, die Sie erhalten möchten. (Sie können Nutzer und deren Daten in der TPP-UI einsehen)."
+      },
+      "AC_INF_TRS": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um von diesem Konto eine Liste aller Transaktionen und deren Buchungsstatus zu erhalten.",
+        "PART_3": "Geben Sie anstelle von ",
+        "PART_4": " die consent-id der Konten an, die Sie erhalten möchten. (Sie können Nutzer und deren Daten in der TPP-UI einsehen). "
+      },
+      "AC_INF_TR": {
+        "PART_1": "1. Nutzen Sie den GET Endpunkt",
+        "PART_2": ", um die Transaktion des Kontos mit der angegebenen ID zu erhalten.",
+        "PART_3": "Geben Sie anstelle von ",
+        "PART_4": " die consent-id der Konten an, die Sie erhalten möchten. (Sie können Nutzer und deren Daten in der TPP-UI einsehen). "
+      },
+      "FUNDS_CONFIRMATION": {
+        "TH": "Fonds Bestätigung:",
+        "TH2": "Bestätigung der Fonds Anfrage",
+        "PART_1": "1. Nutzen Sie den POST Endpunkt",
+        "PART_2": " .Füllen Sie die benötigten Felder mit folgenden Daten aus: ",
+        "PART_3": "2. Fügen Sie folgenden Json Code in das Anforderungsfeld ein:",
+        "PART_4": "3. Ändern Sie nun ",
+        "PART_5": " zu der IBAN des ausgewählten Nutzers an folgender Stelle der Json."
+      }
+    }
+  },
+  "CONTACT": {
+    "TITLE_1": "Noch Fragen?",
+    "SUBTITLE": "Bei Fragen wenden Sie sich bitte an unseren Experten.",
+    "TITLE_2": "Kontakt"
+  },
+  "GETTING_STARTED": {
+    "TABLE_OF_CONTENTS": "Inhaltsverzeichnis"
+  }
+}

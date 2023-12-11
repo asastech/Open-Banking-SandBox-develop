@@ -1,0 +1,117 @@
+# Copyright 2018-2018 adorsys GmbH & Co KG
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+server:
+  # Authorization HTTP header requires to enlarge max header size.
+  max-http-header-size: 65000
+  port: 8090
+  servlet:
+    session:
+      cookie:
+        secure: false
+        max-age: 300
+        http-only: true
+        path: /
+
+keycloak:
+  auth-server-url: http://localhost:8080/auth
+  realm: ledgers
+  resource: ledgers-client
+  public-client: false
+  principal-attribute: preferred_username
+  credentials:
+    secret: a61a81cd-7178-40d8-8386-ed02791e6592 #Here should be personal generated secret for client (swap public to 'private?' generate secret, swap to public again)
+
+springdoc:
+  api-docs:
+    enabled: false
+
+spring:
+  application.name: ledgers-xs2a-oba
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://localhost:5432/consent?currentSchema=consent
+      username: cms
+      password: cms
+  jpa:
+    open-in-view: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: consent
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: false
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+
+ledgers.url: http://localhost:8088
+xs2a.url: http://localhost:8089
+cms.url: http://localhost:38080
+oba.url: http://localhost:4400
+self.url: http://localhost:8090
+
+oba.maxLoginFailedCount: 3
+
+#LOGGER
+# logging.level.org.springframework.web: DEBUG
+
+license.url: https://github.com/adorsys/xs2a/blob/master/LICENSE.md
+
+skip.ssl.certificate.verification: true
+
+# For now this must be the same as the property configured in
+# user-service.jwt.hs256.secret from /ledgers-app/src/main/resources/application.yml
+online-banking.sca:
+  jwt.hs256.secret: 6VFX8YFQG5DLFKZIMNLGH9P406XR1SY4
+
+feign:
+  okhttp:
+    enabled: true
+  client:
+    config:
+      default:
+        loggerLevel: full
+
+logging.level.de.adorsys.ledgers.middleware: DEBUG
+logging.level.org.adorsys.ledgers.consent: DEBUG
+logging.level.de.adorsys.ledgers.xs2a.api: DEBUG
+logging.level.de.adorsys.ledgers.rest: DEBUG
+logging.level.de.adorsys.psd2.consent: DEBUG
+logging.level.org.hibernate: INFO
+logging.level.com.netflix.config: INFO
+logging.level.com.zaxxer.hikari: INFO
+
+# Cors configuration
+management:
+  endpoints:
+    web:
+      cors:
+        allow-credentials: true
+        allowed-origins: "*"
+        allowed-headers: "*"
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+        max-age: 3600
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+  health:
+    mail:
+      enabled: false

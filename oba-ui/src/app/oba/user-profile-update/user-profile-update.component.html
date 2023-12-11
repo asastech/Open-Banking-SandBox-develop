@@ -1,0 +1,118 @@
+<!--
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container-fluid">
+  <div class="card card-mw">
+    <div class="card-body--large">
+      <div class="header__title">Update User Details</div>
+      <form
+        novalidate
+        [formGroup]="userForm"
+        (ngSubmit)="onSubmit()"
+        autocomplete="off"
+      >
+        <div class="row">
+          <label class="control-label col-12 col-md-3" for="username"
+            >Login</label
+          >
+          <div class="col-12 col-md-10">
+            <input
+              [ngClass]="{
+                'is-invalid':
+                  (formControl['username'].touched || submitted) &&
+                  formControl['username'].errors
+              }"
+              autocomplete="off"
+              class="form-control"
+              id="username"
+              placeholder="Enter login"
+              type="text"
+              formControlName="username"
+            />
+            <div
+              *ngIf="
+                (formControl['username'].touched || submitted) &&
+                formControl['username'].hasError('required')
+              "
+              class="invalid-feedback"
+            >
+              Username is required
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-12 col-md-6" for="email">Email</label>
+          <div class="col-12 col-md-10">
+            <input
+              [ngClass]="{
+                'is-invalid':
+                  (formControl['email'].touched || submitted) &&
+                  formControl['email'].errors
+              }"
+              autocomplete="off"
+              class="form-control"
+              id="email"
+              placeholder="Enter Email"
+              type="email"
+              formControlName="email"
+            />
+            <div
+              *ngIf="
+                (formControl['email'].touched || submitted) &&
+                formControl['email'].hasError('required')
+              "
+              class="invalid-feedback"
+            >
+              Email is required
+            </div>
+            <div
+              *ngIf="
+                (formControl['email'].touched || submitted) &&
+                formControl['email'].hasError('email')
+              "
+              class="invalid-feedback"
+            >
+              Email is invalid
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <button
+            class="btn btn-general mr-4 ml-3"
+            (click)="resetPasswordViaEmail(obaUser.login)"
+            type="button"
+          >
+            Send password update link
+          </button>
+        </div>
+        <div class="row">
+          <button class="btn btn-general mr-4 ml-3" type="submit">
+            Submit
+          </button>
+          <button
+            class="btn btn-outline-dark mr-4 ml-3"
+            routerLink="/profile"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
