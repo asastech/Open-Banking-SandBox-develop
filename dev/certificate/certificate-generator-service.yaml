@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: C:\WINDOWS\system32\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: certificate-generator
+  name: certificate-generator
+spec:
+  ports:
+    - name: "8092"
+      port: 8092
+      targetPort: 8092
+  selector:
+    io.kompose.service: certificate-generator
+status:
+  loadBalancer: {}

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\WINDOWS\system32\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/xs2a-net: "true"
+    io.kompose.service: ledgers-keycloak
+  name: ledgers-keycloak
+spec:
+  containers:
+    - env:
+        - name: KEYCLOAK_PASSWORD
+          value: admin
+        - name: KEYCLOAK_USER
+          value: admin
+      image: 'adorsys/ledgers-keycloak:'
+      name: ledgers-keycloak
+      ports:
+        - containerPort: 8080
+      resources: {}
+  restartPolicy: OnFailure
+status: {}

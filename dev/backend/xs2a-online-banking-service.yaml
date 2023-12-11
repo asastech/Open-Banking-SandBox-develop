@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: C:\WINDOWS\system32\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: xs2a-online-banking
+  name: xs2a-online-banking
+spec:
+  ports:
+    - name: "8090"
+      port: 8090
+      targetPort: 8090
+    - name: "8190"
+      port: 8190
+      targetPort: 8000
+  selector:
+    io.kompose.service: xs2a-online-banking
+status:
+  loadBalancer: {}

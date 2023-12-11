@@ -1,0 +1,4 @@
+resources:
+- certificate-generator-pod.yaml
+- certificate-generator-service.yaml
+

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: C:\WINDOWS\system32\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/xs2a-net: "true"
+    io.kompose.service: xs2a-online-banking
+  name: xs2a-online-banking
+spec:
+  containers:
+    - env:
+        - name: CMS_URL
+          value: http://xs2a-consent-management:8080
+        - name: KEYCLOAK_AUTH_SERVER_URL
+          value: http://ledgers-keycloak:8080/auth
+        - name: LEDGERS_URL
+          value: http://ledgers:8088
+        - name: OBA_URL
+          value: http://localhost:4400
+        - name: ONLINE-BANKING_URL
+          value: http://xs2a-online-banking:8090/api/v1/consents/confirm/{userLogin}/{consentId}/{authorizationId}/{tan}
+        - name: ONLINE_BANKING_SCA_LOGINPAGE
+          value: http://localhost:4400/
+        - name: ONLINE_BANKING_SCA_UIREDIRECT
+          value: "true"
+        - name: SELF_URL
+          value: http://localhost:8090
+        - name: SERVER_KEY
+          value: secret123
+        - name: SPRING_DATASOURCE_HIKARI_JDBCURL
+          value: jdbc:postgresql://xs2a-consent-management-db/consent?currentSchema=consent
+        - name: SPRING_DATASOURCE_HIKARI_PASSWORD
+          value: cms
+        - name: SPRING_DATASOURCE_HIKARI_USERNAME
+          value: cms
+        - name: XS2A_URL
+          value: http://xs2a-connector-examples:8089
+      image: 'adorsys/xs2a-online-banking:'
+      name: xs2a-online-banking
+      ports:
+        - containerPort: 8090
+        - containerPort: 8000
+      resources: {}
+  restartPolicy: OnFailure
+status: {}

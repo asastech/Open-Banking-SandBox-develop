@@ -1,0 +1,28 @@
+resources:
+- fakesmtp-deployment.yaml
+- ledgers-keycloak-pod.yaml
+- ledgers-keycloak-service.yaml
+- ledgers-pod.yaml
+- ledgers-service.yaml
+- xs2a-aspsp-profile-claim0-persistentvolumeclaim.yaml
+- xs2a-aspsp-profile-pod.yaml
+- xs2a-aspsp-profile-service.yaml
+- xs2a-connector-data-persistentvolumeclaim.yaml
+- xs2a-connector-examples-pod.yaml
+- xs2a-connector-examples-service.yaml
+- xs2a-consent-management-db-claim1-persistentvolumeclaim.yaml
+- xs2a-consent-management-db-pod.yaml
+- xs2a-consent-management-db-service.yaml
+- xs2a-consent-management-pod.yaml
+- xs2a-consent-management-service.yaml
+- xs2a-fakesmtp-data-persistentvolumeclaim.yaml
+- xs2a-ledgers-data-persistentvolumeclaim.yaml
+- xs2a-net-networkpolicy.yaml
+- xs2a-online-banking-pod.yaml
+- xs2a-online-banking-service.yaml
+- xs2a-online-banking-ui-pod.yaml
+- xs2a-online-banking-ui-service.yaml
+- xs2a-tpp-rest-server-data-persistentvolumeclaim.yaml
+- xs2a-tpp-rest-server-pod.yaml
+- xs2a-tpp-rest-server-service.yaml
+
