@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -26,22 +26,18 @@ export class ExtendedBalance {
   balance?: string;
 
   constructor(details: Account) {
-    if (details && details.balances) {
-      const balance = details.balances[0].amount.amount;
-      const currency = details.balances[0].amount.currency;
-      const limit = Number(details.creditLimit);
+    if (details && details.balances && details.balances.length > 1) {
+      const balance = details.balances[0]?.amount?.amount;
+      const currency = details.balances[0]?.amount?.currency;
+      const limit = Number(details?.creditLimit);
 
       this.isCreditEnabled = details.creditLimit > 0;
       this.limit = `${limit} ${currency}`;
-      this.balance = `${
-        this.isCreditEnabled ? balance + limit : balance
-      } ${currency}`;
+      this.balance = `${this.isCreditEnabled ? balance + limit : balance} ${currency}`;
 
       if (this.isCreditEnabled) {
         this.personal = `${balance < 0 ? 0 : balance} ${currency}`;
-        this.creditLeft = `${
-          balance < 0 ? limit + balance : limit
-        } ${currency}`;
+        this.creditLeft = `${balance < 0 ? limit + balance : limit} ${currency}`;
       }
     }
   }

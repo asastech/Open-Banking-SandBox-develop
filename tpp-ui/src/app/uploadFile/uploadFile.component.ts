@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -31,11 +31,9 @@ export class UploadFileComponent implements OnInit {
   uploadDataConfigs: UploadOptions[];
   private url = `${environment.tppBackend}`;
   private message = 'Test data has been successfully generated.';
+  panelOpenState: boolean;
 
-  constructor(
-    private generationService: TestDataGenerationService,
-    private infoService: InfoService
-  ) {}
+  constructor(private generationService: TestDataGenerationService, private infoService: InfoService) {}
 
   public ngOnInit(): void {
     this.uploadDataConfigs = [
@@ -48,7 +46,7 @@ export class UploadFileComponent implements OnInit {
       },
       {
         exampleFileName: 'Consents-Example.yml',
-        title: 'Upload Consents',
+        title: 'Upload AIS Consents',
         method: 'PUT',
         url: this.url + '/consent',
         exampleFileUrl: '/consent/example',
@@ -64,16 +62,14 @@ export class UploadFileComponent implements OnInit {
   }
 
   generateFileExample(uploadDataConfig) {
-    return this.generationService
-      .generateExampleTestData(uploadDataConfig.exampleFileUrl)
-      .subscribe((data) => {
-        this.infoService.openFeedback(this.message);
-        const blob = new Blob([data], { type: 'plain/text' });
-        let link = document.createElement('a');
-        link.setAttribute('href', window.URL.createObjectURL(blob));
-        link.setAttribute('download', uploadDataConfig.exampleFileName);
-        document.body.appendChild(link);
-        link.click();
-      });
+    return this.generationService.generateExampleTestData(uploadDataConfig.exampleFileUrl).subscribe((data) => {
+      this.infoService.openFeedback(this.message);
+      const blob = new Blob([data], { type: 'plain/text' });
+      const link = document.createElement('a');
+      link.setAttribute('href', window.URL.createObjectURL(blob));
+      link.setAttribute('download', uploadDataConfig.exampleFileName);
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 }

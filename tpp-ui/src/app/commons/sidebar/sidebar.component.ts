@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -31,8 +31,6 @@ export class SidebarComponent implements OnInit {
   constructor(private tppUserService: TppUserService) {}
 
   ngOnInit() {
-    this.tppUserService.currentTppUser.subscribe(
-      (user: User) => (this.admin = user && user.userRoles.includes('SYSTEM'))
-    );
+    this.tppUserService.currentTppUser.subscribe((user: User) => (this.admin = user && user.userRoles.includes('SYSTEM')));
   }
 }

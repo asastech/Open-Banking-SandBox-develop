@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,18 +19,47 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TppsComponent } from './tpps.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InfoService } from '../../commons/info/info.service';
+import { AccountService } from '../../services/account.service';
+import { TppManagementService } from '../../services/tpp-management.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PageNavigationService } from '../../services/page-navigation.service';
+import { CountryService } from '../../services/country.service';
+import { TppUserService } from '../../services/tpp.user.service';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { of } from 'rxjs';
+import {  NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('TppsComponent', () => {
   let component: TppsComponent;
   let fixture: ComponentFixture<TppsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TppsComponent],
-      }).compileComponents();
-    })
-  );
+  const mockRoute = {
+    params: of({ id: '12345' }),
+    queryParams: of({}),
+  };
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, OverlayModule],
+      providers: [
+        InfoService,
+        AccountService,
+        TppManagementService,
+        TppUserService,
+        PageNavigationService,
+        CountryService,
+        { provide: Router, useValue: {} },
+        { provide: ActivatedRoute, useValue: mockRoute },
+      ],
+      declarations: [TppsComponent],
+      schemas: [
+        NO_ERRORS_SCHEMA
+      ],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TppsComponent);

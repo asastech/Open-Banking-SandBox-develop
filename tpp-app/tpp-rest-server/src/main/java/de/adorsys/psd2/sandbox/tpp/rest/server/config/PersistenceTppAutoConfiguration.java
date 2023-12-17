@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -50,7 +50,7 @@ import java.util.HashMap;
     transactionManagerRef = "tppTransactionManager")
 public class PersistenceTppAutoConfiguration {
     @Bean
-    @ConfigurationProperties(prefix = "spring.tpp.datasource.hikari")
+    @ConfigurationProperties(prefix = "tpp.datasource")
     public DataSource tppDataSource() {
         return DataSourceBuilder.create().build();
     }

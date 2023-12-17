@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,13 +16,9 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 
-import {
-  CustomizeService,
-  Theme,
-  GlobalSettings,
-} from './services/customize.service';
+import { CustomizeService, Theme, GlobalSettings } from './services/customize.service';
 import { Title } from '@angular/platform-browser';
 import { CountryService } from './services/country.service';
 
@@ -35,39 +31,29 @@ export class AppComponent implements OnInit {
   title = 'app';
   globalSettings: GlobalSettings;
 
-  constructor(
-    private customizeService: CustomizeService,
-    private countryService: CountryService,
-    private titleService: Title
-  ) {}
+  constructor(private customizeService: CustomizeService, private countryService: CountryService, private titleService: Title,  private ngZone: NgZone) {}
 
   ngOnInit() {
     this.countryService.loadCountries();
     let theme: Theme;
     this.customizeService.getJSON().subscribe((data) => {
-      theme = data;
-      this.globalSettings = theme.globalSettings;
-      if (theme.globalSettings.logo.indexOf('/') === -1) {
-        theme.globalSettings.logo =
-          '../assets/UI' +
-          (this.customizeService.isCustom() ? '/custom/' : '/') +
-          theme.globalSettings.logo;
-      }
-      if (
-        theme.globalSettings.favicon &&
-        theme.globalSettings.favicon.href.indexOf('/') === -1
-      ) {
-        theme.globalSettings.favicon.href =
-          '../assets/UI' +
-          (this.customizeService.isCustom() ? '/custom/' : '/') +
-          theme.globalSettings.favicon.href;
-      }
+      this.ngZone.run(() => {
+        theme = data;
+        this.globalSettings = theme.globalSettings;
+        if (theme.globalSettings.logo.indexOf('/') === -1) {
+          theme.globalSettings.logo = '../assets/UI' + (this.customizeService.isCustom() ? '/custom/' : '/') + theme.globalSettings.logo;
+        }
+        if (theme.globalSettings.favicon && theme.globalSettings.favicon.href.indexOf('/') === -1) {
+          theme.globalSettings.favicon.href =
+            '../assets/UI' + (this.customizeService.isCustom() ? '/custom/' : '/') + theme.globalSettings.favicon.href;
+        }
 
-      const title = theme.globalSettings.title;
-      if (title) {
-        this.titleService.setTitle(title);
-      }
-      this.customizeService.setUserTheme(theme);
+        const title = theme.globalSettings.title;
+        if (title) {
+          this.titleService.setTitle(title);
+        }
+        this.customizeService.setUserTheme(theme);
+      });
     });
   }
 }

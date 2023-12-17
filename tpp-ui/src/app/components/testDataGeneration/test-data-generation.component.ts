@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -29,7 +29,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'test-data-generation',
+  selector: 'app-test-data-generation',
   templateUrl: './test-data-generation.component.html',
   styleUrls: ['./test-data-generation.component.scss'],
 })
@@ -65,21 +65,32 @@ export class TestDataGenerationComponent implements OnInit, OnDestroy {
     return this.generationService
       .generateTestData(this.selectedCurrency, this.generatePaymentsFlag)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
-        const message =
-          'Test data has been successfully generated. The automatic download of the test yml file will start within some seconds.';
-        this.infoService.openFeedback(message);
+      .subscribe(
+        (data) => {
+          const message =
+            'Test data has been successfully generated. The automatic download of the test yml file will start within some seconds.';
+          this.infoService.openFeedback(message);
 
-        setTimeout(() => {
-          const blob = new Blob([data], { type: 'plain/text' });
-          let link = document.createElement('a');
-          link.setAttribute('href', window.URL.createObjectURL(blob));
-          link.setAttribute('download', 'NISP-Test-Data.yml');
-          document.body.appendChild(link);
-          link.click();
-        }, 3000);
-        this.router.navigateByUrl('/accounts');
-      });
+          setTimeout(() => {
+            const blob = new Blob([data], { type: 'plain/text' });
+            const link = document.createElement('a');
+            link.setAttribute('href', window.URL.createObjectURL(blob));
+            link.setAttribute('download', 'NISP-Test-Data.yml');
+            document.body.appendChild(link);
+            link.click();
+          }, 3000);
+          this.router.navigateByUrl('/accounts');
+        },
+        (error) => {
+          if (error.status === 404) {
+            this.infoService.openFeedback("Your Ledgers configuration should have 'develop' profile to activate this feature", {
+              severity: 'error',
+            });
+          } else {
+            this.infoService.openFeedback('An Error occurred while generating the Test Data.', { severity: 'error' });
+          }
+        }
+      );
   }
 
   initializeCurrenciesList() {
@@ -93,11 +104,9 @@ export class TestDataGenerationComponent implements OnInit, OnDestroy {
           this.currencyList = data;
           this.spinner.hide();
         },
-        () =>
-          this.infoService.openFeedback(
-            'Currencies list cannot be initialized',
-            { severity: 'error' }
-          )
+        () => {
+          this.infoService.openFeedback('An error occurred while initialize the Currencieslist', { severity: 'error' });
+        }
       );
   }
 
@@ -107,12 +116,8 @@ export class TestDataGenerationComponent implements OnInit, OnDestroy {
 
   generateCertificate() {
     if (this.certificate) {
-      const message =
-        'Certificate was successfully generated. The download will start automatically within the 2 seconds';
-      this.certificateDownloadService.generateAndDownloadCertificate(
-        this.certificate,
-        message
-      );
+      const message = 'Certificate was successfully generated. The download will start automatically within the 2 seconds';
+      this.certificateDownloadService.generateAndDownloadCertificate(this.certificate, message);
     }
   }
 }

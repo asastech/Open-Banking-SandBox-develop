@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -34,11 +34,13 @@ describe('ConfirmPasswordComponent', () => {
   let component: ConfirmPasswordComponent;
   let fixture: ComponentFixture<ConfirmPasswordComponent>;
   let authService: AuthService;
-  let customizeService: CustomizeService;
   let authServiceSpy;
   let de: DebugElement;
   let el: HTMLElement;
   let router: Router;
+  const newPassword = 'newPassword';
+  const code = 'code';
+  const required = 'required';
 
   beforeEach(
     waitForAsync(() => {
@@ -61,7 +63,6 @@ describe('ConfirmPasswordComponent', () => {
     fixture = TestBed.createComponent(ConfirmPasswordComponent);
     component = fixture.componentInstance;
     authService = fixture.debugElement.injector.get(AuthService);
-    customizeService = TestBed.inject(CustomizeService);
     de = fixture.debugElement.query(By.css('form'));
     el = de.nativeElement;
     fixture.detectChanges();
@@ -78,8 +79,8 @@ describe('ConfirmPasswordComponent', () => {
     authServiceSpy = spyOn(authService, 'resetPassword').and.callThrough();
 
     const form = component.confirmNewPasswordForm;
-    form.controls['newPassword'].setValue('12345');
-    form.controls['code'].setValue('12345678');
+    form.controls[newPassword].setValue('12345');
+    form.controls[code].setValue('12345678');
     fixture.detectChanges();
 
     el = fixture.debugElement.query(By.css('button')).nativeElement;
@@ -99,39 +100,39 @@ describe('ConfirmPasswordComponent', () => {
   it('New password field validity', () => {
     let errors = {};
     const confirmNewPassword =
-      component.confirmNewPasswordForm.controls['newPassword'];
+      component.confirmNewPasswordForm.controls[newPassword];
     expect(confirmNewPassword.valid).toBeFalsy();
 
     // confirmNewPassword field is required
     errors = confirmNewPassword.errors || {};
-    expect(errors['required']).toBeTruthy();
+    expect(errors[required]).toBeTruthy();
     fixture.detectChanges();
 
     // set confirmNewPassword to something correct
     confirmNewPassword.setValue('123345');
     errors = confirmNewPassword.errors || {};
-    expect(errors['required']).toBeFalsy();
+    expect(errors[required]).toBeFalsy();
   });
 
   it('code field validity', () => {
     let errors = {};
-    const code = component.confirmNewPasswordForm.controls['code'];
-    expect(code.valid).toBeFalsy();
+    const codeForm = component.confirmNewPasswordForm.controls[code];
+    expect(codeForm.valid).toBeFalsy();
 
     // code field is required
-    errors = code.errors || {};
-    expect(errors['required']).toBeTruthy();
+    errors = codeForm.errors || {};
+    expect(errors[required]).toBeTruthy();
 
     // set code to something correct
-    code.setValue('12345678');
-    errors = code.errors || {};
+    codeForm.setValue('12345678');
+    errors = codeForm.errors || {};
     fixture.detectChanges();
-    expect(errors['required']).toBeFalsy();
+    expect(errors[required]).toBeFalsy();
   });
 
   it('should call the valid form on Submit ', () => {
-    component.confirmNewPasswordForm.get('newPassword').setValue('12345');
-    component.confirmNewPasswordForm.get('code').setValue('1234');
+    component.confirmNewPasswordForm.get(newPassword).setValue('12345');
+    component.confirmNewPasswordForm.get(code).setValue('1234');
     const resetSpy = spyOn(authService, 'resetPassword').and.returnValue(
       of({})
     );

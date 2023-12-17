@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../services/auth.service';
@@ -31,13 +31,13 @@ import { InfoService } from '../../../commons/info/info.service';
   styleUrls: ['../auth.component.scss'],
 })
 export class ResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
+  resetPasswordForm: UntypedFormGroup;
   public submitted: boolean;
   public errorMessage: string;
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     public customizeService: CustomizeService,
     private tppUserService: TppUserService,
@@ -57,16 +57,11 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    this.tppUserService
-      .resetPasswordViaEmail(this.resetPasswordForm.value.login)
-      .subscribe(() => {
-        this.infoService.openFeedback(
-          'Link for password reset was sent, check email.',
-          {
-            severity: 'info',
-          }
-        );
-        this.router.navigate(['/logout']);
+    this.tppUserService.resetPasswordViaEmail(this.resetPasswordForm.value.login).subscribe(() => {
+      this.infoService.openFeedback('Link for password reset was sent, check email.', {
+        severity: 'info',
       });
+      this.router.navigate(['/logout']);
+    });
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -20,7 +20,11 @@ import { Component, OnInit } from '@angular/core';
 import { PaymentTO } from '../../api/models/payment-to';
 import { OnlineBankingService } from '../../common/services/online-banking.service';
 import { InfoService } from '../../common/info/info.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { debounceTime, map, tap } from 'rxjs/operators';
 import { OnlineBankingConsentsService } from '../../api/services/online-banking-consents.service';
@@ -36,7 +40,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./periodic-payments.component.scss'],
 })
 export class PeriodicPaymentsComponent implements OnInit {
-  formModel: FormGroup;
+  formModel: UntypedFormGroup;
   config: {
     itemsPerPage: number;
     currentPage: number;
@@ -56,7 +60,7 @@ export class PeriodicPaymentsComponent implements OnInit {
   constructor(
     private infoService: InfoService,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private modalService: NgbModal,
     private onlineBankingService: OnlineBankingService,
     private authService: AuthService
@@ -123,17 +127,14 @@ export class PeriodicPaymentsComponent implements OnInit {
     payment: PaymentTO
   ) {
     this.targetedPayment = payment;
-    this.modalService.open(content).result.then(
-      () => {
-        this.initCancel(
-          contentSelect,
-          contentTan,
-          contentDeleted,
-          this.targetedPayment.paymentId
-        );
-      },
-      () => {}
-    );
+    this.modalService.open(content).result.then(() => {
+      this.initCancel(
+        contentSelect,
+        contentTan,
+        contentDeleted,
+        this.targetedPayment.paymentId
+      );
+    });
   }
 
   initCancel(contentSelect, contentTan, contentDeleted, paymentId: string) {
@@ -160,12 +161,9 @@ export class PeriodicPaymentsComponent implements OnInit {
   }
 
   openSelectMethodModal(contentSelect, contentTan, contentDeleted) {
-    this.modalService.open(contentSelect).result.then(
-      () => {
-        return this.startSca(contentTan, contentDeleted);
-      },
-      () => {}
-    );
+    this.modalService.open(contentSelect).result.then(() => {
+      return this.startSca(contentTan, contentDeleted);
+    });
   }
 
   mapTransactionStatus(status: string) {
@@ -221,12 +219,9 @@ export class PeriodicPaymentsComponent implements OnInit {
   }
 
   openTanModal(contentTan, contentDeleted) {
-    this.modalService.open(contentTan).result.then(
-      () => {
-        return this.validateNcancel(contentDeleted);
-      },
-      () => {}
-    );
+    this.modalService.open(contentTan).result.then(() => {
+      return this.validateNcancel(contentDeleted);
+    });
   }
 
   validateNcancel(contentDeleted) {
@@ -251,12 +246,9 @@ export class PeriodicPaymentsComponent implements OnInit {
   }
 
   openDeletedModal(contentDeleted) {
-    this.modalService.open(contentDeleted).result.then(
-      () => {
-        this.refreshPeriodicPayments();
-      },
-      () => {}
-    );
+    this.modalService.open(contentDeleted).result.then(() => {
+      this.refreshPeriodicPayments();
+    });
   }
 
   makeString(): string {

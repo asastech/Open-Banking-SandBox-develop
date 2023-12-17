@@ -1,5 +1,5 @@
 /*!
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -20,6 +20,10 @@
 .row {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+thead tr {
+  border-top: 1px solid #dee2e6 !important;
 }
 
 input {

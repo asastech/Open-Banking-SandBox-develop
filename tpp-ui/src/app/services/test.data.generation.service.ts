@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -29,10 +29,7 @@ export class TestDataGenerationService {
   public generateTestData(currency: string, generatePaymentsFlag: boolean) {
     return this.http.get(this.baseUrl + '/data/generate/' + currency, {
       params: {
-        generatePayments:
-          generatePaymentsFlag === undefined
-            ? 'false'
-            : String(generatePaymentsFlag),
+        generatePayments: generatePaymentsFlag === undefined ? 'false' : String(generatePaymentsFlag),
       },
       responseType: 'text',
     });
@@ -54,12 +51,8 @@ export class TestDataGenerationService {
   }
 
   public generateTppId(countryCode: string) {
-    return this.http.post(
-      this.baseUrl + `/id?countryCode=${countryCode}`,
-      countryCode,
-      {
-        responseType: 'text',
-      }
-    );
+    return this.http.post(this.baseUrl + `/id?countryCode=${countryCode}`, countryCode, {
+      responseType: 'text',
+    });
   }
 }

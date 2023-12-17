@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { OnlineBankingService } from '../../common/services/online-banking.service';
 import { Router } from '@angular/router';
 import { UserTO } from '../../api/models/user-to';
@@ -34,10 +38,10 @@ import { AuthService } from '../../common/services/auth.service';
 export class UserProfileUpdateComponent implements OnInit {
   public obaUser: UserTO;
   public submitted: boolean;
-  public userForm: FormGroup;
+  public userForm: UntypedFormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private currentUserService: CurrentUserService,
     private onlineBankingService: OnlineBankingService,
     private shareDataService: ShareDataService,

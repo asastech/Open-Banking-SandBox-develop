@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,18 +19,22 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PisCancellationService } from './pis-cancellation.service';
-import { PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService } from '../../api/services/psupiscancellation-provides-access-to-online-banking-payment-functionality.service';
-import LoginUsingPOST2Params = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.LoginUsingPOST2Params;
-import SelectMethodUsingPOST1Params = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.SelectMethodUsingPOST1Params;
+import { PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService } from '../../api/services';
 import AuthorisePaymentUsingPOSTParams = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.AuthorisePaymentUsingPOSTParams;
+import SelectMethodUsingPOST1Params = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.SelectMethodUsingPOST1Params;
+import LoginUsingPOST2Params = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.LoginUsingPOST2Params;
 
 describe('PisCancellationService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: PisCancellationService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [PisCancellationService],
+    });
+
+    service = TestBed.inject(PisCancellationService);
+  });
 
   it('should be created', () => {
-    const service: PisCancellationService = TestBed.inject(
-      PisCancellationService
-    );
     expect(service).toBeTruthy();
   });
 

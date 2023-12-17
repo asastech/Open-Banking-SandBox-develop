@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -40,9 +40,7 @@
         <div class="col-12 col-md-9 text-muted">
           <div *ngFor="let access of accesses; last as isLast">
             {{ access.userLogin }},
-            <span *ngIf="access.scaWeight && multilevelScaEnabled"
-              >weight {{ access.scaWeight }} %,</span
-            >
+            <span *ngIf="access.scaWeight && multilevelScaEnabled">weight {{ access.scaWeight }} %,</span>
             Role: {{ access.accessType }}
           </div>
         </div>
@@ -85,28 +83,13 @@
         <div class="col-12 col-md-9 text-muted">{{ balance?.creditLeft }}</div>
       </div>
 
-      <button class="btn btn-primary" (click)="goToAccountDetail()">
-        Access management
-      </button>
-      <button
-        class="btn btn-primary ml-3"
-        (click)="openSetCreditLimitConfirmation(setCreditLimitModal)"
-      >
-        Set Credit Limit
-      </button>
-      <button
-        class="btn btn-primary ml-3"
-        [disabled]="isAccountDeleted"
-        (click)="goToDepositCash()"
-      >
-        Deposit cash
-      </button>
-      <button
-        class="btn btn-outline-danger ml-3"
-        (click)="openDeleteConfirmation(deleteConfirmationModal)"
-      >
+      <button class="btn btn-primary mt-2 me-2" (click)="goToAccountDetail()">Access management</button>
+      <button class="btn btn-primary mt-2 me-2" (click)="openSetCreditLimitConfirmation(setCreditLimitModal)">Set Credit Limit</button>
+      <button class="btn btn-primary me-2 mt-2" [disabled]="isAccountDeleted" (click)="goToDepositCash()">Deposit cash</button>
+      <button class="btn btn-outline-danger mt-2 me-2" (click)="openDeleteConfirmation(deleteConfirmationModal)">
         Delete transactions
       </button>
+      <button class="btn btn-outline-danger mt-2" (click)="openDeleteAccount(deleteAccountConfirmationModal)">Delete Account</button>
     </div>
   </div>
 </div>
@@ -114,76 +97,47 @@
 <ng-template #deleteConfirmationModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Transactions deletion</h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
-  <div class="modal-body">
-    Are you sure you want to delete all transactions of "{{ account?.iban }}"?
-  </div>
+  <div class="modal-body">Are you sure you want to delete all transactions of "{{ account?.iban }}"?</div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      (click)="modal.dismiss('cancel click')"
-    >
-      Cancel
-    </button>
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="modal.close('Ok click')"
-    >
-      Delete transactions
-    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Ok click')">Delete transactions</button>
   </div>
 </ng-template>
 
 <ng-template #setCreditLimitModal let-modal let-limit>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title1">Set Credit Limit</h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    Please input Dispo Credit Limit for account "{{ account?.iban }}" "{{
-      account?.currency
-    }}"
+    Please input Dispo Credit Limit for account "{{ account?.iban }}" "{{ account?.currency }}"
     <input
-      (change)="getValue($event.target)"
+      [(ngModel)]="account.creditLimit"
       class="form-control"
       id="amount"
-      value="{{ account.creditLimit }}"
       placeholder="{{ account?.creditLimit }}"
       type="number"
       min="0"
+      required
+      pattern="^(?!0+[1-9])(?:\d+|\d{1,3}(?:,\d{3})+)(?:(\.|,)\d+)?$"
     />
   </div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      (click)="modal.dismiss('cancel click')"
-    >
-      Cancel
-    </button>
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="modal.close('Ok click')"
-    >
-      Set Credit Limit
-    </button>
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Ok click')">Set Credit Limit</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteAccountConfirmationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete Account</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">Are you sure you want to delete this Account with IBAN: {{ account.iban }}?</div>
+  <div class="modal-footer">
+    <button mat-raised-button type="button" class="btn btn-outline-secondary me-2" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button mat-raised-button type="button" class="btn btn-danger" (click)="modal.close('Ok click')">Delete</button>
   </div>
 </ng-template>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,54 +16,45 @@
  * contact us at psd2@adorsys.com.
  */
 
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-  HttpResponse,
-} from '@angular/common/http';
-import { Observable, throwError as observableThrowError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { EMPTY, Observable, throwError , from } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { ERROR_MESSAGE } from '../commons/constant/constant';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
+  private errorText = 'Invalid password for user';
   private authTokenStorageKey = 'access_token';
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return fromPromise(this.handleRequest(request, next)).pipe(
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return from(this.handleRequest(request, next)).pipe(
       tap((event: HttpEvent<any>) => {
-        if (
-          event instanceof HttpResponse &&
-          event.headers.has(this.authTokenStorageKey)
-        ) {
+        if (event instanceof HttpResponse && event.headers.has(this.authTokenStorageKey)) {
           this.saveAccessToken(event.headers.get(this.authTokenStorageKey));
         }
       }),
       catchError((errors) => {
         if (errors instanceof HttpErrorResponse) {
-          if (errors.status === 401 && this.authService.isLoggedIn()) {
+          if (errors.status === 401 && this.authService.isLoggedIn() && !errors.error?.message.match(this.errorText)) {
+            if (errors.status === 401 && errors.statusText?.match('Unauthorized')) {
+              errors.error.message = 'You have been logged out due to inactivity.';
+              this.authService.logout();
+              sessionStorage.setItem(ERROR_MESSAGE, errors.error.message);
+              return EMPTY;
+            }
             this.authService.logout();
           }
         }
-        return observableThrowError(errors);
+        return throwError(errors);
       })
     );
   }
 
-  private async handleRequest(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Promise<HttpEvent<any>> {
+  private async handleRequest(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
     if (this.authService.isLoggedIn()) {
       request = request.clone({
         setHeaders: {

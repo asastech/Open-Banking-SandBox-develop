@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -18,16 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { TppManagementService } from '../../services/tpp-management.service';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
-import {
-  PageConfig,
-  PaginationConfigModel,
-} from '../../models/pagination-config.model';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
+import { PageConfig, PaginationConfigModel } from '../../models/pagination-config.model';
 import { AccountService } from '../../services/account.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageNavigationService } from '../../services/page-navigation.service';
@@ -46,7 +38,8 @@ import { TooltipPosition } from '@angular/material/tooltip';
   templateUrl: './tpps.component.html',
   styleUrls: ['./tpps.component.scss'],
 })
-// TODO Merge UsersComponent, TppsComponent and AccountListComponent into one single component https://git.adorsys.de/adorsys/xs2a/psd2-dynamic-sandbox/-/issues/713
+// TODO Merge UsersComponent, TppsComponent and AccountListComponent into one single component
+//  https://git.adorsys.de/adorsys/xs2a/psd2-dynamic-sandbox/-/issues/713
 export class TppsComponent implements OnInit {
   tpps: User[] = [];
   admin;
@@ -54,15 +47,8 @@ export class TppsComponent implements OnInit {
   countries: Array<string>;
   countriesList: Array<object> = [];
   newPin = 'pin';
-  positionOptions: TooltipPosition[] = [
-    'above',
-    'before',
-    'after',
-    'below',
-    'left',
-    'right',
-  ];
-  position = new FormControl(this.positionOptions[0]);
+  positionOptions: TooltipPosition[] = ['above', 'before', 'after', 'below', 'left', 'right'];
+  position = new UntypedFormControl(this.positionOptions[0]);
 
   config: PaginationConfigModel = {
     itemsPerPage: 10,
@@ -70,7 +56,7 @@ export class TppsComponent implements OnInit {
     totalItems: 0,
   };
 
-  searchForm: FormGroup = this.formBuilder.group({
+  searchForm: UntypedFormGroup = this.formBuilder.group({
     userLogin: '',
     tppId: '',
     tppLogin: '',
@@ -81,7 +67,7 @@ export class TppsComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private tppManagementService: TppManagementService,
     private infoService: InfoService,
     public router: Router,
@@ -122,12 +108,9 @@ export class TppsComponent implements OnInit {
   deleteTestData() {
     if (this.admin) {
       this.tppService.deleteTestData().subscribe(() => {
-        this.infoService.openFeedback(
-          'TPP test data was successfully deleted!',
-          {
-            severity: 'info',
-          }
-        );
+        this.infoService.openFeedback('TPP test data was successfully deleted!', {
+          severity: 'info',
+        });
         this.getTpps(1, this.config.itemsPerPage, {
           userLogin: this.searchForm.get('userLogin').value,
           tppId: this.searchForm.get('tppId').value,
@@ -146,20 +129,17 @@ export class TppsComponent implements OnInit {
 
   openConfirmation(content, tppId: string, type: string) {
     this.statusBlock = type;
-    this.modalService.open(content).result.then(
-      () => {
-        if (type === 'block') {
-          this.blockTpp(tppId);
-        } else if (type === 'unblock') {
-          this.blockTpp(tppId);
-        } else if (type === 'delete') {
-          this.delete(tppId);
-        } else {
-          this.changePin(tppId);
-        }
-      },
-      () => {}
-    );
+    this.modalService.open(content).result.then(() => {
+      if (type === 'block') {
+        this.blockTpp(tppId);
+      } else if (type === 'unblock') {
+        this.blockTpp(tppId);
+      } else if (type === 'delete') {
+        this.delete(tppId);
+      } else {
+        this.changePin(tppId);
+      }
+    });
   }
 
   showAllTpps() {
@@ -182,12 +162,10 @@ export class TppsComponent implements OnInit {
   }
 
   private getTpps(page: number, size: number, queryParams: TppQueryParams) {
-    this.tppManagementService
-      .getTpps(page - 1, size, queryParams)
-      .subscribe((response) => {
-        this.tpps = response.tpps;
-        this.config.totalItems = response.totalElements;
-      });
+    this.tppManagementService.getTpps(page - 1, size, queryParams).subscribe((response) => {
+      this.tpps = response.tpps;
+      this.config.totalItems = response.totalElements;
+    });
   }
 
   private onQueryUsers() {
@@ -216,11 +194,7 @@ export class TppsComponent implements OnInit {
         this.infoService.openFeedback('TPP was successfully unblocked!', {
           severity: 'info',
         });
-        this.getTpps(
-          this.config.currentPageNumber,
-          this.config.itemsPerPage,
-          {}
-        );
+        this.getTpps(this.config.currentPageNumber, this.config.itemsPerPage, {});
       }
       this.getTpps(this.config.currentPageNumber, this.config.itemsPerPage, {});
     });
@@ -277,25 +251,20 @@ export class TppsComponent implements OnInit {
   }
 
   private getPageConfigs() {
-    this.route.queryParams
-      .pipe(map((params) => params.page))
-      .subscribe((param) => {
-        if (param) {
-          this.config.currentPageNumber = param;
-        } else {
-          this.config.currentPageNumber = 1;
-        }
-      });
+    this.route.queryParams.pipe(map((params) => params.page)).subscribe((param) => {
+      if (param) {
+        this.config.currentPageNumber = param;
+      } else {
+        this.config.currentPageNumber = 1;
+      }
+    });
   }
 
   resetPasswordViaEmail(login: string) {
     this.tppUserService.resetPasswordViaEmail(login).subscribe(() => {
-      this.infoService.openFeedback(
-        'Link for password reset was sent, check email.',
-        {
-          severity: 'info',
-        }
-      );
+      this.infoService.openFeedback('Link for password reset was sent, check email.', {
+        severity: 'info',
+      });
     });
   }
 }

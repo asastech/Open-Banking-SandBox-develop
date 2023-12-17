@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -45,7 +45,7 @@ export class CustomizeService {
   }
 
   public getJSON(): Observable<Theme> {
-    return this.http.get('../assets/UI/defaultTheme.json').pipe(
+    return this.http.get('../assets/UI/custom/UITheme.json').pipe(
       map((data) => {
         let theme = data;
         this.IS_CUSTOM = true;

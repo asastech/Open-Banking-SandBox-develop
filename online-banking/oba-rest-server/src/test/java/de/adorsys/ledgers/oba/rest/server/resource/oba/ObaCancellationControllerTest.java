@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -176,6 +176,6 @@ class ObaCancellationControllerTest {
     }
 
     private ScaUserDataTO getScaMethod() {
-        return new ScaUserDataTO(METHOD_ID, ScaMethodTypeTO.EMAIL, "anton.brueckner@adorsys.de", null, false, null, false, false);
+        return new ScaUserDataTO(METHOD_ID, ScaMethodTypeTO.SMTP_OTP, "anton.brueckner@adorsys.de", null, false, null, false, false);
     }
 }

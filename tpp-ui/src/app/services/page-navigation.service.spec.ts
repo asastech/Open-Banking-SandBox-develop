@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -22,25 +22,23 @@ import { PageNavigationService } from './page-navigation.service';
 
 describe('PageNavigationService', () => {
   let service: PageNavigationService;
-  let storage = {};
-  let pageLink = 'link';
+  const storage = {};
+  const pageLink = 'link';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [PageNavigationService],
     });
 
-    service = TestBed.get(PageNavigationService);
+    service = TestBed.inject(PageNavigationService);
 
     spyOn(sessionStorage, 'getItem').and.callFake((key: string): string => {
       return storage[key] || null;
     });
 
-    spyOn(sessionStorage, 'setItem').and.callFake(
-      (key: string, value: string): string => {
-        return (storage[key] = value as string);
-      }
-    );
+    spyOn(sessionStorage, 'setItem').and.callFake((key: string, value: string): string => {
+      return (storage[key] = value as string);
+    });
   });
 
   it('should be created', () => {

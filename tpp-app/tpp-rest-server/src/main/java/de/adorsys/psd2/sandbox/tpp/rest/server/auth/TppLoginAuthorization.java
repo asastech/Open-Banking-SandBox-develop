@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,12 +23,10 @@ import de.adorsys.ledgers.middleware.api.domain.um.UserRoleTO;
 import de.adorsys.psd2.sandbox.auth.LoginAuthorization;
 import org.springframework.stereotype.Component;
 
-import java.util.EnumSet;
-
 @Component
 public class TppLoginAuthorization implements LoginAuthorization {
     @Override
     public boolean canLogin(BearerTokenTO bearerTokenTO) {
-        return EnumSet.of(UserRoleTO.SYSTEM, UserRoleTO.STAFF).contains(bearerTokenTO.getAccessTokenObject().getRole());
+        return bearerTokenTO.getAccessTokenObject().getRole() == UserRoleTO.STAFF;
     }
 }

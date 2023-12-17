@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,6 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
 import { User } from '../../models/user.model';
 import { TppUserService } from '../../services/tpp.user.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,16 +28,12 @@ import { AccountAccess } from '../../models/account-access.model';
 import { InfoService } from '../../commons/info/info.service';
 import { ResetLedgersService } from '../../services/reset-ledgers.service';
 import { RecoveryPoint } from '../../models/recovery-point.models';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { ADMIN_KEY } from '../../commons/constant/constant';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../modal/modal.component';
 import { Select, Store } from '@ngxs/store';
-import {
-  DeleteRecoveryPoint,
-  GetRecoveryPoint,
-  RollbackRecoveryPoint,
-} from '../actions/revertpoints.action';
+import { DeleteRecoveryPoint, GetRecoveryPoint } from '../actions/revertpoints.action';
 import { Observable } from 'rxjs';
 import { RecoveryPointState } from '../../state/recoverypoints.state';
 import { AuthService } from '../../services/auth.service';
@@ -52,22 +47,15 @@ import { TooltipPosition } from '@angular/material/tooltip';
 export class UserProfileComponent implements OnInit {
   @Select(RecoveryPointState.getRecoveryPointsList)
   ngxsrecoveryPoint: Observable<RecoveryPoint[]>;
-  public userForm: FormGroup;
+  public userForm: UntypedFormGroup;
   public bsModalRef: BsModalRef;
   admin;
   tppUser: User;
   countries;
   userAmount = 0;
   private newPin = 'pin';
-  positionOptions: TooltipPosition[] = [
-    'above',
-    'before',
-    'after',
-    'below',
-    'left',
-    'right',
-  ];
-  position = new FormControl(this.positionOptions[0]);
+  positionOptions: TooltipPosition[] = ['above', 'before', 'after', 'below', 'left', 'right'];
+  position = new UntypedFormControl(this.positionOptions[0]);
 
   constructor(
     public pageNavigationService: PageNavigationService,
@@ -86,7 +74,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.admin = sessionStorage.getItem(ADMIN_KEY);
-    if (this.admin === false) {
+    if (this.admin === 'false') {
       this.store.dispatch(new GetRecoveryPoint());
     }
     this.setUpCountries();
@@ -124,18 +112,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   openConfirmation(content, type: string) {
-    this.modalService.open(content).result.then(
-      () => {
-        if (type === 'block') {
-          this.blockTpp();
-        } else if (type === 'delete') {
-          this.delete();
-        } else {
-          this.changePin();
-        }
-      },
-      () => {}
-    );
+    this.modalService.open(content).result.then(() => {
+      if (type === 'block') {
+        this.blockTpp();
+      } else if (type === 'delete') {
+        this.delete();
+      } else {
+        this.changePin();
+      }
+    });
   }
 
   private blockTpp() {
@@ -157,9 +142,7 @@ export class UserProfileComponent implements OnInit {
     } else {
       this.tppService.deleteSelf().subscribe(() => {
         sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem(
-          this.pageNavigationService.getLastVisitedPage()
-        );
+        sessionStorage.removeItem(this.pageNavigationService.getLastVisitedPage());
         this.authService.logout();
         this.router.navigateByUrl('/login');
       });
@@ -182,7 +165,7 @@ export class UserProfileComponent implements OnInit {
         .getUsersForTpp(tppId)
         .toPromise()
         .then((users) => {
-          let userSet = new Set<string>();
+          const userSet = new Set<string>();
           users.forEach((value) => {
             userSet.add(value.id);
           });
@@ -224,12 +207,9 @@ export class UserProfileComponent implements OnInit {
 
   resetPasswordViaEmail(login: string) {
     this.userInfoService.resetPasswordViaEmail(login).subscribe(() => {
-      this.infoService.openFeedback(
-        'Link for password reset was sent, check email.',
-        {
-          severity: 'info',
-        }
-      );
+      this.infoService.openFeedback('Link for password reset was sent, check email.', {
+        severity: 'info',
+      });
     });
   }
   handleBackNavigation() {

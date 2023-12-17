@@ -3,7 +3,7 @@
 <div class="row">
 <div class="col-2"></div>
 <div class="col-4">
-<h1>Developer Portal <br/> by adorsys <br/></h1><br/><h2> Creating new, digital <br/> services through Open <br/> Banking</h2>
+<h1>Developer Portal <br/> by AsasTech <br/></h1><br/><h2> Creating new, digital <br/> services through Open <br/> Banking</h2>
 </div>
 <div class="col-5">
     <div class="text-center">

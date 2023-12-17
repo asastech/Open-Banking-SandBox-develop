@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -42,18 +42,21 @@ export class GlobalErrorsHandler implements ErrorHandler {
 
     if (errorObj instanceof HttpErrorResponse) {
       this.zone.run(() => {
-        let error = errorObj.error;
-        let errorMessage = error ? error.message : error.statusText;
+        const error = errorObj.error;
+        const errorMessage = error ? error.message : error.statusText;
         this.infoService.openFeedback(errorMessage, {
           severity: 'error',
         });
       });
     } else {
       this.zone.run(() => {
-        let errorMessage = errorObj.message;
-        this.infoService.openFeedback(errorMessage, {
-          severity: 'info',
-        });
+        const errorMessage = errorObj.message;
+        // TODO: next line ignore the error if it's beacause of unresolved promise. It should be removed when the issue #1145 is fixed
+        if (!errorMessage.includes('Uncaught (in promise)')) {
+          this.infoService.openFeedback(errorMessage, {
+            severity: 'info',
+          });
+        }
       });
     }
   }

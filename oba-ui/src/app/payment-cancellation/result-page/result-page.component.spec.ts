@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,14 +23,11 @@ import { PisService } from '../../common/services/pis.service';
 import { SettingsService } from '../../common/services/settings.service';
 import { ResultPageComponent } from './result-page.component';
 import { PaymentAuthorizeResponse } from '../../api/models/payment-authorize-response';
-import { of } from 'rxjs';
 
 describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
   let fixture: ComponentFixture<ResultPageComponent>;
   let shareDataService: ShareDataService;
-  let pisService: PisService;
-  let settingsService: SettingsService;
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -45,8 +42,6 @@ describe('ResultPageComponent', () => {
     fixture = TestBed.createComponent(ResultPageComponent);
     component = fixture.componentInstance;
     shareDataService = TestBed.inject(ShareDataService);
-    settingsService = TestBed.inject(SettingsService);
-    pisService = TestBed.inject(PisService);
     fixture.detectChanges();
   });
 
@@ -63,7 +58,7 @@ describe('ResultPageComponent', () => {
     const mockPaymentAuthorization: PaymentAuthorizeResponse = {
       scaStatus: 'received',
     };
-    shareDataService.currentData = of(mockPaymentAuthorization);
+    shareDataService.changePaymentData(mockPaymentAuthorization);
     component.authResponse = mockResponse;
     component.ngOnInit();
     expect(component.scaStatus).toEqual(mockPaymentAuthorization.scaStatus);

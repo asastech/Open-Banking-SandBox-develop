@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,6 @@
  * contact us at psd2@adorsys.com.
  */
 
-/* tslint:disable */
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -63,11 +62,11 @@ class OnlineBankingConsentsService extends __BaseService {
   confirmUsingGETResponse(
     params: OnlineBankingConsentsService.ConfirmUsingGETParams
   ): __Observable<__StrictHttpResponse<null>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __params = this.newParams();
+    const __headers = new HttpHeaders();
+    const __body: any = null;
 
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'GET',
       this.rootUrl +
         `/api/v1/consents/confirm/${params.userLogin}/${params.consentId}/${params.authorizationId}/${params.tan}`,
@@ -112,11 +111,11 @@ class OnlineBankingConsentsService extends __BaseService {
   revokeConsentUsingPUTResponse(
     consentId: string
   ): __Observable<__StrictHttpResponse<boolean>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __params = this.newParams();
+    const __headers = new HttpHeaders();
+    const __body: any = null;
 
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/api/v1/consents/${consentId}`,
       __body,
@@ -164,15 +163,26 @@ class OnlineBankingConsentsService extends __BaseService {
     params: OnlineBankingConsentsService.PagedUsingGetParams
   ): __Observable<__StrictHttpResponse<Array<ObaAisConsent>>> {
     let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __headers = new HttpHeaders();
+    const __body: any = null;
+
+    // todo as an option for replace below strings
+    // const param = ['size', 'page'];
+    // for(let i=0; i< param.length; i++) {
+    //   if(params[param[i]] != null) {
+    //     __params = __params.set(param[i], params[param[i]].toString())
+    //   }
+    // }
 
     if (params.size != null)
       __params = __params.set('size', params.size.toString());
     if (params.page != null)
       __params = __params.set('page', params.page.toString());
 
-    let req = new HttpRequest<any>(
+    // todo as an option for replace below strings
+    // return this.http.get(this.rootUrl + `/api/v1/consents/${userLogin}/paged`, __body)
+
+    const req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/api/v1/consents/${userLogin}/paged`,
       __body,
@@ -192,7 +202,7 @@ class OnlineBankingConsentsService extends __BaseService {
   }
 }
 
-module OnlineBankingConsentsService {
+namespace OnlineBankingConsentsService {
   /**
    * Parameters for confirmUsingGET
    */

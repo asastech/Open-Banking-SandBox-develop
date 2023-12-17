@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -18,14 +18,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RecoveryPoint } from '../../models/recovery-point.models';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { ResetLedgersService } from '../../services/reset-ledgers.service';
 import { InfoService } from '../../commons/info/info.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import {
-  AddRecoveryPoint,
-  GetRecoveryPoint,
-} from '../actions/revertpoints.action';
+import { AddRecoveryPoint, GetRecoveryPoint } from '../actions/revertpoints.action';
 import { Select, Store } from '@ngxs/store';
 import { RecoveryPointState } from '../../state/recoverypoints.state';
 import { Observable } from 'rxjs';
@@ -41,14 +38,14 @@ export class ModalComponent implements OnInit {
   public title: string;
   public list: Array<string>;
   public closeBtnName: string;
-  public userForm: FormGroup;
+  public userForm: UntypedFormGroup;
 
   constructor(
     public modal: BsModalService,
     private ledgersService: ResetLedgersService,
     private infoService: InfoService,
     private store: Store,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private _bsModalRef: BsModalRef
   ) {}
 
@@ -73,9 +70,7 @@ export class ModalComponent implements OnInit {
       rollBackTime: '',
       branchId: '',
     };
-    this.store
-      .dispatch(new AddRecoveryPoint(createRecoveryPoint))
-      .subscribe(() => this.getRecoveryPoints());
+    this.store.dispatch(new AddRecoveryPoint(createRecoveryPoint)).subscribe(() => this.getRecoveryPoints());
     this.infoService.openFeedback('State successfully created');
     this.close();
   }

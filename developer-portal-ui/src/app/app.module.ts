@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -52,6 +52,11 @@ import { UrlLoadService } from './services/url-load.service';
 import { UrlService } from './services/url.service';
 import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 export function app_Init(settingsHttpService: SettingsHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -101,6 +106,11 @@ export function url_Init(urlLoadService: UrlLoadService) {
       sanitize: SecurityContext.NONE,
     }),
     MatSnackBarModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule,
   ],
   exports: [],
   providers: [

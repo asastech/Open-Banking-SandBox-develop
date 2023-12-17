@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -15,19 +15,56 @@
  * This project is also available under a separate commercial license. You can
  * contact us at psd2@adorsys.com.
  */
+/* eslint-disable @typescript-eslint/no-empty-function */
 
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { PisService } from './pis.service';
 import { PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService } from '../../api/services/psupisprovides-access-to-online-banking-payment-functionality.service';
 import PisAuthUsingGETParams = PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.PisAuthUsingGETParams;
 import LoginUsingPOST3Params = PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.LoginUsingPOST3Params;
 import { PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService } from '../../api/services/psupiscancellation-provides-access-to-online-banking-payment-functionality.service';
+
 import AuthorisePaymentUsingPOSTParams = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.AuthorisePaymentUsingPOSTParams;
 import PisDoneUsingGET1Params = PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.PisDoneUsingGET1Params;
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService } from './auth.service';
+import { InfoService } from '../info/info.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoginComponent } from '../../ais/login/login.component';
+import { of } from 'rxjs';
 
 describe('PisService', () => {
   let pisService: PisService;
   let pisServicePSU: PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService;
+  const mockRouter = {
+    navigate: () => {},
+  };
+
+  const mockActivatedRoute = {
+    params: of({
+      id: '12345',
+      redirectId: 'asdfa',
+      encryptedConsentId: '23948',
+    }),
+    queryParams: of({ redirectId: 'asdfa', encryptedConsentId: '23948' }),
+  };
+
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule],
+        providers: [
+          AuthService,
+          InfoService,
+          { provide: Router, useValue: mockRouter },
+          { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        ],
+
+        declarations: [LoginComponent],
+      }).compileComponents();
+    })
+  );
+
   beforeEach(() => {
     pisService = TestBed.inject(PisService);
     pisServicePSU = TestBed.inject(

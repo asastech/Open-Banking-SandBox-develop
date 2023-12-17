@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -33,7 +33,6 @@ import { ConvertBalancePipe } from '../../../pipes/convertBalance.pipe';
 describe('AccountDetailsComponent', () => {
   let component: AccountDetailsComponent;
   let fixture: ComponentFixture<AccountDetailsComponent>;
-  let authService: AuthService;
   let onlineBankingService: OnlineBankingService;
 
   beforeEach(
@@ -55,7 +54,6 @@ describe('AccountDetailsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountDetailsComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
     onlineBankingService = TestBed.inject(OnlineBankingService);
     fixture.detectChanges();
   });
@@ -102,12 +100,6 @@ describe('AccountDetailsComponent', () => {
   });
 
   it('should change the page', () => {
-    const config = {
-      itemsPerPage: 10,
-      currentPage: 1,
-      totalItems: 0,
-      maxSize: 7,
-    };
     const transactionsSpy = spyOn(component, 'getTransactions');
     component.pageChange(10);
     expect(transactionsSpy).toHaveBeenCalledWith(10, 10);

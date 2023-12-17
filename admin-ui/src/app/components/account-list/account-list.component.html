@@ -1,0 +1,326 @@
+<!--
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container-fluid" [formGroup]="searchForm">
+  <div class="row header">
+    <div class="col-12 col-md-3 header__title">Accounts</div>
+    <div class="col-12 col-md-12 mt-3">
+      <div class="row">
+        <div class="col-sm">
+          <div class="me-2">
+            <div class="mb-3 has-search">
+              <label>IBAN:</label>
+              <span class="form-control-feedback">
+                <img src="./assets/icons/search.svg" alt="search logo" />
+              </span>
+              <input
+                class="form-control w-100"
+                placeholder="Search by IBAN"
+                formControlName="ibanParam"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-sm me-2">
+          <div class="mb-3 has-search">
+            <label>TPP ID:</label>
+            <span class="form-control-feedback">
+              <img src="./assets/icons/search.svg" alt="search logo" />
+            </span>
+            <input
+              class="form-control w-100"
+              placeholder="Search by TPP ID"
+              formControlName="tppId"
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="select me-2">
+            <label for="country">Country:</label>
+            <select
+              name="country"
+              class="form-control"
+              formControlName="country"
+              id="country"
+            >
+              <option id="emptySelect" [ngValue]="" selected></option>
+              <option
+                *ngFor="let country of countries"
+                [ngValue]="country.code"
+              >
+                {{ country.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm">
+          <label for="filter">Filter: </label>
+          <select
+            name="filter"
+            class="form-control"
+            formControlName="filter"
+            (change)="onChangeFilterSelection()"
+            id="filter"
+          >
+            <option selected>No Filters</option>
+            <option>Active</option>
+            <option>Blocked</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <div class="container-fluid configs-container">
+          <div class="d-flex justify-cosntent-between configs fixed-width">
+            <div class="paginator">
+              <app-pagination-container
+                [paginationConfig]="config"
+                (pageDataConfig)="pageChange($event)"
+              ></app-pagination-container>
+            </div>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">IBAN</th>
+              <th scope="col">Balance</th>
+              <th scope="col">Currency</th>
+              <th scope="col">TPP ID</th>
+              <th scope="col">Account Type</th>
+              <th scope="col">Usage Type</th>
+              <th scope="col">Account Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="accounts && accounts.length > 0">
+            <tr
+              *ngFor="let account of accounts; index as i"
+              [ngClass]="{ 'disabled-text': account.blocked }"
+            >
+              <th
+                scope="row"
+                [routerLink]="[createAccountDetailsLink(account.id)]"
+              >
+                {{
+                  (config.currentPageNumber - 1) * config.itemsPerPage + i + 1
+                }}
+              </th>
+              <td
+                [routerLink]="[createAccountDetailsLink(account.id)]"
+                [queryParams]="{
+                  page: config.currentPageNumber,
+                  tppId: account.branch
+                }"
+              >
+                {{ account.iban }}
+              </td>
+
+              <td
+                [routerLink]="[createAccountDetailsLink(account.id)]"
+                [queryParams]="{
+                  page: config.currentPageNumber,
+                  tppId: account.branch
+                }"
+              >
+                {{
+                  account.balances && account.balances?.length >= 0
+                    ? account.balances[0].amount?.amount
+                    : ""
+                }}
+              </td>
+
+              <td
+                [routerLink]="[createAccountDetailsLink(account.id)]"
+                [queryParams]="{
+                  page: config.currentPageNumber,
+                  tppId: account.branch
+                }"
+              >
+                {{ account.currency }}
+              </td>
+              <td>
+                <a
+                  [routerLink]="[createLastVisitedPageLink(account.branch)]"
+                  [queryParams]="{ page: config.currentPageNumber }"
+                  [ngClass]="{ 'disabled-text': account.blocked }"
+                  >{{ account.branch }}
+                </a>
+              </td>
+              <td [routerLink]="[createAccountDetailsLink(account.id)]">
+                {{ account.accountType }}
+              </td>
+              <td [routerLink]="[createAccountDetailsLink(account.id)]">
+                {{ account.usageType }}
+              </td>
+              <td [routerLink]="[createAccountDetailsLink(account.id)]">
+                {{ account.blocked ? "Blocked" : "Active" }}
+              </td>
+              <td class="action d-flex">
+                <button
+                  aria-label="Deposit Cash"
+                  mat-fab
+                  matTooltip="Deposit Cash"
+                  title="Deposit Cash"
+                  [matTooltipPosition]="position.value"
+                  *ngIf="!account.blocked"
+                  class="btn btn-table-btn me-2"
+                  [disabled]="!isAccountEnabled(account)"
+                  (click)="goToDepositCash(account)"
+                >
+                  <mat-icon>account_balance</mat-icon>
+                </button>
+
+                <button
+                  mat-fab
+                  [matTooltip]="
+                    !account.blocked
+                      ? 'Block the account'
+                      : 'Unblock the account'
+                  "
+                  [title]="
+                    !account.blocked
+                      ? 'Block the account'
+                      : 'Unblock the account'
+                  "
+                  [matTooltipPosition]="position.value"
+                  aria-label="Block the account"
+                  class="btn btn-table-btn me-2"
+                  (click)="
+                    openConfirmation(
+                      blockConfirmation,
+                      account.id,
+                      account.blocked ? 'block' : 'unblock'
+                    )
+                  "
+                >
+                  <mat-icon *ngIf="!account.blocked">lock</mat-icon>
+                  <mat-icon *ngIf="account.blocked">lock_open</mat-icon>
+                </button>
+
+                <ng-template #deleteConfirmationModal let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">
+                      Account deletion
+                    </h4>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      aria-label="Close"
+                      (click)="modal.dismiss('Cross click')"
+                    >
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to delete this Account?
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary me-2"
+                      (click)="modal.dismiss('cancel click')"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      (click)="modal.close('Ok click')"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </ng-template>
+                <ng-template #blockConfirmation let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title-1">
+                      Account {{ account.blocked ? "unblocking" : "blocking" }}
+                    </h4>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      aria-label="Close"
+                      (click)="modal.dismiss('Cross click')"
+                    >
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to
+                    {{ account.blocked ? "Unblock" : "Block" }} this Account?
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary me-2"
+                      (click)="modal.dismiss('cancel click')"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      (click)="modal.close('Ok click')"
+                    >
+                      {{ account.blocked ? "Unblock" : "Block" }}
+                    </button>
+                  </div>
+                </ng-template>
+                <button
+                  mat-fab
+                  matTooltip="Delete the account"
+                  title="Delete the account"
+                  [matTooltipPosition]="position.value"
+                  aria-label="Delete the account"
+                  class="btn btn-outline-danger me-2"
+                  (click)="
+                    openConfirmation(
+                      deleteConfirmationModal,
+                      account.id,
+                      'delete'
+                    )
+                  "
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="accounts && accounts.length > 1" class="text-center fw-bold">
+          No suitable user account available
+        </p>
+
+        <div class="container-fluid">
+          <div class="d-flex justify-content-start">
+            <app-pagination-container
+              [paginationConfig]="config"
+              (pageDataConfig)="pageChange($event)"
+            ></app-pagination-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

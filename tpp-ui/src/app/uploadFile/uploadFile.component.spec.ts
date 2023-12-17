@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -30,42 +30,30 @@ import { SpinnerVisibilityService } from 'ng-http-loader';
 import { InfoModule } from '../commons/info/info.module';
 import { environment } from '../../environments/environment';
 import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UploadFileComponent', () => {
   let component: UploadFileComponent;
   let fixture: ComponentFixture<UploadFileComponent>;
   let infoService: InfoService;
   let testDataGenerationService: TestDataGenerationService;
-  let spinnerService: SpinnerVisibilityService;
 
-  let url = `${environment.tppBackend}`;
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          FileUploadModule,
-          RouterTestingModule,
-          HttpClientModule,
-          InfoModule,
-          IconModule,
-        ],
-        declarations: [UploadFileComponent, DocumentUploadComponent],
-        providers: [
-          InfoService,
-          SpinnerVisibilityService,
-          TestDataGenerationService,
-        ],
-      }).compileComponents();
-    })
-  );
+  const url = `${environment.tppBackend}`;
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FileUploadModule, RouterTestingModule, HttpClientModule, InfoModule, IconModule],
+      declarations: [UploadFileComponent, DocumentUploadComponent],
+      providers: [InfoService, SpinnerVisibilityService, TestDataGenerationService],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UploadFileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    infoService = TestBed.get(InfoService);
-    testDataGenerationService = TestBed.get(TestDataGenerationService);
-    spinnerService = TestBed.get(SpinnerVisibilityService);
+    infoService = TestBed.inject(InfoService);
+    testDataGenerationService = TestBed.inject(TestDataGenerationService);
   });
 
   it('should create', () => {
@@ -73,7 +61,7 @@ describe('UploadFileComponent', () => {
   });
 
   it('should load the ngOninit', () => {
-    let mockUploadConfig: UploadOptions[] = [
+    const mockUploadConfig: UploadOptions[] = [
       {
         exampleFileName: 'Users-Accounts-Balances-Payments-Example.yml',
         title: 'Upload Users/Accounts/Balances/Payments',
@@ -83,7 +71,7 @@ describe('UploadFileComponent', () => {
       },
       {
         exampleFileName: 'Consents-Example.yml',
-        title: 'Upload Consents',
+        title: 'Upload AIS Consents',
         method: 'PUT',
         url: url + '/consent',
         exampleFileUrl: '/consent/example',
@@ -101,21 +89,16 @@ describe('UploadFileComponent', () => {
   });
 
   it('should generate the file Example', () => {
-    let mockUploadConfig: UploadOptions = {
+    const mockUploadConfig: UploadOptions = {
       exampleFileName: 'Users-Accounts-Balances-Payments-Example.yml',
       title: 'Upload Users/Accounts/Balances/Payments',
       method: 'PUT',
       url: url + '/data/upload',
       exampleFileUrl: '/accounts/example',
     };
-    let generateSpy = spyOn(
-      testDataGenerationService,
-      'generateExampleTestData'
-    ).and.returnValue(of(mockUploadConfig.exampleFileUrl));
-    let infoSpy = spyOn(infoService, 'openFeedback');
+    spyOn(testDataGenerationService, 'generateExampleTestData').and.returnValue(of(mockUploadConfig.exampleFileUrl));
+    const infoSpy = spyOn(infoService, 'openFeedback');
     component.generateFileExample(mockUploadConfig);
-    expect(infoSpy).toHaveBeenCalledWith(
-      'Test data has been successfully generated.'
-    );
+    expect(infoSpy).toHaveBeenCalledWith('Test data has been successfully generated.');
   });
 });

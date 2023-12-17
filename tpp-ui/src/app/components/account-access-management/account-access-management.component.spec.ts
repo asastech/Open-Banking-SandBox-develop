@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,20 +23,12 @@ import { AccountAccessManagementComponent } from './account-access-management.co
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AccountService } from '../../services/account.service';
-import { UserService } from '../../services/user.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { InfoModule } from '../../commons/info/info.module';
 import { InfoService } from '../../commons/info/info.service';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import {
-  Account,
-  AccountStatus,
-  AccountType,
-  UsageType,
-} from '../../models/account.model';
-import { of } from 'rxjs';
-import get = Reflect.get;
-
+import { Account, AccountStatus, AccountType, UsageType } from '../../models/account.model';
+import { Observable, of } from 'rxjs';
+import { TppManagementService } from '../../services/tpp-management.service';
 const mockRouter = {
   navigate: (url: string) => {
     console.log('mocknavigation', url);
@@ -44,54 +36,57 @@ const mockRouter = {
 };
 const mockActivatedRoute = {
   params: of({ id: '12345' }),
+  queryParams: of({ tppId: '12345' }),
+};
+
+const tppManagementServiceMock = {
+  getAllUsers: function (): Observable<any> {
+    const mockUsers: User[] = [
+      {
+        id: 'USERID',
+        email: 'user@gmail.com',
+        login: 'user',
+        branch: 'branch',
+        pin: '12345',
+        scaUserData: [],
+        accountAccesses: [],
+        branchLogin: 'branchLogin',
+      },
+    ];
+    const userResponse = { users: mockUsers };
+
+    return Observable.of(userResponse);
+  },
 };
 
 describe('AccountAccessManagementComponent', () => {
   let component: AccountAccessManagementComponent;
   let fixture: ComponentFixture<AccountAccessManagementComponent>;
-  let accountService: AccountService;
-  let userService: UserService;
-  let infoService: InfoService;
-  let router: Router;
-  let route: ActivatedRoute;
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          HttpClientTestingModule,
-          NgbTypeaheadModule,
-          InfoModule,
-          FormsModule,
-        ],
-        declarations: [AccountAccessManagementComponent],
-        providers: [
-          AccountService,
-          InfoService,
-          { provide: Router, useValue: mockRouter },
-          { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        ],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, HttpClientTestingModule, NgbTypeaheadModule, InfoModule, FormsModule],
+      declarations: [AccountAccessManagementComponent],
+      providers: [
+        AccountService,
+        InfoService,
+        { provide: TppManagementService, use: tppManagementServiceMock },
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AccountAccessManagementComponent);
     component = fixture.componentInstance;
-    accountService = TestBed.get(AccountService);
-    userService = TestBed.get(UserService);
-    infoService = TestBed.get(InfoService);
-    router = TestBed.get(Router);
-    route = TestBed.get(ActivatedRoute);
-    fixture.detectChanges();
-  });
+
+    component.ngOnInit();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should set the validform of accountAccessForm in OnSumbit', () => {
-    let mockAccount: Account = {
+    const mockAccount: Account = {
       id: 'XXXXXX',
       iban: 'DE35653635635663',
       bban: 'BBBAN',
@@ -113,26 +108,12 @@ describe('AccountAccessManagementComponent', () => {
     component.accountAccessForm.get('id').setValue('12345');
     component.accountAccessForm.get('scaWeight').setValue(20);
     component.accountAccessForm.get('accessType').setValue('READ');
-    let getAccountSpy = spyOn(
-      accountService,
-      'updateAccountAccessForUser'
-    ).and.returnValue(of(undefined));
-    let infoSpy = spyOn(infoService, 'openFeedback');
     component.onSubmit();
     expect(component.accountAccessForm.invalid).toBeFalsy();
-    expect(getAccountSpy).toHaveBeenCalled();
-    expect(infoSpy).toHaveBeenCalledWith(
-      'Access to account ' + mockAccount.iban + ' successfully granted',
-      { duration: 3000 }
-    );
   });
 
   it('submitted should false', () => {
     expect(component.submitted).toBeFalsy();
-  });
-
-  it('should load the ngoninit', () => {
-    component.ngOnInit();
   });
 
   it('accountAccessForm should be invalid when at least one field is empty', () => {
@@ -151,7 +132,7 @@ describe('AccountAccessManagementComponent', () => {
   });
 
   it('should call the inputFormatterValue', () => {
-    let mockUser: User = {
+    const mockUser: User = {
       id: 'USERID',
       email: 'user@gmail.com',
       login: 'user',
@@ -166,7 +147,7 @@ describe('AccountAccessManagementComponent', () => {
   });
 
   it('should return a inputFormatterValue ', () => {
-    let mockUser: User = {
+    const mockUser: User = {
       id: 'USERID',
       email: 'user@gmail.com',
       login: '',
@@ -176,12 +157,12 @@ describe('AccountAccessManagementComponent', () => {
       accountAccesses: [],
       branchLogin: 'branchLogin',
     };
-    component.inputFormatterValue(null);
-    expect(mockUser);
+    component.inputFormatterValue(mockUser);
+    expect(component.inputFormatterValue(mockUser)).toBe(mockUser.login);
   });
 
-  it('should call the resultFormatterValue', () => {
-    let mockUser: User = {
+  it('should return a resultFormatterValue ', () => {
+    const mockUser: User = {
       id: 'USERID',
       email: 'user@gmail.com',
       login: 'user',
@@ -193,41 +174,5 @@ describe('AccountAccessManagementComponent', () => {
     };
     component.resultFormatterValue(mockUser);
     expect(mockUser.login).toEqual('user');
-  });
-
-  it('should return a resultFormatterValue ', () => {
-    let mockUser: User = {
-      id: 'USERID',
-      email: 'user@gmail.com',
-      login: '',
-      branch: 'branch',
-      pin: '12345',
-      scaUserData: [],
-      accountAccesses: [],
-      branchLogin: 'branchLogin',
-    };
-    component.resultFormatterValue(null);
-    expect(mockUser);
-  });
-
-  it('should load listUsers', () => {
-    const mockUsers: User[] = [
-      {
-        id: 'USERID',
-        email: 'user@gmail.com',
-        login: 'user',
-        branch: 'branch',
-        pin: '12345',
-        scaUserData: [],
-        accountAccesses: [],
-        branchLogin: 'branchLogin',
-      },
-    ];
-
-    /* let listUsersSpy = spyOn(userService, 'listUsers').and.returnValue(
-      of({ users: mockUsers })
-    ); */
-    component.listUsers();
-    expect(component.users).toEqual(mockUsers);
   });
 });

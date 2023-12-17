@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PaymentAuthorizeResponse } from '../../api/models/payment-authorize-response';
@@ -31,7 +31,7 @@ import { AuthService } from '../../common/services/auth.service';
   templateUrl: './result-page.component.html',
   styleUrls: ['./result-page.component.scss'],
 })
-export class ResultPageComponent implements OnInit, OnDestroy {
+export class ResultPageComponent implements OnInit {
   public authResponse: PaymentAuthorizeResponse;
   public scaStatus: string;
   public pisDoneRequest: PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.PisDoneUsingGET1Params;
@@ -55,16 +55,16 @@ export class ResultPageComponent implements OnInit, OnDestroy {
 
     // Manual redirect is used because of the CORS error otherwise
     this.route.queryParams.subscribe((params) => {
-      let oauth2 = params.oauth2;
+      let valueOauth2 = params.oauth2;
 
-      if (oauth2 === undefined || oauth2 !== 'true') {
-        oauth2 = false;
+      if (valueOauth2 === undefined || valueOauth2 !== 'true') {
+        valueOauth2 = false;
       }
 
       this.pisDoneRequest = {
         encryptedPaymentId: params.encryptedConsentId,
         authorisationId: params.authorisationId,
-        oauth2: oauth2,
+        oauth2: valueOauth2,
         authConfirmationCode: null,
       };
     });
@@ -105,6 +105,4 @@ export class ResultPageComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  ngOnDestroy(): void {}
 }

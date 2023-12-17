@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -110,6 +110,55 @@ export class HomeComponent implements OnInit, AfterViewInit {
       isToday: false,
       orderNumber: 4,
     },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_6.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_6.CONTENT',
+      date: 1573032533000,
+      isToday: false,
+      orderNumber: 5,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_7.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_7.CONTENT',
+      date: 1580981333000,
+      isToday: false,
+      orderNumber: 6,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_8.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_8.CONTENT',
+      date: 1604654933000,
+      isToday: false,
+      orderNumber: 7,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_9.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_9.CONTENT',
+      date: 1615022933000,
+      isToday: false,
+      orderNumber: 8,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_10.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_10.CONTENT',
+      date: 1630920533000,
+      isToday: false,
+      orderNumber: 9,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_11.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_11.CONTENT',
+      date: 1659778133000,
+      isToday: false,
+      orderNumber: 10,
+    },
+    {
+      title: 'HOME.HISTORY.PRODUCT.POINT_12.TITLE',
+      text: 'HOME.HISTORY.PRODUCT.POINT_12.CONTENT',
+      date: 1688635733000,
+      isToday: false,
+      orderNumber: 11,
+    }
   ];
 
   pathToFile = `./assets/content/i18n/en/home.md`;
@@ -167,7 +216,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   slider() {
     const images = document.querySelectorAll('#slider .slide');
     const buttons = document.querySelectorAll('.button-block button');
-    buttons[0]['style'].backgroundColor = '#D8D8D8';
+    buttons[0]['style'].backgroundColor = '#0a8f70';
     let currentImg = 0;
     let carouselIntervalId = null;
     // Show only first slide
@@ -175,7 +224,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < buttons.length; i++) {
       buttons[i].addEventListener('click', () => {
         buttons[currentImg]['style'].backgroundColor = null;
-        buttons[i]['style'].backgroundColor = '#D8D8D8';
+        buttons[i]['style'].backgroundColor = '#0a8f70';
         // Stop autoplay on button click
         clearInterval(carouselIntervalId);
         images[currentImg].classList.remove('show');
@@ -192,7 +241,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         currentImg = 0;
       }
       images[currentImg].classList.add('show');
-      buttons[currentImg]['style'].backgroundColor = '#D8D8D8';
+      buttons[currentImg]['style'].backgroundColor = '#0a8f70';
     }
 
     // Start autoplay

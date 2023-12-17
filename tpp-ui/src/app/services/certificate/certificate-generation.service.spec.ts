@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,13 +19,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { CertificateGenerationService } from './certificate-generation.service';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
-import { inject } from '@angular/core';
 
 describe('CertificateGenerationService', () => {
   let httpMock: HttpTestingController;
@@ -37,8 +33,8 @@ describe('CertificateGenerationService', () => {
       imports: [HttpClientModule, HttpClientTestingModule],
       providers: [CertificateGenerationService],
     });
-    httpMock = TestBed.get(HttpTestingController);
-    certGenerationService = TestBed.get(CertificateGenerationService);
+    httpMock = TestBed.inject(HttpTestingController);
+    certGenerationService = TestBed.inject(CertificateGenerationService);
   });
 
   it('should be created', () => {
@@ -46,7 +42,7 @@ describe('CertificateGenerationService', () => {
   });
 
   it('should load the generate', () => {
-    let mockCertData: any = {};
+    const mockCertData: any = {};
     certGenerationService.generate(mockCertData).subscribe((data: any) => {
       expect(data).toBe('');
     });

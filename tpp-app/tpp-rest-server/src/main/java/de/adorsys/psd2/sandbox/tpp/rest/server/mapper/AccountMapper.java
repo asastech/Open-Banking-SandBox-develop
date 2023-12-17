@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -27,12 +27,14 @@ import de.adorsys.psd2.sandbox.tpp.rest.api.domain.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.EnumSet;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "blocked", expression = "java(resolveBlockedStatus(depositAccount))")
     AccountDetailsTO toAccountDetailsTO(DepositAccount depositAccount);
 
     @Mapping(target = "id", ignore = true)
@@ -49,4 +51,8 @@ public interface AccountMapper {
     UserAccess toUserAccess(UserTO user);
 
     AccessType toAccessType(AccessTypeTO accessTypeTO);
+
+    default boolean resolveBlockedStatus(DepositAccount depositAccount) {
+        return EnumSet.of(AccountStatus.BLOCKED, AccountStatus.DELETED).contains(depositAccount.getAccountStatus());
+    }
 }

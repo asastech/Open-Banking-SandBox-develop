@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -36,9 +36,7 @@ export class TppUserService {
   constructor(private http: HttpClient) {}
 
   public getUserInfo() {
-    return this.http
-      .get<User>(`${this.url}/users/me`)
-      .pipe(tap((user) => this.tppUser.next(user)));
+    return this.http.get<User>(`${this.url}/users/me`).pipe(tap((user) => this.tppUser.next(user)));
   }
 
   public resetPasswordViaEmail(login: string): Observable<any> {
@@ -46,7 +44,7 @@ export class TppUserService {
   }
 
   public loadUserInfo(): void {
-    this.getUserInfo().subscribe(() => {});
+    this.getUserInfo().subscribe();
   }
 
   public updateUserInfo(user: User): Observable<any> {

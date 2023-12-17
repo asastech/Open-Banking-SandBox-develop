@@ -1,0 +1,43 @@
+<!--
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body--large">
+      <div class="header__title">
+        <mat-icon>account_circle</mat-icon>
+        User Details
+      </div>
+      <div class="row">
+        <div class="col-4 col-md-3">Login</div>
+        <div class="col-8 col-md-9 text-muted">{{ tppUser?.login }}</div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-3">Email</div>
+        <div class="col-12 col-md-9 text-muted">{{ tppUser?.email }}</div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-3">State</div>
+        <div class="col-12 col-md-9 text-muted">
+          {{ tppUser?.blocked ? "Blocked" : "Active" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

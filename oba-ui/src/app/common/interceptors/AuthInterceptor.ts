@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -61,6 +61,9 @@ export class AuthInterceptor implements HttpInterceptor {
           if (errors.status === 401 && this.authService.isLoggedIn()) {
             this.authService.logout();
           }
+        }
+        if (errors.status === 401 && errors.statusText?.match('Unauthorized')) {
+          errors.error.message = 'You have been logged out due to inactivity.';
         }
         return throwError(errors);
       })

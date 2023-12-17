@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -67,7 +67,7 @@ describe('AccinfTransactionGetComponent', () => {
   it('should be right headers', () => {
     const headers: object = {
       'X-Request-ID': '2f77a125-aa7a-45c0-b414-cea25a116035',
-      'Consent-ID': 'CONSENT_ID',
+      'Consent-ID': null,
       'PSU-IP-Address': '1.1.1.1',
     };
     expect(typeof component.headers).toBe('object');

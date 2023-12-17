@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -23,7 +23,7 @@
     <parent>
         <artifactId>tpp-db</artifactId>
         <groupId>de.adorsys.psd2.sandbox</groupId>
-        <version>5.15-SNAPSHOT</version>
+        <version>6.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -35,10 +35,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -57,7 +53,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>${liquibase-maven-plugin.version}</version>
 
                 <configuration>
                     <propertyFile>liquibase.properties</propertyFile>

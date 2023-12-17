@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,15 +16,22 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CountryService } from './country.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CountryService', () => {
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+    }).compileComponents();
+  }));
+
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CountryService = TestBed.get(CountryService);
+    const service: CountryService = TestBed.inject(CountryService);
     expect(service).toBeTruthy();
   });
 });

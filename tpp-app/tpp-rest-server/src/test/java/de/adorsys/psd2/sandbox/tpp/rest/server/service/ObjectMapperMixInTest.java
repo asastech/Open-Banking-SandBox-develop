@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -36,7 +36,7 @@ class ObjectMapperMixInTest {
     @Test
     void scaUserDataMixIn() throws JsonProcessingException, JSONException {
         // Given
-        String expected = "{\"id\":\"id\",\"login\":\"login\",\"email\":\"email\",\"pin\":\"pin\",\"scaUserData\":[{\"id\":\"id\",\"scaMethod\":\"EMAIL\",\"methodValue\":\"methodValue\",\"user\":null,\"usesStaticTan\":true,\"staticTan\":\"STATIC TAN\", \"decoupled\":false, \"valid\":false}],\"accountAccesses\":[],\"userRoles\":[],\"branch\":\"branch\",\"blocked\":false,\"systemBlocked\":false}";
+        String expected = "{\"id\":\"id\",\"login\":\"login\",\"email\":\"email\",\"pin\":\"pin\",\"scaUserData\":[{\"id\":\"id\",\"scaMethod\":\"SMTP_OTP\",\"methodValue\":\"methodValue\",\"user\":null,\"usesStaticTan\":true,\"staticTan\":\"STATIC TAN\", \"decoupled\":false, \"valid\":false}],\"accountAccesses\":[],\"userRoles\":[],\"branch\":\"branch\",\"blocked\":false,\"systemBlocked\":false}";
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.addMixIn(ScaUserDataTO.class, ScaUserDataMixedIn.class);
 
@@ -54,6 +54,6 @@ class ObjectMapperMixInTest {
     }
 
     private List<ScaUserDataTO> getScaUserData() {
-        return Collections.singletonList(new ScaUserDataTO("id", ScaMethodTypeTO.EMAIL, "methodValue", null, true, "STATIC TAN", false, false));
+        return Collections.singletonList(new ScaUserDataTO("id", ScaMethodTypeTO.SMTP_OTP, "methodValue", null, true, "STATIC TAN", false, false));
     }
 }

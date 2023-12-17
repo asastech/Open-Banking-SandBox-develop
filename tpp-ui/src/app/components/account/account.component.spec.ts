@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,16 +23,11 @@ import { of } from 'rxjs';
 import { IconModule } from '../../commons/icon/icon.module';
 import { InfoModule } from '../../commons/info/info.module';
 import { InfoService } from '../../commons/info/info.service';
-import {
-  AccountStatus,
-  AccountType,
-  UsageType,
-} from '../../models/account.model';
+import { AccountStatus, AccountType, UsageType } from '../../models/account.model';
 import { AccountService } from '../../services/account.service';
 import { AccountComponent } from './account.component';
 import { ConvertBalancePipe } from '../../pipes/convertBalance.pipe';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
 import { TppManagementService } from '../../services/tpp-management.service';
 
 describe('AccountComponent', () => {
@@ -41,38 +36,22 @@ describe('AccountComponent', () => {
   let accountService: AccountService;
   let infoService: InfoService;
   let tppService: TppManagementService;
-  let modalService: NgbModal;
-  let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          HttpClientTestingModule,
-          InfoModule,
-          IconModule,
-        ],
-        declarations: [AccountComponent, ConvertBalancePipe],
-        providers: [
-          AccountService,
-          NgbModal,
-          TppManagementService,
-          InfoService,
-        ],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule, HttpClientTestingModule, InfoModule, IconModule],
+      declarations: [AccountComponent, ConvertBalancePipe],
+      providers: [AccountService, NgbModal, TppManagementService, InfoService],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    infoService = TestBed.get(InfoService);
-    accountService = TestBed.get(AccountService);
-    router = TestBed.get(Router);
-    tppService = TestBed.get(TppManagementService);
-    modalService = TestBed.get(NgbModal);
+    infoService = TestBed.inject(InfoService);
+    accountService = TestBed.inject(AccountService);
+    tppService = TestBed.inject(TppManagementService);
   });
 
   it('should create', () => {
@@ -80,10 +59,7 @@ describe('AccountComponent', () => {
   });
 
   it('should call getAccountReport on ngOnInit', () => {
-    let getAccountSpy = spyOn(
-      accountService,
-      'getAccountReport'
-    ).and.callThrough();
+    const getAccountSpy = spyOn(accountService, 'getAccountReport').and.callThrough();
 
     component.ngOnInit();
 
@@ -120,10 +96,7 @@ describe('AccountComponent', () => {
       ],
       multilevelScaEnabled: false,
     };
-    const deleteSpy = spyOn(
-      tppService,
-      'deleteAccountTransactions'
-    ).and.returnValue(of({ id: component.accountReport.details.id }));
+    const deleteSpy = spyOn(tppService, 'deleteAccountTransactions').and.returnValue(of({ id: component.accountReport.details.id }));
     const infoServiceOpenFeedbackSpy = spyOn(infoService, 'openFeedback');
 
     component.deleteAccountTransactions();
@@ -168,12 +141,9 @@ describe('AccountComponent', () => {
     };
     const infoServiceOpenFeedbackSpy = spyOn(infoService, 'openFeedback');
     component.goToAccountDetail();
-    expect(
-      infoServiceOpenFeedbackSpy
-    ).toHaveBeenCalledWith(
-      'You can not Grant Accesses to a Deleted/Blocked account',
-      { severity: 'error' }
-    );
+    expect(infoServiceOpenFeedbackSpy).toHaveBeenCalledWith('You can not Grant Accesses to a Deleted/Blocked account', {
+      severity: 'error',
+    });
   });
 
   it('should check if account is deleted', () => {
@@ -206,11 +176,11 @@ describe('AccountComponent', () => {
       ],
       multilevelScaEnabled: false,
     };
-    component.isAccountDeleted;
+    expect(component.isAccountDeleted).toEqual(true);
   });
 
   it('should assign account-report after server call', () => {
-    let accountReport = {
+    const accountReport = {
       details: {
         branch: 'asdas',
         id: 'XXXXXX',
@@ -240,9 +210,7 @@ describe('AccountComponent', () => {
       multilevelScaEnabled: false,
     };
 
-    spyOn(accountService, 'getAccountReport').and.returnValue(
-      of(accountReport)
-    );
+    spyOn(accountService, 'getAccountReport').and.returnValue(of(accountReport));
     component.getAccountReport();
     expect(component.getAccountReport).not.toBeUndefined();
   });

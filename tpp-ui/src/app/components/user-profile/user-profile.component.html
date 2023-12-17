@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -21,8 +21,7 @@
     <div class="card-body--large">
       <div class="header__title">
         <mat-icon>account_circle</mat-icon>
-        {{ tppUser?.userRoles.includes('SYSTEM') ? 'Admin' : 'TPP' }} User
-        Details
+        {{ tppUser?.userRoles.includes('SYSTEM') ? 'Admin' : 'TPP' }} User Details
       </div>
       <div class="row">
         <div class="col-4 col-md-3">Login</div>
@@ -52,10 +51,7 @@
       <div class="row" *ngIf="admin && tppUser?.login !== 'admin'">
         <div class="col-12 col-md-3">Users</div>
         <div class="col-12 col-md-9 text-muted">
-          <a
-            [routerLink]="['/users/all']"
-            [queryParams]="{ tppId: tppUser?.id }"
-          >
+          <a [routerLink]="['/users/all']" [queryParams]="{ tppId: tppUser?.id }">
             {{ userAmount || 0 }}
           </a>
         </div>
@@ -68,11 +64,8 @@
           </a>
         </div>
       </div>
-      <div
-        class="row d-flex justify-content-between"
-        *ngIf="tppUser?.login !== 'admin'"
-      >
-        <div class="mr-3">
+      <div class="d-flex mb-4 justify-content-between" *ngIf="tppUser?.login !== 'admin'">
+        <div class="me-3">
           <button
             mat-raised-button
             class="btn btn-sm btn-outline-secondary"
@@ -81,37 +74,19 @@
           >
             < Back
           </button>
-          <button
-            mat-raised-button
-            class="btn btn-primary mr-2 ml-3"
-            [routerLink]="['/edit/' + tppUser?.id]"
-            type="button"
-          >
-            Edit
-          </button>
+          <button mat-raised-button class="btn btn-primary me-2 ms-3" [routerLink]="['/edit/' + tppUser?.id]" type="button">Edit</button>
 
-          <button
-            mat-raised-button
-            class="btn btn-primary mr-4 ml-3"
-            (click)="resetPasswordViaEmail(tppUser.login)"
-            type="button"
-          >
+          <button mat-raised-button class="btn btn-primary me-4 ms-3" (click)="resetPasswordViaEmail(tppUser.login)" type="button">
             Send password update link
           </button>
 
-          <button
-            mat-raised-button
-            class="btn btn-primary mr-2"
-            type="button"
-            (click)="openModalWithComponent()"
-            *ngIf="!admin"
-          >
+          <button mat-raised-button class="btn btn-primary me-2" type="button" (click)="openModalWithComponent()" *ngIf="!admin">
             Create State
           </button>
 
           <button
             mat-raised-button
-            class="btn btn-outline-danger mr-2 ml-1"
+            class="btn btn-outline-danger me-2"
             (click)="openConfirmation(blockConfirmation, 'block')"
             *ngIf="admin"
             type="button"
@@ -122,35 +97,17 @@
           <ng-template #blockConfirmation let-modal>
             <div class="modal-header">
               <h4 class="modal-title" id="modal-basic-title-1">TPP blocking</h4>
-              <button
-                mat-raised-button
-                type="button"
-                class="close"
-                aria-label="Close"
-                (click)="modal.dismiss('Cross click')"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <button type="button" class="btn-close box__close-icon" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
             </div>
             <div class="modal-body">
               Are you sure you want to
               {{ tppUser.blocked ? 'Unblock TPP' : 'Block TPP' }} this TPP?
             </div>
             <div class="modal-footer">
-              <button
-                mat-raised-button
-                type="button"
-                class="btn btn-outline-secondary mr-2"
-                (click)="modal.dismiss('cancel click')"
-              >
+              <button mat-raised-button type="button" class="btn btn-outline-secondary me-2" (click)="modal.dismiss('cancel click')">
                 Cancel
               </button>
-              <button
-                mat-raised-button
-                type="button"
-                class="btn btn-danger"
-                (click)="modal.close('Ok click')"
-              >
+              <button mat-raised-button type="button" class="btn btn-danger" (click)="modal.close('Ok click')">
                 {{ tppUser.blocked ? 'Unblock TPP' : 'Block TPP' }}
               </button>
             </div>
@@ -158,12 +115,12 @@
         </div>
 
         <button
-          mat-raised-button
+          mat.mdc-icon-button-theme
           matTooltip="Delete TPP"
           [matTooltipPosition]="position.value"
           aria-label="Delete TPP"
           (click)="openConfirmation(deleteConfirmationModal, 'delete')"
-          class="btn btn-danger mr-3"
+          class="btn btn-danger me-3"
         >
           <mat-icon>delete</mat-icon>
         </button>
@@ -171,40 +128,18 @@
         <ng-template #deleteConfirmationModal let-modal>
           <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">TPP deletion</h4>
-            <button
-              mat-raised-button
-              type="button"
-              class="close"
-              aria-label="Close"
-              (click)="modal.dismiss('Cross click')"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close box__close-icon" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
           </div>
-          <div class="modal-body">
-            Are you sure you want to delete this TPP?
-          </div>
+          <div class="modal-body">Are you sure you want to delete this TPP?</div>
           <div class="modal-footer">
-            <button
-              mat-raised-button
-              type="button"
-              class="btn btn-outline-secondary mr-2"
-              (click)="modal.dismiss('cancel click')"
-            >
+            <button mat-raised-button type="button" class="btn btn-outline-secondary me-2" (click)="modal.dismiss('cancel click')">
               Cancel
             </button>
-            <button
-              mat-raised-button
-              type="button"
-              class="btn btn-danger"
-              (click)="modal.close('Ok click')"
-            >
-              Delete
-            </button>
+            <button mat.mdc-button-theme type="button" class="btn btn-danger" (click)="modal.close('Ok click')">Delete</button>
           </div>
         </ng-template>
       </div>
-      <table class="table mr-2" *ngIf="!admin">
+      <table class="table me-2" *ngIf="!admin">
         <thead>
           <tr>
             <th>#</th>
@@ -223,20 +158,8 @@
               </div>
             </td>
             <td class="flex va-m">
-              <button
-                mat-raised-button
-                class="btn btn-primary mr-2"
-                (click)="rollbackRecoveryPointById(point?.id)"
-              >
-                Rollback State
-              </button>
-              <button
-                mat-raised-button
-                class="btn btn-danger"
-                (click)="deleteRecoveryPointById(point?.id)"
-              >
-                Delete
-              </button>
+              <button mat-raised-button class="btn btn-primary me-2" (click)="rollbackRecoveryPointById(point?.id)">Rollback State</button>
+              <button mat.mdc-button-theme class="btn btn-danger" (click)="deleteRecoveryPointById(point?.id)">Delete</button>
             </td>
           </tr>
         </tbody>

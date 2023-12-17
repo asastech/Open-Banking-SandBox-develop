@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -39,7 +39,13 @@
   <div class="endpoint-main-content">
     <!-- Documentation -->
     <div class="endpoint-documentation" *ngIf="activeSegment === 'documentation'; else play_with_data">
-      <h1>{{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.TITLE' | translate }}</h1>
+      <h1>
+        {{ 'TEST_CASES.SIDE_NAV.CONSENT.EMBEDDED.START_AUTHORISATION_PROCESS' | translate }}
+      </h1>
+
+      <h2>{{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.TITLE' | translate }}</h2>
+      <br />
+      <span class="subtitle">{{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.SUBTITLE' | translate }}</span>
 
       <p>
         {{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.PART_1' | translate }} <span class="bold-text">POST</span> endpoint
@@ -58,7 +64,7 @@
       <div class="api-table bg"><span>PSU-ID</span> <span>YOUR_USER_LOGIN</span></div>
       <div class="api-table"><span>TPP-QWAC-Certificate</span> <span> -----BEGIN CERTIFICATE-----</span></div>
       <p>
-        {{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.PART_5' | translate }} <span class="bold-text">YOUR_USER_LOGIN</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.PART_5' | translate }} <span class="bold-text">"PSU-ID"</span>
         {{ 'TEST_CASES.COMPONENTS.EMB_CONS_AUTH.PART_6' | translate }}
       </p>
       <p>
@@ -74,6 +80,7 @@
         method="POST"
         [headers]="headers"
         [consentIdFlag]="true"
+        [consentId]="consentId"
         [variablePathEnd]="'/authorisations'"
         url="v1/consents"
         [fieldsToCopy]="['authorisationId', 'consentId']"

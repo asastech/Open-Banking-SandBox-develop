@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -46,7 +46,6 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +76,7 @@ class TppAccountsControllerTest {
         when(accountMgmtStaffRestClient.createDepositAccountForUser(any(), any())).thenAnswer(i -> ResponseEntity.ok().build());
 
         // When
-        ResponseEntity<Void> response = accountsController.createAccount(USER_ID, getDepositAccount());
+        ResponseEntity<Boolean> response = accountsController.createAccount(USER_ID, getDepositAccount());
 
         // Then
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
@@ -214,7 +213,7 @@ class TppAccountsControllerTest {
     }
 
     private AccountDetailsTO getAccountDetailsTO() {
-        return new AccountDetailsTO("id", IBAN, "bban", "pan", "maskedPan", "msisdn", EUR, "name", "product", AccountTypeTO.CASH, AccountStatusTO.ENABLED,
+        return new AccountDetailsTO("id", IBAN, "bban", "pan", "maskedPan", "msisdn", EUR, "name",null, "product", AccountTypeTO.CASH, AccountStatusTO.ENABLED,
                                     "bic", "linkedAccounts", UsageTypeTO.PRIV, "details", Collections.singletonList(new AccountBalanceTO()), false, false, BigDecimal.ZERO, null);
     }
 

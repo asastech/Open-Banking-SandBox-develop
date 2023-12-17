@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -27,6 +27,7 @@ export interface GlobalSettings {
   socialMedia?: object;
   cssVariables?: CSSVariables;
   googleAnalyticsTrackingId?: string;
+  logo: string
 }
 
 export interface PagesSettings {
@@ -39,6 +40,16 @@ export interface PagesSettings {
 
 export interface CSSVariables {
   [key: string]: string;
+  colorPrimary?: string;
+  fontFamily?: string;
+  bodyBG?: string;
+  headerBG?: string;
+  headerFontColor?: string;
+  sidebarBG?: string;
+  sidebarFontColor?: string;
+  mainBG?: string;
+  anchorFontColor?: string;
+  anchorFontColorHover?: string;
 }
 
 export interface ContactInfo {
@@ -58,15 +69,23 @@ export interface OfficeInfo {
   email?: string;
 }
 
+export interface SocialMedia {
+  facebookLink: string;
+  twitterLink: string;
+  xingLink: string;
+  linkedinLink: string
+}
+
 export interface TppSettings {
   tppDefaultNokRedirectUrl?: string;
   tppDefaultRedirectUrl?: string;
 }
 
 export interface NavigationSettings {
-  allowedNavigationSize: number;
+  allowedNavigationSize?: number;
   logo: string;
   logoLink?: string;
+  socialMedia?: SocialMedia;
 }
 
 class ContactPageSettings {

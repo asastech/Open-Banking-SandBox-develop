@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -165,6 +165,8 @@ class TppUsersControllerTest {
     }
 
     private CustomPageImpl<UserTO> getCustomPageImplUserTO() {
-        return new CustomPageImpl<>();
+        CustomPageImpl<UserTO> users = new CustomPageImpl<>();
+        users.setContent(Collections.singletonList(new UserTO()));
+        return users;
     }
 }

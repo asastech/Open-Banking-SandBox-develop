@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -15,28 +15,42 @@
  * This project is also available under a separate commercial license. You can
  * contact us at psd2@adorsys.com.
  */
-
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShareDataService } from '../../common/services/share-data.service';
 import { PaymentDetailsComponent } from './payment-details.component';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ConsentAuthorizeResponse } from '../../api/models/consent-authorize-response';
+import { PaymentAuthorizeResponse } from '../../api/models/payment-authorize-response';
 
 describe('PaymentDetailsComponent', () => {
   let component: PaymentDetailsComponent;
   let fixture: ComponentFixture<PaymentDetailsComponent>;
-  let shareDataService: ShareDataService;
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [PaymentDetailsComponent],
-        providers: [ShareDataService],
-      }).compileComponents();
-    })
-  );
+  let shareDataServiceStub: Partial<ShareDataService>;
 
   beforeEach(() => {
+    shareDataServiceStub = {
+      get currentData(): Observable<
+        ConsentAuthorizeResponse | PaymentAuthorizeResponse
+      > {
+        const subjectMock = new BehaviorSubject<
+          ConsentAuthorizeResponse | PaymentAuthorizeResponse
+        >(null);
+        return subjectMock.asObservable();
+      },
+
+      changeData(data: ConsentAuthorizeResponse) {},
+    };
+    TestBed.configureTestingModule({
+      declarations: [PaymentDetailsComponent],
+      providers: [
+        { provide: ShareDataService, useValue: shareDataServiceStub },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PaymentDetailsComponent);
     component = fixture.componentInstance;
-    shareDataService = TestBed.inject(ShareDataService);
     fixture.detectChanges();
   });
 

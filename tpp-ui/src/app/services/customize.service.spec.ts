@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,13 +16,10 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CustomizeService, Theme } from './customize.service';
 
 describe('CustomizeService', () => {
@@ -67,8 +64,8 @@ describe('CustomizeService', () => {
       imports: [HttpClientTestingModule],
       providers: [CustomizeService],
     });
-    service = TestBed.get(CustomizeService);
-    httpTestingController = TestBed.get(HttpTestingController);
+    service = TestBed.inject(CustomizeService);
+    httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
@@ -93,33 +90,31 @@ describe('CustomizeService', () => {
       }
     });
 
-    const req = httpTestingController.expectOne(
-      '../assets/UI/custom/UITheme.json'
-    );
+    const req = httpTestingController.expectOne('../assets/UI/custom/UITheme.json');
     expect(req.request.method).toEqual('GET');
   });
 
   describe('getJson', () => {
     let http: HttpClient;
     beforeEach(() => {
-      http = TestBed.get(HttpClient);
+      http = TestBed.inject(HttpClient);
     });
     it('should return custom theme', () => {
-      const httpSpy = spyOn(http, 'get').and.returnValue(of(theme));
+      spyOn(http, 'get').and.returnValue(of(theme));
       service.getJSON().subscribe();
       expect(service.isCustom()).toBeTruthy();
     });
 
     it('should return default theme when custom theme is invalid', () => {
       const invalidJsonTheme = undefined;
-      const httpSpy = spyOn(http, 'get').and.returnValue(of(invalidJsonTheme));
+      spyOn(http, 'get').and.returnValue(of(invalidJsonTheme));
       service.getJSON().subscribe();
       expect(service.isCustom()).toBeFalsy();
     });
 
     it('should return default theme when custom theme has validations error', () => {
       const invalidTheme = {};
-      const httpSpy = spyOn(http, 'get').and.returnValue(of(invalidTheme));
+      spyOn(http, 'get').and.returnValue(of(invalidTheme));
       service.getJSON().subscribe();
       expect(service.isCustom()).toBeFalsy();
     });
@@ -145,9 +140,7 @@ describe('CustomizeService', () => {
       expect(res).toEqual(defTheme);
     });
 
-    const req = httpTestingController.expectOne(
-      '../assets/UI/defaultTheme.json'
-    );
+    const req = httpTestingController.expectOne('../assets/UI/defaultTheme.json');
     expect(req.request.method).toEqual('GET');
   });
 
@@ -161,7 +154,8 @@ describe('CustomizeService', () => {
     expect(typeof service.getLogo()).toBe('string');
   });
 
-  it('should change font', async (done) => {
+
+  it('should change font', fakeAsync(() => {
     service.setUserTheme({
       ...defTheme,
       globalSettings: {
@@ -171,26 +165,21 @@ describe('CustomizeService', () => {
         },
       },
     });
-    setTimeout(() => {
-      const tmp = getComputedStyle(document.body).getPropertyValue(
-        '--fontFamily'
-      );
-      expect(tmp).toEqual('Helvetica, Arial, sans-serif');
-      done();
-    }, 100);
-  });
+  
+    tick(100);
+  
+    const tmp = getComputedStyle(document.body).getPropertyValue('--fontFamily');
+    expect(tmp).toEqual('Helvetica, Arial, sans-serif');
+  }));
 
-  it('should left default', async (done) => {
+  it('should left default', fakeAsync(() => {
     document.documentElement.removeAttribute('style');
     service.setUserTheme(defTheme);
-    setTimeout(() => {
-      const tmp = getComputedStyle(document.body).getPropertyValue(
-        '--fontFamily'
-      );
-      expect(tmp).toEqual(' "Verdana", sans-serif');
-      done();
-    }, 100);
-  });
+    tick(100);
+  
+    const tmp = getComputedStyle(document.body).getPropertyValue('--fontFamily').trim();
+    expect(tmp).toEqual('"Verdana", sans-serif');
+  }));
 
   it('should validate theme', () => {
     let tmp = service.validateTheme(defTheme).length;
@@ -202,9 +191,13 @@ describe('CustomizeService', () => {
 
   it('should add favicon', () => {
     service.addFavicon('type', 'href');
+    const link = document.documentElement.getElementsByTagName('link');
+    expect(link).not.toEqual(null);
   });
 
   it('should set favicon', () => {
     service.setFavicon('type', 'href');
+    const link = document.documentElement.getElementsByTagName('link');
+    expect(link).not.toEqual(null);
   });
 });

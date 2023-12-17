@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ADMIN_KEY } from '../../commons/constant/constant';
@@ -26,9 +26,7 @@ import { ADMIN_KEY } from '../../commons/constant/constant';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private role = sessionStorage.getItem(ADMIN_KEY);
   constructor(private authService: AuthService, private router: Router) {}
-
-  ngOnInit() {}
 }

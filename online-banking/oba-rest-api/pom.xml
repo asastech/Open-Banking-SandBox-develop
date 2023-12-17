@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>de.adorsys.psd2.sandbox</groupId>
 		<artifactId>online-banking</artifactId>
-		<version>5.15-SNAPSHOT</version>
+		<version>6.8-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -55,7 +55,7 @@
 
 		<!-- swagger -->
 		<dependency>
-			<groupId>io.swagger</groupId>
+			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
 

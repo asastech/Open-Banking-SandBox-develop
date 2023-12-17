@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { TppUserService } from '../../services/tpp.user.service';
@@ -37,7 +37,7 @@ import { takeUntil } from 'rxjs/operators';
 export class UserProfileUpdateComponent implements OnInit, OnDestroy {
   user: User;
   tppId: string;
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   submitted: boolean;
   admin: string;
   private currentLogin: string;
@@ -47,7 +47,7 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private userInfoService: TppUserService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private tppManagementService: TppManagementService,
     private infoService: InfoService,
@@ -83,7 +83,7 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
           this.userForm.patchValue({
             email: this.user.email,
             username: this.user.login,
-            //pin: this.user.pin,
+            // pin: this.user.pin,
           });
         });
     }
@@ -93,7 +93,7 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
     this.userForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.email, Validators.required]],
-      //pin: ['', [Validators.minLength(5), Validators.required]],
+      // pin: ['', [Validators.minLength(5), Validators.required]],
     });
   }
 
@@ -110,10 +110,7 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
 
     let restCall;
     if (this.admin === 'true') {
-      restCall = this.tppManagementService.updateUserDetails(
-        updatedUser,
-        this.tppId
-      );
+      restCall = this.tppManagementService.updateUserDetails(updatedUser, this.tppId);
     } else {
       restCall = this.userInfoService.updateUserInfo(updatedUser);
     }
@@ -121,9 +118,7 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
     restCall.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.getUserDetails();
       this.location.back();
-      this.infoService.openFeedback(
-        'The information has been successfully updated'
-      );
+      this.infoService.openFeedback('The information has been successfully updated');
 
       if (this.currentLogin === this.user.login) {
         this.authService.logout();
@@ -132,17 +127,13 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
   }
 
   private getCurrentUserLogin() {
-    this.userInfoService.currentTppUser
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((user) => {
-        this.currentLogin = user.login;
-      });
+    this.userInfoService.currentTppUser.pipe(takeUntil(this.unsubscribe$)).subscribe((user) => {
+      this.currentLogin = user.login;
+    });
   }
 
   private getUserInfoForAdmin(tppId: string, adminSize?) {
-    const restCall = adminSize
-      ? this.tppManagementService.getAdminById(tppId, adminSize)
-      : this.tppManagementService.getTppById(tppId);
+    const restCall = adminSize ? this.tppManagementService.getAdminById(tppId, adminSize) : this.tppManagementService.getTppById(tppId);
     restCall.pipe(takeUntil(this.unsubscribe$)).subscribe((user: User) => {
       if (user) {
         this.user = user;
@@ -165,12 +156,9 @@ export class UserProfileUpdateComponent implements OnInit, OnDestroy {
 
   resetPasswordViaEmail(login: string) {
     this.userInfoService.resetPasswordViaEmail(login).subscribe(() => {
-      this.infoService.openFeedback(
-        'Link for password reset was sent, check email.',
-        {
-          severity: 'info',
-        }
-      );
+      this.infoService.openFeedback('Link for password reset was sent, check email.', {
+        severity: 'info',
+      });
     });
   }
 }

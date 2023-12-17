@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -46,7 +46,7 @@ export class AccountComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private tppService: TppManagementService,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute, 
     private infoService: InfoService,
     private tppUserService: TppUserService,
     private router: Router,
@@ -73,12 +73,9 @@ export class AccountComponent implements OnInit {
 
   public goToAccountDetail() {
     if (this.isAccountDeleted) {
-      this.infoService.openFeedback(
-        'You can not Grant Accesses to a Deleted/Blocked account',
-        {
-          severity: 'error',
-        }
-      );
+      this.infoService.openFeedback('You can not Grant Accesses to a Deleted/Blocked account', {
+        severity: 'error',
+      });
     } else {
       this.router.navigate(['/accounts/' + this.account.id + '/access']);
     }
@@ -93,40 +90,27 @@ export class AccountComponent implements OnInit {
   deleteAccountTransactions() {
     this.tppService.deleteAccountTransactions(this.account.id).subscribe(() => {
       this.getAccountReport();
-      this.infoService.openFeedback(
-        `Transactions of ${this.account.iban} successfully deleted`,
-        {
-          severity: 'info',
-        }
-      );
+      this.infoService.openFeedback(`Transactions of ${this.account.iban} successfully deleted`, {
+        severity: 'info',
+      });
     });
   }
 
   openDeleteConfirmation(content) {
-    this.modalService.open(content).result.then(
-      () => {
-        this.deleteAccountTransactions();
-      },
-      () => {}
-    );
+    this.modalService.open(content).result.then(() => {
+      this.deleteAccountTransactions();
+    });
   }
 
   openSetCreditLimitConfirmation(limit) {
-    this.modalService.open(limit).result.then(
-      () => {
-        console.log(this.account.creditLimit);
-        this.setCreditLimit();
-      },
-      () => {}
-    );
+    this.modalService.open(limit).result.then(() => {
+      this.setCreditLimit();
+    });
   }
 
   get isAccountDeleted(): boolean {
     if (this.account) {
-      return (
-        this.account.accountStatus === 'DELETED' ||
-        this.account.accountStatus === 'BLOCKED'
-      );
+      return this.account.accountStatus === 'DELETED' || this.account.accountStatus === 'BLOCKED';
     }
     return false;
   }
@@ -144,21 +128,33 @@ export class AccountComponent implements OnInit {
   }
 
   getAccountReport() {
-    this.accountService
-      .getAccountReport(this.accountID)
-      .subscribe((report: AccountReport) => {
-        this.accountReport = report;
-        this.balance = new ExtendedBalance(report.details);
-      });
-  }
-
-  getValue(data) {
-    this.account.creditLimit = data.value;
+    this.accountService.getAccountReport(this.accountID).subscribe((report: AccountReport) => {
+      this.accountReport = report;
+      this.balance = new ExtendedBalance(report.details);
+    });
   }
 
   private setCreditLimit() {
-    this.accountService
-      .setCreditLimit(this.account.id, this.account.creditLimit)
-      .subscribe(() => this.getAccountReport());
+    this.accountService.setCreditLimit(this.account.id, this.account.creditLimit).subscribe(() => this.getAccountReport());
+  }
+
+  openDeleteAccount(content) {
+    this.modalService.open(content).result.then(() => {
+      this.deleteAccount();
+    });
+  }
+
+  deleteAccount() {
+    this.accountService.deleteAccount(this.account.id).subscribe(
+      () => {
+        this.infoService.openFeedback('Account was successfully deleted!', {
+          severity: 'info',
+        });
+        this.router.navigate(['/accounts']);
+      },
+      () => {
+        this.infoService.openFeedback('Sorry, something went wrong Account cannot be deleted.');
+      }
+    );
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/user.model';
@@ -36,8 +36,7 @@ import { SettingsService } from '../../../services/settings.service';
   styleUrls: ['./user-create.component.scss'],
 })
 export class UserCreateComponent implements OnInit {
-  public url =
-    `${this.settingsService.settings.tppBackendBasePath}` + '/tpp/push/tan';
+  public url = `${this.settingsService.settings.tppBackendBasePath}` + '/tpp/push/tan';
   public error: string;
   id: string;
   users: User[];
@@ -45,14 +44,14 @@ export class UserCreateComponent implements OnInit {
   admin: string;
   methods: string[];
   httpMethods: string[];
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   submitted: boolean;
   asyncSelected: string;
   typeaheadLoading: boolean;
 
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private infoService: InfoService,
     private route: ActivatedRoute,
@@ -136,51 +135,39 @@ export class UserCreateComponent implements OnInit {
       usesStaticTan: [false],
     });
 
-    scaData
-      .get('usesStaticTan')
-      .valueChanges.subscribe((bool: boolean = true) => {
-        if (bool) {
-          scaData.get('staticTan').setValidators(Validators.required);
-          scaData.get('methodValue').setValidators(Validators.required);
-          scaData.get('staticTan').enable();
-        } else {
-          scaData.get('staticTan').clearValidators();
-          scaData.get('staticTan').disable();
-          scaData.get('staticTan').setValue('');
-        }
-        scaData.get('staticTan').updateValueAndValidity();
-        scaData.get('methodValue').updateValueAndValidity();
-      });
+    scaData.get('usesStaticTan').valueChanges.subscribe((bool = true) => {
+      if (bool) {
+        scaData.get('staticTan').setValidators(Validators.required);
+        scaData.get('methodValue').setValidators(Validators.required);
+        scaData.get('staticTan').enable();
+      } else {
+        scaData.get('staticTan').clearValidators();
+        scaData.get('staticTan').disable();
+        scaData.get('staticTan').setValue('');
+      }
+      scaData.get('staticTan').updateValueAndValidity();
+      scaData.get('methodValue').updateValueAndValidity();
+    });
 
     scaData.get('staticTan').valueChanges.subscribe((value) => {
-      if (value === ScaMethods.EMAIL) {
+      if (value === ScaMethods.SMTP_OTP) {
         scaData.get('staticTan').setValidators(emailValidators);
       } else if (value === ScaMethods.MOBILE) {
         scaData
           .get('staticTan')
-          .setValidators([
-            Validators.required,
-            Validators.pattern(
-              new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/)
-            ),
-          ]);
+          .setValidators([Validators.required, Validators.pattern(new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/))]);
       } else {
         scaData.get('scaMethod').setValidators([Validators.required]);
       }
     });
 
     scaData.get('scaMethod').valueChanges.subscribe((value) => {
-      if (value === ScaMethods.EMAIL) {
+      if (value === ScaMethods.SMTP_OTP) {
         scaData.get('methodValue').setValidators(emailValidators);
       } else if (value === ScaMethods.MOBILE) {
         scaData
           .get('methodValue')
-          .setValidators([
-            Validators.required,
-            Validators.pattern(
-              new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/)
-            ),
-          ]);
+          .setValidators([Validators.required, Validators.pattern(new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/))]);
       } else if (value === ScaMethods.PUSH_OTP) {
         scaData.get('methodValue').clearValidators();
       } else {
@@ -192,12 +179,12 @@ export class UserCreateComponent implements OnInit {
   }
 
   addScaDataItem() {
-    const control = <FormArray>this.userForm.controls['scaUserData'];
+    const control = <UntypedFormArray>this.userForm.controls['scaUserData'];
     control.push(this.initScaData());
   }
 
   removeScaDataItem(i: number) {
-    const control = <FormArray>this.userForm.controls['scaUserData'];
+    const control = <UntypedFormArray>this.userForm.controls['scaUserData'];
     control.removeAt(i);
   }
 
@@ -205,7 +192,7 @@ export class UserCreateComponent implements OnInit {
     const body = this.userForm.value as User;
     body.scaUserData.forEach((d) => {
       if (d.scaMethod === 'PUSH_OTP') {
-        if (d.pushMethod == '' || d.pushMethod == undefined) {
+        if (d.pushMethod === '' || d.pushMethod === undefined) {
           d.pushMethod = 'POST';
         }
         if (d.methodValue === '' || d.methodValue === undefined) {
@@ -226,26 +213,21 @@ export class UserCreateComponent implements OnInit {
     }
     const body = this.updateValue();
     if (this.admin === 'true') {
-      this.tppManagementService
-        .createUser(body, this.userForm.get('tppId').value)
-        .subscribe(() => {
-          this.infoService.openFeedback('User was successfully created!', {
-            severity: 'info',
-          });
-          this.router.navigate(['/users/all']);
+      this.tppManagementService.createUser(body, this.userForm.get('tppId').value).subscribe(() => {
+        this.infoService.openFeedback('User was successfully created!', {
+          severity: 'info',
         });
+        this.router.navigate(['/users/all']);
+      });
     } else if (this.admin === 'false') {
       this.userService.createUser(body).subscribe(
         () => {
           this.router.navigateByUrl('/users/all');
         },
         () => {
-          this.infoService.openFeedback(
-            'Provided Login or Email are already taken',
-            {
-              severity: 'error',
-            }
-          );
+          this.infoService.openFeedback('Provided Login or Email are already taken', {
+            severity: 'error',
+          });
         }
       );
     }

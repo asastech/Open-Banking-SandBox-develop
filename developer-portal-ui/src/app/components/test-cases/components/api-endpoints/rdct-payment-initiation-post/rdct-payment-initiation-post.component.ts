@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -40,7 +40,13 @@ export class RdctPaymentInitiationPostComponent implements OnInit {
     'TPP-Nok-Redirect-URI': LocalStorageService.get(TPP_NOK_REDIRECT_URL_KEY),
   };
 
-  body;
+  body: object;
+
+  changeSegment(segment) {
+    if (segment === 'documentation' || segment === 'play-data') {
+      this.activeSegment = segment;
+    }
+  }
 
   constructor(private jsonService: JsonService) {
     this.jsonService.getPreparedJsonData(jsonService.jsonLinks.singlePayment, true).subscribe(
@@ -59,17 +65,13 @@ export class RdctPaymentInitiationPostComponent implements OnInit {
       (data) => (this.jsonData4 = data),
       (error) => console.log(error)
     );
-    this.jsonService.getPreparedJsonData(jsonService.jsonLinks.singlePayment, true).subscribe(
+    this.jsonService.getPreparedJsonData(jsonService.jsonLinks.singlePaymentPlayWithData, true).subscribe(
       (data) => (this.body = data),
       (error) => console.log(error)
     );
   }
 
-  changeSegment(segment) {
-    if (segment === 'documentation' || segment === 'play-data') {
-      this.activeSegment = segment;
-    }
-  }
+
 
   ngOnInit() {}
 }

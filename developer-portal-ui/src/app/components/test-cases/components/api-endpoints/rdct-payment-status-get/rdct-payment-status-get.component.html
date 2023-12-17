@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -39,6 +39,8 @@
   <div class="endpoint-main-content">
     <!-- Documentation -->
     <div class="endpoint-documentation" *ngIf="activeSegment === 'documentation'; else play_with_data">
+      <h1>{{ 'TEST_CASES.SIDE_NAV.PAYMENT.REDIRECT.GET_PAYMENT_STATUS' | translate }}</h1>
+      <br />
       <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_IN_GET.SUBTITLE' | translate }}</span>
       <p>
         {{ 'TEST_CASES.COMPONENTS.EMB_IN_GET.PART_7' | translate }}
@@ -64,8 +66,9 @@
         [paymentServiceFlag]="true"
         [paymentProductFlag]="true"
         [paymentIdFlag]="true"
-        url="v1/"
+        [paymentId]="paymentId"
         [variablePathEnd]="'/status'"
+        url="v1/"
         eventName="redirect_get_payment_status"
         eventCategory="send_request"
         eventAction="click"

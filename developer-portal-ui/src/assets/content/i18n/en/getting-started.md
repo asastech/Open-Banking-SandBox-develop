@@ -16,7 +16,7 @@ This developer portal is created to help TPP developers start working with Model
 
 Components of ModelBank with their connections to each other are shown in Figure 1.1.
 
-![Figure 1.1](../../assets/images/Graphic_XS2A_Sandbox.jpg)
+![Figure 1.1](../../../../assets/images/Graphic_XS2A_Sandbox.png)
 
 Figure 1.1: Components of the ModelBank
 
@@ -25,7 +25,7 @@ Figure 1.1: Components of the ModelBank
 
 # XS2A Interface
 
-Central component of the **ModelBank** is the XS2A interface which meets the requirements of the Berlin Group's specification [NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts) (Version 1.3) and is based on test data. You can visit our [XS2A Swagger UI](https://demo-dynamicsandbox-xs2a.cloud.adorsys.de/) or find full [OpenSource XS2A Interface on Github](https://github.com/adorsys/xs2a).
+Central component of the **ModelBank** is the XS2A interface which meets the requirements of the Berlin Group's specification [NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts) (Version 1.3.11) and is based on test data. You can visit our <a href="#" id="XS2AInterfaceSwagger">XS2A Swagger UI</a> or find full [adorsys XS2A Interface on GitHub](https://github.com/adorsys/xs2a).
 
 <div class="divider">
 </div>
@@ -89,6 +89,45 @@ To create test payments, you have to generate test payment data on tab "Generate
 <div class="divider">
 </div>
 
+# Admin Interface
+
+Admin interface is provided to manage system administrators, TPPs and users with their accounts. This interface provides a possibility to create other administrators except the default one, provided out of box.
+
+## How to create a new administrator?
+
+1. Open Admin UI login page.
+
+2. Login as "admin" with password "admin123".
+
+3. Open the "Administrators List" and push "New Administrator" button.
+
+4. Provide email, your administrator login and the password. Then press "Submit".
+
+5. You will see the "New Admin has been successfully registered." popup, then administrator will be available in the list. You may login to Admin UI with this new administrator. Please note, that this user won't be able to login to TPP UI.
+
+## How to create users?
+
+Users process creation is the same as in TPP UI.
+
+### To create user manually:
+
+1. Go to “Users list” and click on “Create New User”.
+
+2. Select TPP for this user, then enter email, login and pin for a new user.
+
+3. Choose authentication method (only email is valid for now) and enter a valid email. If you choose option "Use Static TAN in ModelBank", mock static TAN would be used for testing. Then you have to enter your mock TAN also. You can add multiple SCA methods to every user.
+
+### To create accounts manually:
+
+1. Choose a user in your list of users and click "Create deposit account" icon.
+
+2. Select account type, usage and account status. IBAN could be generated automatically. Please note, that only valid IBANs are accepted by XS2A Interface.
+
+3. After account is created, you can use function "Deposit cash" to add any amount to the balances for testing purposes. All the created accounts are available in "Users accounts" tab.
+
+<div class="divider">
+</div>
+
 # Online banking
 
 In case of REDIRECT SCA approach a user wants to provide consent for using their account information or for payment confirmation/cancellation. Online banking is a user interface to provide consent to a bank. Links for a consent confirmation and payment confirmation or cancellation are provided in the response of the corresponding endpoints.
@@ -100,12 +139,13 @@ In case of REDIRECT SCA approach a user wants to provide consent for using their
 
 | Service                   |                                                        Demo environment |
 | ------------------------- | ----------------------------------------------------------------------: |
-| XS2A Interface Swagger    |        <a href="#" id="XS2AInterfaceSwagger">XS2A Interface Swagger</a> |
+| XS2A Interface Swagger    |       <a href="#" id="XS2AInterfaceSwagger2">XS2A Interface Swagger</a> |
 | Developer portal          |                   <a href="#" id="developerPortal">Developer Portal</a> |
 | Consent management system | <a href="#" id="consentManagementSystem" >Consent management system</a> |
 | Ledgers                   |                                   <a href="#" id="ledgers" >Ledgers</a> |
 | ASPSP-Profile Swagger     |         <a href="#" id="ASPSPProfileSwagger" >ASPSP-Profile Swagger</a> |
 | TPP User Interface        |               <a href="#" id="TPPUserInterface" >TPP User Interface</a> |
+| Admin Interface           |                <a href="#" id="AdminUserInterface" >Admin Interface</a> |
 | Online banking UI         |                 <a href="#" id="onlineBankingUI" >Online banking UI</a> |
 | Online banking backend    |       <a href="#" id="onlineBankingBackend" >Online banking backend</a> |
 | Certificate Generator     |        <a href="#" id="certificateGenerator" >Certificate Generator</a> |
@@ -124,10 +164,10 @@ _make check_
 If something is missing, install it to your local machine, otherwise the build will fail. List of dependencies that are required to use ModelBank: Java 11, NodeJs, Angular CLI, Asciidoctor, jq, Docker, Docker Compose, Maven, PlantUML. Here are links where you can install needed dependencies:
 
 | Dependency          |                  Link                   |
-| ------------------- | :-------------------------------------: |
+|---------------------| :-------------------------------------: |
 | Java 11             |    https://openjdk.java.net/install/    |
-| Node.js 12.x        |     https://nodejs.org/en/download      |
-| Angular CLI 9.x     |   https://angular.io/guide/quickstart   |
+| Node.js 18.x        |     https://nodejs.org/en/download      |
+| Angular CLI 15.x    |   https://angular.io/guide/quickstart   |
 | Asciidoctor 2.0     |         https://asciidoctor.org         |
 | jq 1.6              | https://stedolan.github.io/jq/download  |
 | Docker 1.17         |   https://www.docker.com/get-started    |
@@ -152,7 +192,7 @@ Check amount of memory given to Docker (Open Docker Desktop -> Preferences -> Ad
 
 Download the project directly from GitHub or use command:
 
-_git clone https://github.com/adorsys/XS2A-Sandbox_
+_git clone https://github.com/adorsys/XS2A-Sandbox.git_
 
 **Note2:**
 Always make a pull from GitHub
@@ -165,11 +205,6 @@ _cd XS2A-Sandbox_
 
 ---
 
-**Note3:**
-If you cloned master branch or tag version of ModelBank you should run service with commands like `docker-compose up` or `make run`.
-
----
-
 If you cloned develop branch you could build and run ModelBank in two ways - with a docker command or with Makefile commands.
 
 If you want use a first way:
@@ -178,7 +213,8 @@ If you want use a first way:
 
 _make_
 
-2. After building services you can run ModelBank with a simple docker command:
+2. After building services you can run ModelBank with a simple docker command.
+   Please note, to be able to use adorsys' applications docker images you have to build them on your local first.
 
 _docker-compose up_
 
@@ -269,7 +305,7 @@ If version is higher than 11.x - change version of NodeJs to earlier one.
 
 Whole flow for TPPs to start their work with ModelBank is displayed in Figure 1.2:
 
-![Figure 1.2](../../assets/images/Flow.png)
+![Figure 1.2](../../../../assets/images/Flow.png)
 
 Figure 1.2: TPP flow step-by-step
 

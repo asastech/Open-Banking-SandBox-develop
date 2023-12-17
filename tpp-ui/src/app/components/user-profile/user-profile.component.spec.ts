@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -24,18 +24,18 @@ import { TppUserService } from '../../services/tpp.user.service';
 import { AuthService } from '../../services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { of } from 'rxjs';
-import { TppManagementService } from '../../services/tpp-management.service';
+import { InfoService } from '../../commons/info/info.service';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { Store } from '@ngxs/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {  NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('UserProfileComponent', () => {
   let component: UserProfileComponent;
   let fixture: ComponentFixture<UserProfileComponent>;
-  let tppUserService: TppUserService;
-  let tppService: TppManagementService;
-  let authService: AuthService;
-  let router: Router;
 
   const mockUser: User = {
     id: 'id',
@@ -46,9 +46,11 @@ describe('UserProfileComponent', () => {
     scaUserData: [],
     accountAccesses: [],
     branchLogin: 'branchLogin',
+    userRoles: ['SYSTEM'],
   };
 
   const mockTppUserService = {
+    currentTppUser: of(mockUser),
     getUserInfo: () => of(mockUser),
   };
 
@@ -58,35 +60,36 @@ describe('UserProfileComponent', () => {
     },
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          HttpClientTestingModule,
-          RouterTestingModule,
-          RouterTestingModule.withRoutes([]),
-        ],
-        providers: [
-          TppManagementService,
-          NgbModal,
-          AuthService,
-          TppUserService,
-          { provide: AuthService, useValue: mockAuthUserService },
-          { provide: TppUserService, useValue: mockTppUserService },
-        ],
-        declarations: [UserProfileComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        OverlayModule,
+        RouterTestingModule,
+        RouterTestingModule.withRoutes([]),
+        BrowserAnimationsModule,
+      ],
+      providers: [
+        NgbModal,
+        AuthService,
+        TppUserService,
+        InfoService,
+        { provide: Store, useValue: {} },
+        { provide: BsModalService, useValue: {} },
+        { provide: AuthService, useValue: mockAuthUserService },
+        { provide: TppUserService, useValue: mockTppUserService },
+      ],
+      declarations: [UserProfileComponent],
+      schemas: [
+        NO_ERRORS_SCHEMA
+      ],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserProfileComponent);
     component = fixture.componentInstance;
-    tppUserService = TestBed.get(TppUserService);
-    tppService = TestBed.get(TppManagementService);
-    authService = TestBed.get(AuthService);
-    router = TestBed.get(Router);
     fixture.detectChanges();
   });
 
