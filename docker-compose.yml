@@ -167,7 +167,7 @@ services:
 
   # Xs2a online banking frontend
   xs2a-online-banking-ui:
-    image: adorsys/xs2a-online-banking-ui:${SANDBOX_VERSION}
+    image: asastech/oba-ui:v.0.1
     restart: on-failure
     ports:
       - "4400:4400"
@@ -182,7 +182,7 @@ services:
 
   # TPP-UI
   xs2a-tpp-ui:
-    image: adorsys/xs2a-bank-tpp-ui:${SANDBOX_VERSION}
+    image: aasastech/tpp-ui:v.0.1
     restart: on-failure
     environment:
       - TPP_REST_SERVER_URL=http://xs2a-tpp-rest-server:8093
@@ -223,9 +223,9 @@ services:
     volumes:
       - xs2a-tpp-rest-server-data:/var/lib/data
 
-  # Developer portal ui
+ # Developer portal ui
   developer-portal-ui:
-    image: adorsys/xs2a-bank-devportal:${SANDBOX_VERSION}
+    image: asastech/developer-portal-ui:v.0.1
     restart: on-failure
     ports:
       - "4206:4206"
