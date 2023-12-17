@@ -182,7 +182,7 @@ services:
 
   # TPP-UI
   xs2a-tpp-ui:
-    image: aasastech/tpp-ui:v.0.1
+    image: asastech/tpp-ui:v.0.1
     restart: on-failure
     environment:
       - TPP_REST_SERVER_URL=http://xs2a-tpp-rest-server:8093
