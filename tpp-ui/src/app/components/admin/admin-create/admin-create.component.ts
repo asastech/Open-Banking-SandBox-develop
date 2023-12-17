@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { InfoService } from '../../../commons/info/info.service';
@@ -33,7 +33,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./admin-create.component.scss'],
 })
 export class AdminCreateComponent implements OnInit {
-  public userForm: FormGroup;
+  public userForm: UntypedFormGroup;
   public submitted: boolean;
   public errorMessage: string;
   public admin: false;
@@ -41,7 +41,7 @@ export class AdminCreateComponent implements OnInit {
   constructor(
     private infoService: InfoService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private settingsService: SettingsService,
     public customizeService: CustomizeService,
     private pageNavigationService: PageNavigationService,

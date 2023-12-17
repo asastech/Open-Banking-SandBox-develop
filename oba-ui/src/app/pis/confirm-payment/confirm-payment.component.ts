@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -18,13 +18,15 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { PaymentAuthorizeResponse } from '../../api/models';
 
 import { AccountDetailsTO } from '../../api/models/account-details-to';
 import { ConsentAuthorizeResponse } from '../../api/models/consent-authorize-response';
 import { RoutingPath } from '../../common/models/routing-path.model';
 import { ShareDataService } from '../../common/services/share-data.service';
+import { PsupisprovidesGetPsuAccsService } from '../../api/services/psupisprovides-get-psu-accs.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-confirm-payment',
@@ -37,12 +39,15 @@ export class ConfirmPaymentComponent implements OnInit, OnDestroy {
   public encryptedConsentId: string;
   public authorisationId: string;
   public transactionStatus: string;
-  private subscriptions: Subscription[] = [];
+  private ngUnsubscribe = new Subject();
   private oauth2Param: boolean;
+  isDisabled = true;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private shareService: ShareDataService
+    private shareService: ShareDataService,
+    private getPsuAccsService: PsupisprovidesGetPsuAccsService
   ) {}
 
   get accounts(): Array<AccountDetailsTO> {
@@ -50,27 +55,37 @@ export class ConfirmPaymentComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.subscriptions.push(
-      this.shareService.currentData.subscribe((data) => {
+    this.getPsuAccsService
+      .choseIbanAndCurrencyObservable()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((res) => {
+        this.isDisabled = !!res;
+      });
+
+    this.shareService.currentData
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((data) => {
         if (data) {
-          this.shareService.currentData.subscribe((authResponse) => {
-            this.authResponse = authResponse;
-          });
+          console.log('69 string confirm payment');
+          this.authResponse = data;
         }
-      })
-    );
-    this.shareService.currentData.subscribe((data) => {
-      if (data) {
-        this.shareService.currentData.subscribe((payAuthResponse) => {
-          this.payAuthResponse = payAuthResponse;
+      });
+
+    this.shareService.currentData
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((data) => {
+        if (data) {
+          console.log('78 string confirm payment');
+          this.payAuthResponse = data;
           this.transactionStatus = this.payAuthResponse.payment.transactionStatus;
-        });
-      }
-    });
+        }
+      });
     // fetch oauth param value
-    this.shareService.oauthParam.subscribe((oauth2: boolean) => {
-      this.oauth2Param = oauth2;
-    });
+    this.shareService.oauthParam
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((oauth2: boolean) => {
+        this.oauth2Param = oauth2;
+      });
   }
 
   public onConfirm() {
@@ -105,6 +120,7 @@ export class ConfirmPaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.ngUnsubscribe.next(true);
+    this.ngUnsubscribe.complete();
   }
 }

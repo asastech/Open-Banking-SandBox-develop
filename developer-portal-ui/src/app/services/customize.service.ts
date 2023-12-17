@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -77,7 +77,7 @@ export class CustomizeService {
   }
 
   get currentLanguageFolder(): string {
-    return (this.custom ? this._customContentFolderPath : this._defaultContentFolderPath) + this.languagesFolder;
+    return  this._defaultContentFolderPath + this.languagesFolder;
   }
 
   get defaultContentFolder(): string {
@@ -99,6 +99,7 @@ export class CustomizeService {
   setStyling(theme: Theme) {
     if (theme.globalSettings.cssVariables) {
       this.updateCSS(theme.globalSettings.cssVariables);
+      
     }
 
     if (theme.globalSettings.favicon) {
@@ -112,11 +113,11 @@ export class CustomizeService {
     cssVars({
       include: 'style',
       onlyLegacy: true,
-      watch: true,
+      watch: false,
       variables,
-      onComplete(cssText, styleNode, cssVariables) {
-        console.log(cssText, styleNode, cssVariables);
-      },
+      onError(mes) {
+        console.log('mes', mes)
+      }
     });
     // If you decide to drop ie11, edge < 14 support in future, use this as implementation to set variables
     // Object.keys(variables).forEach(variableName => {
@@ -126,12 +127,15 @@ export class CustomizeService {
 
   private setUpRoutes(theme: Theme) {
     const folder = this._custom ? this._customContentFolderPath : this._defaultContentFolderPath;
-
     if (theme.globalSettings && theme.globalSettings.favicon) {
       theme.globalSettings.favicon = `${folder}/${theme.globalSettings.favicon}`;
     }
-
+    if (theme.globalSettings && theme.globalSettings.logo) {
+      theme.globalSettings.logo = `${folder}/${theme.globalSettings.logo}`;
+    }
+    
     const pagesSettings = theme.pagesSettings;
+    // const defaultSettingPath = this._defaultContentFolderPath
     if (pagesSettings) {
       if (pagesSettings.navigationBarSettings && pagesSettings.navigationBarSettings.logo) {
         pagesSettings.navigationBarSettings.logo = `${folder}/${pagesSettings.navigationBarSettings.logo}`;
@@ -166,7 +170,6 @@ export class CustomizeService {
     const defaultLanguages = {
       en: `${this._defaultContentFolderPath}${this.languagesFolder}/en/united-kingdom.png`,
       de: `${this._defaultContentFolderPath}${this.languagesFolder}/de/germany.png`,
-      es: `${this._defaultContentFolderPath}${this.languagesFolder}/es/spain.png`,
       ua: `${this._defaultContentFolderPath}${this.languagesFolder}/ua/ukraine.png`,
     };
 
@@ -187,9 +190,9 @@ export class CustomizeService {
     } else {
       theme.globalSettings = {
         supportedLanguagesDictionary: defaultLanguages,
+        logo:theme.globalSettings.logo
       };
     }
-
     return theme;
   }
 

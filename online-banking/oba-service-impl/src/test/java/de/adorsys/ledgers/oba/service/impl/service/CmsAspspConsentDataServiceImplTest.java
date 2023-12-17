@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -36,9 +36,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -62,7 +62,7 @@ class CmsAspspConsentDataServiceImplTest {
 
     @BeforeEach
     void set() throws NoSuchFieldException {
-        FieldSetter.setField(service, service.getClass().getDeclaredField("loginFailedMax"), 3);
+        ReflectionTestUtils.setField(service, "loginFailedMax", 3);
     }
 
     @Test

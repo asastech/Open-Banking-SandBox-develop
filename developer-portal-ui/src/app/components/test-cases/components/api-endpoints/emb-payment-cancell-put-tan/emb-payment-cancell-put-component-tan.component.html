@@ -1,0 +1,164 @@
+<!--
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
+  ~
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
+  -->
+
+<div class="endpoint-wrapper">
+  <!-- Segments -->
+  <div class="endpoint-segment-wrapper">
+    <div
+      class="endpoint-segment-item"
+      [ngClass]="activeSegment === 'documentation' ? 'left-item' : 'unactive-item'"
+      (click)="changeSegment('documentation')"
+    >
+      <span>{{ 'TEST_CASES.COMPONENTS.TABS.DOC' | translate }}</span>
+    </div>
+    <div
+      class="endpoint-segment-item"
+      [ngClass]="activeSegment === 'play-data' ? 'left-item' : 'unactive-item'"
+      (click)="changeSegment('play-data')"
+    >
+      <span>{{ 'TEST_CASES.COMPONENTS.TABS.PLAY' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="endpoint-main-content">
+    <!-- Documentation -->
+    <div class="endpoint-documentation" *ngIf="activeSegment === 'documentation'; else play_with_data">
+      <h1>{{ 'TEST_CASES.SIDE_NAV.PAYMENT.CANCELLATION.UPDATE_PSU_WITH_TAN' | translate }}</h1>
+      <br />
+      <h2>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.TITLE' | translate }}</h2>
+      <br />
+      <span class="subtitle">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_TAN' | translate }}</span
+      ><br />
+      <span class="bold-text">a) {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_2' | translate }}</span>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_13' | translate }} <span class="bold-text">PUT</span> endpoint
+        <app-line-command
+          title="/v1/{payment-service}/{payment-product}/{paymentId}/cancellation-authorisations/{cancellationId}"
+        ></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_14' | translate }}
+        <app-line-command title="payment-service"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_15' | translate }}
+        <app-line-command title="payment-product"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_16' | translate }}
+        <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.STEP' | translate }}</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_17' | translate }}
+      </p>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_18' | translate }}
+        <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.STEP' | translate }}</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_19' | translate }}
+        <app-line-command title="paymentId"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_20' | translate }}
+        <app-line-command title="cancellationId"></app-line-command>
+        .
+      </p>
+      <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_21' | translate }}</p>
+      <app-code-area [json]="jsonData1" [id]="'EPCPut-2'"></app-code-area>
+
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_22' | translate }} <span class="bold-text">"scaAuthenticationData"</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CONS_PUT.PART_51' | translate }}
+      </p>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_24' | translate }}
+        <app-line-command title="200 HTTP code"></app-line-command>
+        .
+      </p>
+      <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_25' | translate }}</p>
+      <app-code-area [json]="jsonData2" [id]="'EPCPut-3'"></app-code-area>
+
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_26' | translate }} {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_27' | translate }}
+        <app-line-command title="200 HTTP code"></app-line-command>.
+      </p>
+
+      <br /><br />
+      <span class="bold-text">b) {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_3' | translate }}</span>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_28' | translate }} <span class="bold-text">PUT</span> endpoint
+        <app-line-command
+          title="/v1/{payment-service}/{payment-product}/{paymentId}/cancellation-authorisations/{cancellationId}"
+        ></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_29' | translate }}
+        <app-line-command title="payment-service"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_30' | translate }}
+        <app-line-command title="payment-product"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_31' | translate }}
+        <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.STEP' | translate }}</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_32' | translate }}
+      </p>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_33' | translate }}
+        <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.STEP' | translate }}</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_34' | translate }}
+        <app-line-command title="paymentId"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_35' | translate }}
+        <app-line-command title="cancellationId"></app-line-command>
+        .
+      </p>
+      <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_36' | translate }}</p>
+      <app-code-area [json]="jsonData1" [id]="'EPCPut-4'"></app-code-area>
+
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_37' | translate }} <span class="bold-text">"scaAuthenticationData"</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CONS_PUT.PART_51' | translate }}
+      </p>
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_39' | translate }}
+        <app-line-command title="200 HTTP code"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_40' | translate }}
+      </p>
+      <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_41' | translate }}</p>
+      <app-code-area [json]="jsonData3" [id]="'EPCPut-5'"></app-code-area>
+
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_42' | translate }} <span class="bold-text">"authenticationMethodId"</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_43' | translate }} <app-line-command title="200 HTTP code"></app-line-command>.
+      </p>
+      <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_44' | translate }}</p>
+      <app-code-area [json]="jsonData2" [id]="'EPCPut-6'"></app-code-area>
+
+      <p>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_45' | translate }} {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_46' | translate }}
+        <app-line-command title="200 HTTP code"></app-line-command>.
+      </p>
+    </div>
+
+    <!-- Play with data -->
+    <ng-template #play_with_data>
+      <app-play-wth-data
+        method="PUT"
+        [headers]="headers"
+        [body]="body"
+        [paymentServiceFlag]="true"
+        [paymentProductFlag]="true"
+        [paymentIdFlag]="true"
+        [paymentId]="paymentId"
+        [variablePathEnd]="'/cancellation-authorisations'"
+        [authorisationIdFlag]="true"
+        [authorisationId]="authorisationId"
+        url="v1/"
+        eventName="embedded_put_authorise_payment_cancellation"
+        eventCategory="send_request"
+        eventAction="click"
+        eventLabel="embedded_put_authorise_payment_cancellation"
+      ></app-play-wth-data>
+    </ng-template>
+  </div>
+</div>

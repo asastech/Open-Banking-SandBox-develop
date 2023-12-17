@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
  * contact us at psd2@adorsys.com.
  */
 
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AccountAccessManagementComponent } from './components/account-access-management/account-access-management.component';
@@ -42,7 +42,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { UploadFileComponent } from './uploadFile/uploadFile.component';
 import { TppsComponent } from './components/tpps/tpps.component';
 import { AdminCreateComponent } from './components/admin/admin-create/admin-create.component';
-
+import { UserCreateFundsConfirmationComponent } from './components/users/user-create-funds-confirmation/user-create-funds-confirmation.component';
+import { UserFundsConfirmationDetailsComponent } from './components/users/user-funds-confirmation-details/user-funds-confirmation-details.component';
 const routes: Routes = [
   {
     path: '',
@@ -97,6 +98,14 @@ const routes: Routes = [
       {
         path: 'users/:id/update-user-details',
         component: UserUpdateComponent,
+      },
+      {
+        path: 'users/:id/update-create-funds',
+        component: UserCreateFundsConfirmationComponent,
+      },
+      {
+        path: 'confirmation-consent/:userLogin/:id/details',
+        component: UserFundsConfirmationDetailsComponent,
       },
       {
         path: 'users/:id/create-deposit-account',
@@ -164,10 +173,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
-      relativeLinkResolution: 'legacy',
-    }),
+    RouterModule.forRoot(routes, {}),
   ],
   exports: [RouterModule],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppRoutingModule {}

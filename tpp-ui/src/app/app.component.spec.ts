@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,6 +16,7 @@
  * contact us at psd2@adorsys.com.
  */
 
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgHttpLoaderModule } from 'ng-http-loader';
@@ -23,6 +24,11 @@ import { of } from 'rxjs';
 
 import { AppComponent } from './app.component';
 import { CustomizeService } from './services/customize.service';
+import { AccountComponent } from './components/account/account.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InfoModule } from './commons/info/info.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -48,21 +54,31 @@ describe('AppComponent', () => {
     getLogo: () => '../assets/UI/Logo_XS2ASandbox.png',
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [NgHttpLoaderModule, RouterTestingModule],
-        declarations: [AppComponent],
-        providers: [
-          { provide: CustomizeService, useValue: CustomizeServiceStub },
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          customizeService = TestBed.get(CustomizeService);
-        });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'accounts', component: AccountComponent }]),
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        InfoModule,
+        FormsModule,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+  }));
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [NgHttpLoaderModule, RouterTestingModule],
+      declarations: [AppComponent],
+      providers: [{ provide: CustomizeService, useValue: CustomizeServiceStub }],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA],
     })
-  );
+      .compileComponents()
+      .then(() => {
+        customizeService = TestBed.inject(CustomizeService);
+      });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
@@ -75,10 +91,7 @@ describe('AppComponent', () => {
   });
 
   it('should set global settings in ngOnInit', () => {
-    const getGlobalSettingsSpy = spyOn(
-      customizeService,
-      'getJSON'
-    ).and.callThrough();
+    const getGlobalSettingsSpy = spyOn(customizeService, 'getJSON').and.callThrough();
 
     component.ngOnInit();
 

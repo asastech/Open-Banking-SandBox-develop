@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -22,20 +22,26 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TppUserService } from '../../services/tpp.user.service';
 import { AuthService } from '../../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
-import { DebugElement } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { UserProfileUpdateComponent } from './user-profile-update.component';
 import { of } from 'rxjs';
 import { TppManagementService } from '../../services/tpp-management.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { InfoModule } from '../../commons/info/info.module';
+import { InfoService } from '../../commons/info/info.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('UserProfileUpdateComponent', () => {
   let component: UserProfileUpdateComponent;
   let fixture: ComponentFixture<UserProfileUpdateComponent>;
   let userInfoService: TppUserService;
-  let router: Router;
-  let de: DebugElement;
-  let el: HTMLElement;
+
+  const mockRoute = {
+    snapshot: { params: of({ id: '12345' }) },
+    params: of({ id: '12345' }),
+    queryParams: of({}),
+  };
 
   const mockUser: User = {
     id: 'id',
@@ -43,20 +49,16 @@ describe('UserProfileUpdateComponent', () => {
     login: 'login',
     branch: 'branch',
     pin: 'pin',
+    userRoles: [],
     scaUserData: [],
     accountAccesses: [],
     branchLogin: 'branchLogin',
   };
 
-  const mockAuthUserService = {
-    isLoggedIn: () => {
-      return true;
-    },
-  };
-
-  const mockinfoService = {
+  const mockTppUserService = {
+    currentTppUser: of(mockUser),
     getUserInfo: () => of(mockUser),
-    updateUserInfo: (user: User) => of({}),
+    updateUserInfo: () => of({}),
   };
 
   const mockRouter = {
@@ -64,33 +66,30 @@ describe('UserProfileUpdateComponent', () => {
       console.log('mocknavigation', url);
     },
   };
-  const mockActivatedRoute = {
-    params: of({ id: '12345' }),
-  };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [ReactiveFormsModule, HttpClientTestingModule],
-        providers: [
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, InfoModule, HttpClientTestingModule, BrowserAnimationsModule],
+      providers: [
+        {
+          provide: InfoService,
           TppUserService,
           AuthService,
           TppManagementService,
           NgbModal,
-          { provide: AuthService, useValue: mockAuthUserService },
-          { provide: TppUserService, useValue: mockinfoService },
-          { provide: Router, useValue: mockRouter },
-        ],
-        declarations: [UserProfileUpdateComponent],
-      }).compileComponents();
-    })
-  );
+        },
+        { provide: ActivatedRoute, useValue: mockRoute },
+        { provide: TppUserService, useValue: mockTppUserService },
+        { provide: Router, useValue: mockRouter },
+      ],
+      declarations: [UserProfileUpdateComponent],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserProfileUpdateComponent);
     component = fixture.componentInstance;
-    userInfoService = TestBed.get(TppUserService);
-    router = TestBed.get(Router);
+    userInfoService = TestBed.inject(TppUserService);
     fixture.detectChanges();
   });
 
@@ -99,13 +98,13 @@ describe('UserProfileUpdateComponent', () => {
   });
 
   it('should get UserDetails component', () => {
+    sessionStorage.setItem('access_token', 'Real session token');
     component.getUserDetails();
     expect(component.user).toEqual(mockUser);
   });
 
   it('validate onSubmit method', () => {
     component.onSubmit();
-    expect(component.submitted).toEqual(true);
     expect(component.userForm.valid).toBeFalsy();
   });
 
@@ -119,15 +118,13 @@ describe('UserProfileUpdateComponent', () => {
   });
 
   it('should load the update users info', () => {
-    let infoSpy = spyOn(userInfoService, 'updateUserInfo').and.returnValue(
-      of({ mockUser })
-    );
+    const infoSpy = spyOn(userInfoService, 'updateUserInfo').and.returnValue(of({ mockUser }));
     component.user = mockUser;
-    component.userForm.get('email').setValue('dart.vader@dark-side.com');
+    component.userForm.get('email').setValue('dart.vader@gmail.com');
     component.userForm.get('username').setValue('dart.vader');
-    component.userForm.get('password').setValue('12345678');
-    component.onSubmit();
     expect(component.userForm.valid).toBeTruthy();
+    component.admin = 'false';
+    component.onSubmit();
     expect(infoSpy).toHaveBeenCalled();
   });
 });

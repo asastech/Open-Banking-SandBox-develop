@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,6 +16,7 @@
  * contact us at psd2@adorsys.com.
  */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import cssVars from 'css-vars-ponyfill';
@@ -26,6 +27,9 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class CustomizeService {
+  constructor(private http: HttpClient) {
+    this.updateCSS();
+  }
   private NEW_THEME_WAS_SET = false;
   private STATUS_WAS_CHANGED = false;
   private IS_CUSTOM = false;
@@ -40,8 +44,18 @@ export class CustomizeService {
     },
   };
 
-  constructor(private http: HttpClient) {
-    this.updateCSS();
+  private static removeExternalLinkElements(): void {
+    const linkElements = document.querySelectorAll('link[rel ~= "icon"]');
+    for (const linkElement of Array.from(linkElements)) {
+      linkElement.parentNode.removeChild(linkElement);
+    }
+  }
+
+  private static removeFavicon(): void {
+    const linkElement = document.head.querySelector('#customize-service-injected-node');
+    if (linkElement) {
+      document.head.removeChild(linkElement);
+    }
   }
 
   public getJSON(): Observable<Theme> {
@@ -62,7 +76,7 @@ export class CustomizeService {
         }
         return theme as Theme;
       }),
-      catchError((e) => {
+      catchError(() => {
         this.IS_CUSTOM = false;
         return this.getDefaultTheme();
       })
@@ -101,10 +115,7 @@ export class CustomizeService {
       CustomizeService.removeExternalLinkElements();
     }
     if (this.USER_THEME.globalSettings.favicon) {
-      this.setFavicon(
-        this.USER_THEME.globalSettings.favicon.type,
-        this.USER_THEME.globalSettings.favicon.href
-      );
+      this.setFavicon(this.USER_THEME.globalSettings.favicon.type, this.USER_THEME.globalSettings.favicon.href);
     }
     this.NEW_THEME_WAS_SET = true;
     this.STATUS_WAS_CHANGED = !this.STATUS_WAS_CHANGED;
@@ -153,13 +164,6 @@ export class CustomizeService {
     return errors;
   }
 
-  private static removeExternalLinkElements(): void {
-    const linkElements = document.querySelectorAll('link[rel ~= "icon"]');
-    for (const linkElement of Array.from(linkElements)) {
-      linkElement.parentNode.removeChild(linkElement);
-    }
-  }
-
   public addFavicon(type: string, href: string): void {
     const linkElement = document.createElement('link');
     linkElement.setAttribute('id', 'customize-service-injected-node');
@@ -167,15 +171,6 @@ export class CustomizeService {
     linkElement.setAttribute('type', type);
     linkElement.setAttribute('href', href);
     document.head.appendChild(linkElement);
-  }
-
-  private static removeFavicon(): void {
-    const linkElement = document.head.querySelector(
-      '#customize-service-injected-node'
-    );
-    if (linkElement) {
-      document.head.removeChild(linkElement);
-    }
   }
 
   public setFavicon(type: string, href: string): void {
@@ -190,7 +185,6 @@ export class CustomizeService {
       onlyLegacy: true,
       watch: true,
       variables,
-      onComplete(cssText, styleNode, cssVariables) {},
     });
     // If you decide to drop ie11, edge < 14 support in future, use this as implementation to set variables
     // Object.keys(variables).forEach(variableName => {

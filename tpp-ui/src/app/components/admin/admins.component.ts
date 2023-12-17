@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,19 +17,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import { debounceTime, tap } from 'rxjs/operators';
 import { User, UserResponse } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
-import {
-  PageConfig,
-  PaginationConfigModel,
-} from '../../models/pagination-config.model';
+import { PageConfig, PaginationConfigModel } from '../../models/pagination-config.model';
 import { TppManagementService } from '../../services/tpp-management.service';
 import { PageNavigationService } from '../../services/page-navigation.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,20 +45,13 @@ export class AdminsComponent implements OnInit {
     totalItems: 0,
   };
 
-  searchForm: FormGroup = this.formBuilder.group({
+  searchForm: UntypedFormGroup = this.formBuilder.group({
     itemsPerPage: [this.config.itemsPerPage, Validators.required],
   });
   newPin: string;
   confirmNewPin: string;
-  positionOptions: TooltipPosition[] = [
-    'above',
-    'before',
-    'after',
-    'below',
-    'left',
-    'right',
-  ];
-  position = new FormControl(this.positionOptions[0]);
+  positionOptions: TooltipPosition[] = ['above', 'before', 'after', 'below', 'left', 'right'];
+  position = new UntypedFormControl(this.positionOptions[0]);
 
   constructor(
     private userService: UserService,
@@ -74,7 +59,7 @@ export class AdminsComponent implements OnInit {
     private pageNavigationService: PageNavigationService,
     private tppManagementService: TppManagementService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private modalService: NgbModal,
     private router: Router,
     private userInfoService: TppUserService
@@ -113,55 +98,39 @@ export class AdminsComponent implements OnInit {
   }
 
   listAdmins(page: number, size: number) {
-    this.tppManagementService
-      .getAllAdmins(page - 1, size)
-      .subscribe((response: UserResponse) => {
-        if (typeof response.users !== 'undefined') {
-          this.users = response.users;
-          this.users.reverse();
-        }
-        this.config.totalItems = response.totalElements;
-      });
+    this.tppManagementService.getAllAdmins(page - 1, size).subscribe((response: UserResponse) => {
+      if (typeof response.users !== 'undefined') {
+        this.users = response.users;
+        this.users.reverse();
+      }
+      this.config.totalItems = response.totalElements;
+    });
   }
 
   openConfirmation(content, userId: string, type: string) {
-    this.modalService.open(content).result.then(
-      () => {
-        this.userInfoService.getUserInfo().subscribe(
-          (user: User) => {
-            if (type === 'delete') {
-              this.tppManagementService.deleteUser(userId).subscribe(() => {
-                if (userId === user.id) {
-                  sessionStorage.removeItem('access_token');
-                  this.router.navigateByUrl('/login');
-                } else {
-                  this.getAdmins();
-                }
-                this.infoService.openFeedback(
-                  'Admin was successfully deleted!',
-                  {
-                    severity: 'info',
-                  }
-                );
-              });
-            } else if (type === 'pin' && this.newPin === this.confirmNewPin) {
-              this.tppManagementService
-                .changePin(userId, this.newPin)
-                .subscribe(() => {
-                  this.getAdmins();
-                  this.infoService.openFeedback(
-                    'Pin was successfully changed!',
-                    {
-                      severity: 'info',
-                    }
-                  );
-                });
+    this.modalService.open(content).result.then(() => {
+      this.userInfoService.getUserInfo().subscribe((user: User) => {
+        if (type === 'delete') {
+          this.tppManagementService.deleteUser(userId).subscribe(() => {
+            if (userId === user.id) {
+              sessionStorage.removeItem('access_token');
+              this.router.navigateByUrl('/login');
+            } else {
+              this.getAdmins();
             }
-          },
-          () => {}
-        );
-      },
-      () => {}
-    );
+            this.infoService.openFeedback('Admin was successfully deleted!', {
+              severity: 'info',
+            });
+          });
+        } else if (type === 'pin' && this.newPin === this.confirmNewPin) {
+          this.tppManagementService.changePin(userId, this.newPin).subscribe(() => {
+            this.getAdmins();
+            this.infoService.openFeedback('Pin was successfully changed!', {
+              severity: 'info',
+            });
+          });
+        }
+      });
+    });
   }
 }

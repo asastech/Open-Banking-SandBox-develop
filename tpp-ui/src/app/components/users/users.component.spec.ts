@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -29,35 +29,39 @@ import { UserService } from '../../services/user.service';
 import { UsersComponent } from './users.component';
 import { PaginationContainerComponent } from '../../commons/pagination-container/pagination-container.component';
 import { PaginationConfigModel } from '../../models/pagination-config.model';
+import { InfoService } from '../../commons/info/info.service';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ADMIN_KEY } from '../../commons/constant/constant';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
   let fixture: ComponentFixture<UsersComponent>;
   let usersService: UserService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          FormsModule,
-          FilterPipeModule,
-          RouterTestingModule,
-          HttpClientTestingModule,
-          NgbPaginationModule,
-          NgbPaginationModule,
-        ],
-        declarations: [UsersComponent, PaginationContainerComponent],
-        providers: [UserService],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        FilterPipeModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        NgbPaginationModule,
+        NgbPaginationModule,
+        OverlayModule,
+      ],
+      declarations: [UsersComponent, PaginationContainerComponent],
+      providers: [UserService, InfoService],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UsersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    usersService = TestBed.get(UserService);
+    usersService = TestBed.inject(UserService);
   });
 
   it('should create', () => {
@@ -65,6 +69,7 @@ describe('UsersComponent', () => {
   });
 
   it('should load users on NgOnInit', () => {
+    sessionStorage.setItem(ADMIN_KEY, 'false');
     component.ngOnInit();
     const mockUsers: User[] = [
       {
@@ -78,10 +83,7 @@ describe('UsersComponent', () => {
         branchLogin: 'branchLogin',
       },
     ];
-
-    const getUsersSpy = spyOn(usersService, 'listUsers').and.returnValue(
-      of({ users: mockUsers, totalElements: mockUsers.length })
-    );
+    const getUsersSpy = spyOn(usersService, 'listUsers').and.returnValue(of({ users: mockUsers, totalElements: mockUsers.length }));
 
     component.ngOnInit();
 
@@ -90,6 +92,7 @@ describe('UsersComponent', () => {
   });
 
   it('should load users', () => {
+    component.admin = 'false';
     const mockUsers: User[] = [
       {
         id: 'USERID',
@@ -102,9 +105,8 @@ describe('UsersComponent', () => {
         branchLogin: 'branchLogin',
       },
     ];
-    const getUsersSpy = spyOn(usersService, 'listUsers').and.returnValue(
-      of({ users: mockUsers, totalElements: mockUsers.length })
-    );
+
+    const getUsersSpy = spyOn(usersService, 'listUsers').and.returnValue(of({ users: mockUsers, totalElements: mockUsers.length }));
 
     component.listUsers(5, 10, {});
 
@@ -119,12 +121,26 @@ describe('UsersComponent', () => {
       pageSize: 5,
     };
     component.searchForm.setValue({
-      query: 'foo',
+      userLogin: 'foo',
+      tppId: 'foo',
+      tppLogin: 'foo',
+      country: 'foo',
+      blocked: 'foo',
       itemsPerPage: 15,
     });
     const listUsersSpy = spyOn(component, 'listUsers');
     component.pageChange(mockPageConfig);
-    expect(listUsersSpy).toHaveBeenCalledWith(10, 5, null);
+    expect(listUsersSpy).toHaveBeenCalledWith(
+      10,
+      5,
+      Object({
+        userLogin: 'foo',
+        tppId: 'foo',
+        tppLogin: 'foo',
+        country: 'foo',
+        blocked: 'foo',
+      })
+    );
   });
 
   it('should change the page size', () => {

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -18,30 +18,18 @@
 
 <div class="modal-header">
   <h4 class="modal-title pull-left">{{ title }}</h4>
-  <button
-    type="button"
-    class="close pull-right"
-    aria-label="Close"
-    (click)="close()"
-  >
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close pull-right" aria-label="Close" (click)="close()">
   </button>
 </div>
 <div class="modal-body">
   <div class="flex" *ngIf="list.length">
     <div [formGroup]="userForm">
-      <input
-        *ngFor="let item of list"
-        formControlName="description"
-        placeholder="{{ item }}"
-      />
+      <input *ngFor="let item of list" formControlName="description" placeholder="{{ item }}" />
     </div>
   </div>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary mr-2" (click)="createRecoveryPoints()">
-    Create State
-  </button>
+  <button class="btn btn-primary me-2" (click)="createRecoveryPoints()">Create State</button>
   <button type="button" class="btn btn-outline-secondary" (click)="close()">
     {{ closeBtnName }}
   </button>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -28,13 +28,16 @@ export class RdctPaymentCancellationDeleteComponent implements OnInit {
   activeSegment = 'documentation';
   headers: object = {
     'TPP-Explicit-Authorisation-Preferred': 'false',
-    'PSU-ID': 'YOUR_USER_LOGIN',
     'TPP-Redirect-Preferred': 'true',
     'TPP-Redirect-URI': LocalStorageService.get(TPP_REDIRECT_URL_KEY),
     'TPP-Nok-Redirect-URI': LocalStorageService.get(TPP_NOK_REDIRECT_URL_KEY),
   };
 
-  constructor() {}
+  paymentId: string;
+
+  constructor(public localStorageService: LocalStorageService) {
+    this.paymentId = LocalStorageService.get('paymentId');
+  }
 
   changeSegment(segment) {
     if (segment === 'documentation' || segment === 'play-data') {

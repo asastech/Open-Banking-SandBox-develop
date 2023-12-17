@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -119,10 +119,13 @@
         <div class="col-2">
           <label>&nbsp;</label>
           <button
-            class="btn btn-primary btn-block mt-2"
+            mat-fab
+            matTooltip="Refresh"
+            aria-label="Refresh"
+            class="btn btn-table-btn mt-4"
             (click)="refreshTransactions()"
           >
-            Refresh
+            <mat-icon>refresh</mat-icon>
           </button>
         </div>
       </div>
@@ -140,7 +143,7 @@
           (pageChange)="pageChange($event)"
         ></ngb-pagination>
         <select
-          class="custom-select custom-select-sm ml-4 mb-4"
+          class="form-select form-select-sm ms-4 mb-4"
           style="width: auto"
           formControlName="itemsPerPage"
         >
@@ -165,8 +168,8 @@
               <th scope="col">Creditor Name</th>
               <th scope="col">Creditor Account</th>
               <th scope="col">Remittance</th>
-              <th scope="col">transactionId</th>
-              <th scope="col">endToEndId</th>
+              <th scope="col">Transaction ID</th>
+              <th scope="col">End To End ID</th>
             </tr>
           </thead>
           <tbody>
@@ -184,7 +187,7 @@
               <td>{{ transaction.valueDate }}</td>
               <td>{{ transaction?.creditorName }}</td>
               <td>{{ transaction.creditorAccount?.iban }}</td>
-              <td>{{ transaction.remittanceInformationUnstructured }}</td>
+              <td>{{ transaction.remittanceInformationUnstructuredArray }}</td>
               <td>{{ transaction.transactionId }}</td>
               <td>{{ transaction.endToEndId }}</td>
             </tr>
@@ -207,7 +210,7 @@
       ></ngb-pagination>
 
       <select
-        class="custom-select custom-select-sm ml-4 mb-3"
+        class="form-select form-select-sm ms-4 mb-3"
         id="value"
         style="width: auto"
         formControlName="itemsPerPage"

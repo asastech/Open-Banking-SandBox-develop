@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,6 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-emb-payment-cancell-delete',
@@ -25,11 +26,15 @@ import { Component, OnInit } from '@angular/core';
 export class EmbPaymentCancellDeleteComponent implements OnInit {
   activeSegment = 'documentation';
   headers: object = {
-    'TPP-Explicit-Authorisation-Preferred': 'false',
+    'TPP-Explicit-Authorisation-Preferred': 'true',
     'PSU-ID': 'YOUR_USER_LOGIN',
   };
 
-  constructor() {}
+  paymentId: string;
+
+  constructor(public localStorageService: LocalStorageService) {
+    this.paymentId = LocalStorageService.get('paymentId');
+  }
 
   changeSegment(segment) {
     if (segment === 'documentation' || segment === 'play-data') {

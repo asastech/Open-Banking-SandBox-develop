@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -39,7 +39,9 @@
   <div class="endpoint-main-content">
     <!-- Documentation -->
     <div class="endpoint-documentation" *ngIf="activeSegment === 'documentation'; else play_with_data">
-      <h1>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.TITLE_1' | translate }}</h1>
+      <h1>{{ 'TEST_CASES.SIDE_NAV.PAYMENT.REDIRECT.INITIATE_PAYMENT' | translate }}</h1>
+      <br />
+      <h2>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.TITLE_1' | translate }}</h2>
       <p>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_1' | translate }} <span class="bold-text">POST</span> endpoint
         <app-line-command title="/v1/{payment-service}/{payment-product}"></app-line-command>
@@ -81,8 +83,15 @@
       </div>
       <div class="api-table bg"><span>TPP-QWAC-Certificate</span> <span> -----BEGIN CERTIFICATE-----</span></div>
       <p>
-        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_10' | translate }} <span class="bold-text">YOUR_USER_LOGIN</span>
+        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_10' | translate }} <span class="bold-text">"PSU-ID"</span>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_11' | translate }}
+      </p>
+      <p>
+        4.
+        <span class="bold-text"> {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.NOTE' | translate }} </span>
+        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_28' | translate }}
+        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_29' | translate }}
+        <span class="italic-text">{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.DEBTOR_ACC' | translate }}</span>
       </p>
       <p>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_12' | translate }}
@@ -98,6 +107,7 @@
         <app-line-command title="payment-service"></app-line-command>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_16' | translate }}
         <app-line-command title="periodic-payments"></app-line-command>
+        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_27' | translate }}
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_17' | translate }}
       </p>
       <app-code-area [json]="jsonData2" [id]="'RPIP-2'"></app-code-area>
@@ -112,14 +122,14 @@
       <app-code-area [json]="jsonData3" [id]="'RPIP-3'"></app-code-area>
 
       <p>
-        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_21' | translate }} <span class="bold-text">YOUR_USER_IBAN</span>
+        {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_21' | translate }} <span class="bold-text">"iban"</span>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_22' | translate }}
       </p>
       <app-code-area [json]="jsonData4" [id]="'RPIP-4'"></app-code-area>
 
       <p>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_23' | translate }}</p>
-      <p>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_24' | translate }}</p>
-      <h1>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.TITLE_2' | translate }}</h1>
+      <p>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_30' | translate }}</p>
+      <h2>{{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.TITLE_2' | translate }}</h2>
       <p>
         {{ 'TEST_CASES.COMPONENTS.RDCT_PAY_INIT_POST.PART_25' | translate }}
         <app-line-command title="scaRedirect"></app-line-command>
@@ -135,6 +145,7 @@
         [body]="body"
         [paymentServiceFlag]="true"
         [paymentProductFlag]="true"
+        [paymentIdFlag]="false"
         [url]="'v1/'"
         [fieldsToCopy]="['paymentId']"
         eventName="redirect_post_initiate_payment"

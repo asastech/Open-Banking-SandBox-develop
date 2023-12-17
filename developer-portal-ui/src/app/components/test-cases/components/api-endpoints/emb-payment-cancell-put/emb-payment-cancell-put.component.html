@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -39,8 +39,11 @@
   <div class="endpoint-main-content">
     <!-- Documentation -->
     <div class="endpoint-documentation" *ngIf="activeSegment === 'documentation'; else play_with_data">
-      <h1>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.TITLE' | translate }}</h1>
-      <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_1' | translate }}</span>
+      <h1>{{ 'TEST_CASES.SIDE_NAV.PAYMENT.CANCELLATION.UPDATE_PSU_DATA_WITH_PASSWORD' | translate }}</h1>
+      <br />
+      <span class="subtitle">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE' | translate }}</span
+      ><br /><br />
+      <span class="bold-text">a) {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_1' | translate }}</span>
       <p>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_1' | translate }} <span class="bold-text">PUT</span> endpoint
         <app-line-command
@@ -67,7 +70,7 @@
       <app-code-area [json]="jsonData1" [id]="'EPCPut-1'"></app-code-area>
 
       <p>
-        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_10' | translate }} <span class="bold-text">YOUR_USER_PASSWORD</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_10' | translate }} <span class="bold-text">"password"</span>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_11' | translate }}
       </p>
       <p>
@@ -76,7 +79,8 @@
         .
       </p>
 
-      <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_2' | translate }}</span>
+      <br />
+      <span class="bold-text">b) {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_2' | translate }}</span>
       <p>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_13' | translate }} <span class="bold-text">PUT</span> endpoint
         <app-line-command
@@ -103,7 +107,7 @@
       <app-code-area [json]="jsonData1" [id]="'EPCPut-2'"></app-code-area>
 
       <p>
-        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_22' | translate }} <span class="bold-text">YOUR_USER_PASSWORD</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_22' | translate }} <span class="bold-text">"password"</span>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_23' | translate }}
       </p>
       <p>
@@ -119,7 +123,8 @@
         <app-line-command title="200 HTTP code"></app-line-command>.
       </p>
 
-      <span class="bold-text">{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_3' | translate }}</span>
+      <br />
+      <span class="bold-text">c) {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.SUBTITLE_3' | translate }}</span>
       <p>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_28' | translate }} <span class="bold-text">PUT</span> endpoint
         <app-line-command
@@ -146,7 +151,7 @@
       <app-code-area [json]="jsonData1" [id]="'EPCPut-4'"></app-code-area>
 
       <p>
-        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_37' | translate }} <span class="bold-text">YOUR_USER_PASSWORD</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_37' | translate }} <span class="bold-text">"password"</span>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_38' | translate }}
       </p>
       <p>
@@ -158,7 +163,7 @@
       <app-code-area [json]="jsonData3" [id]="'EPCPut-5'"></app-code-area>
 
       <p>
-        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_42' | translate }} <span class="italic-text">YOUR_AUTHENTICATION_METHOD_ID</span>
+        {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_42' | translate }} <span class="bold-text">"authenticationMethodId"</span>
         {{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_43' | translate }} <app-line-command title="200 HTTP code"></app-line-command>.
       </p>
       <p>{{ 'TEST_CASES.COMPONENTS.EMB_CANS_PUT.PART_44' | translate }}</p>
@@ -172,6 +177,7 @@
 
     <!-- Play with data -->
     <ng-template #play_with_data>
+      riririrr
       <app-play-wth-data
         method="PUT"
         [headers]="headers"
@@ -179,8 +185,10 @@
         [paymentServiceFlag]="true"
         [paymentProductFlag]="true"
         [paymentIdFlag]="true"
+        [paymentId]="paymentId"
         [variablePathEnd]="'/cancellation-authorisations'"
-        [cancellationIdFlag]="true"
+        [authorisationIdFlag]="true"
+        [authorisationId]="authorisationId"
         url="v1/"
         eventName="embedded_put_authorise_payment_cancellation"
         eventCategory="send_request"

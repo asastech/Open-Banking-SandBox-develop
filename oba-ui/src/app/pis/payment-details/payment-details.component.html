@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -22,11 +22,34 @@
       <div id="fixed">
         <h2><strong>Debtor account</strong></h2>
         <strong
-          ><p>
+          *ngIf="authResponse.payment.debtorAccount; else withoutDebtorAcc"
+        >
+          <p>
             {{ authResponse.payment.debtorAccount.iban }}
             {{ authResponse.payment.debtorAccount.currency }}
-          </p></strong
-        >
+          </p>
+        </strong>
+
+        <ng-template #withoutDebtorAcc>
+          <div class="d-flex flex-column payment__dropdown">
+            <ng-multiselect-dropdown
+              [data]="dropdownList"
+              [placeholder]="'Choose Iban'"
+              [settings]="dropdownConf"
+              [(ngModel)]="selectedItems"
+              [disabled]="isSubmitted"
+            >
+            </ng-multiselect-dropdown>
+            <span *ngIf="error" class="dp-error-text">{{ error }}</span>
+            <button
+              class="btn btn-primary mt-2"
+              [disabled]="isSubmitted"
+              (click)="sendSelectedIban()"
+            >
+              Ok
+            </button>
+          </div>
+        </ng-template>
         <hr />
         <h5>Total amount</h5>
         <strong

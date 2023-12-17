@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,6 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import JSZip from 'jszip';
 
 import { CertificateDownloadService } from './certificate-download.service';
 import { of } from 'rxjs';
@@ -32,15 +31,10 @@ describe('CertificateDownloadService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule,
-        HttpClientTestingModule,
-        RouterTestingModule,
-        InfoModule,
-      ],
+      imports: [HttpClientModule, HttpClientTestingModule, RouterTestingModule, InfoModule],
       providers: [CertificateGenerationService, CertificateDownloadService],
     });
-    service = TestBed.get(CertificateGenerationService);
+    service = TestBed.inject(CertificateDownloadService);
   });
 
   it('should be created', () => {
@@ -50,12 +44,8 @@ describe('CertificateDownloadService', () => {
   it('should create a zip Url', (done) => {
     const encodedCert = 'encodedCert';
     const privateKey = 'privateKey';
-    spyOn(CertificateDownloadService, 'generateZipFile').and.returnValue(
-      of({}).toPromise()
-    );
-    spyOn(CertificateDownloadService, 'createObjectUrl').and.returnValue(
-      'dummy-obj-val'
-    );
+    spyOn(CertificateDownloadService, 'generateZipFile').and.returnValue(of({}).toPromise());
+    spyOn(CertificateDownloadService, 'createObjectUrl').and.returnValue('dummy-obj-val');
     service.createZipUrl(encodedCert, privateKey).then((r) => {
       expect(r).toBe('dummy-obj-val');
       done();
@@ -76,12 +66,9 @@ describe('CertificateDownloadService', () => {
   it('should generate a Zip file', (done) => {
     const certBlob = 'certBlob';
     const keyBlob = 'keyBlob';
-    const mockZip: JSZip = ['Blob'];
-    CertificateDownloadService.generateZipFile(certBlob, keyBlob).then(
-      (r: any) => {
-        expect(r).toBeTruthy();
-        done();
-      }
-    );
+    CertificateDownloadService.generateZipFile(certBlob, keyBlob).then((r: any) => {
+      expect(r).toBeTruthy();
+      done();
+    });
   });
 });

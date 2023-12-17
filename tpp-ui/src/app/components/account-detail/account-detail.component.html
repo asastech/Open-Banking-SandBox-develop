@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -25,22 +25,17 @@
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
-        <div class="form-group required">
+        <div class="mb-3 required">
           <label class="control-label" for="accountType">Account type</label>
           <select
             [ngClass]="{
-              'is-invalid':
-                accountType.invalid &&
-                (accountType.dirty || accountType.touched || submitted)
+              'is-invalid': accountType.invalid && (accountType.dirty || accountType.touched || submitted)
             }"
             class="form-control"
             formControlName="accountType"
             id="accountType"
           >
-            <option
-              *ngFor="let accountType of accountTypes"
-              [value]="accountType"
-            >
+            <option *ngFor="let accountType of accountTypes" [value]="accountType">
               {{ accountType }}
             </option>
           </select>
@@ -48,13 +43,11 @@
             <div *ngIf="accountType.errors?.required">Required</div>
           </div>
         </div>
-        <div class="form-group required">
+        <div class="mb-3 required">
           <label class="control-label" for="usageType">Usage type</label>
           <select
             [ngClass]="{
-              'is-invalid':
-                usageType.invalid &&
-                (usageType.dirty || usageType.touched || submitted)
+              'is-invalid': usageType.invalid && (usageType.dirty || usageType.touched || submitted)
             }"
             class="form-control"
             formControlName="usageType"
@@ -68,13 +61,11 @@
             <div>Required</div>
           </div>
         </div>
-        <div class="form-group required">
+        <div class="mb-3 required">
           <label class="control-label" for="currency">Currency code</label>
           <select
             [ngClass]="{
-              'is-invalid':
-                currency.invalid &&
-                (currency.dirty || currency.touched || submitted)
+              'is-invalid': currency.invalid && (currency.dirty || currency.touched || submitted)
             }"
             class="form-control"
             formControlName="currency"
@@ -88,13 +79,12 @@
             <div>Required</div>
           </div>
         </div>
-        <div class="form-group required">
+        <div class="mb-3 required">
           <label class="control-label" for="iban">IBAN</label>
           <div class="input-group">
             <input
               [ngClass]="{
-                'is-invalid':
-                  iban.invalid && (iban.dirty || iban.touched || submitted)
+                'is-invalid': iban.invalid && (iban.dirty || iban.touched || submitted)
               }"
               class="form-control"
               formControlName="iban"
@@ -103,11 +93,7 @@
             />
 
             <div class="input-group-append">
-              <button
-                class="btn btn-outline-secondary bg-light text-black-50 mb-0"
-                type="button"
-                (click)="generateIban()"
-              >
+              <button class="btn btn-outline-secondary bg-light text-black-50 mb-0" type="button" (click)="generateIban()">
                 Generate IBAN
               </button>
             </div>
@@ -117,24 +103,17 @@
           </div>
         </div>
 
-        <div class="form-group required">
-          <label class="control-label" for="accountStatus"
-            >Account status</label
-          >
+        <div class="mb-3 required">
+          <label class="control-label" for="accountStatus">Account status</label>
           <select
             [ngClass]="{
-              'is-invalid':
-                accountStatus.invalid &&
-                (accountStatus.dirty || accountStatus.touched || submitted)
+              'is-invalid': accountStatus.invalid && (accountStatus.dirty || accountStatus.touched || submitted)
             }"
             class="form-control"
             formControlName="accountStatus"
             id="accountStatus"
           >
-            <option
-              *ngFor="let accountStatus of accountStatuses"
-              [value]="accountStatus"
-            >
+            <option *ngFor="let accountStatus of accountStatuses" [value]="accountStatus">
               {{ accountStatus }}
             </option>
           </select>
@@ -142,13 +121,8 @@
             <div *ngIf="accountStatus.errors?.required">Required</div>
           </div>
         </div>
-        <div class="form-group d-flex flex-row justify-content-lg-between">
-          <button
-            class="btn mr-sm-2 mr-md-3 btn-outline-danger"
-            (click)="onCancel()"
-          >
-            Cancel
-          </button>
+        <div class="mb-3 d-flex flex-row justify-content-lg-between">
+          <button class="btn me-sm-2 me-md-3 btn-outline-danger" (click)="onCancel()">Cancel</button>
           <button class="btn btn-primary" type="submit">Create account</button>
         </div>
       </form>

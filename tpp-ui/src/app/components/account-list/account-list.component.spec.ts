@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -18,19 +18,13 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { IconModule } from '../../commons/icon/icon.module';
 import { InfoModule } from '../../commons/info/info.module';
 import { InfoService } from '../../commons/info/info.service';
-import {
-  Account,
-  AccountStatus,
-  AccountType,
-  UsageType,
-} from '../../models/account.model';
+import { Account, AccountStatus, AccountType, UsageType } from '../../models/account.model';
 import { AccountService } from '../../services/account.service';
 import { AccountListComponent } from './account-list.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -38,41 +32,36 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { PaginationContainerComponent } from '../../commons/pagination-container/pagination-container.component';
 import { PaginationConfigModel } from '../../models/pagination-config.model';
+import { ADMIN_KEY } from '../../commons/constant/constant';
 
 describe('AccountListComponent', () => {
   let component: AccountListComponent;
   let fixture: ComponentFixture<AccountListComponent>;
   let accountService: AccountService;
-  let infoService: InfoService;
-  let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule,
-          ReactiveFormsModule,
-          HttpClientTestingModule,
-          InfoModule,
-          RouterTestingModule,
-          FilterPipeModule,
-          IconModule,
-          NgbPaginationModule,
-          FormsModule,
-        ],
-        declarations: [AccountListComponent, PaginationContainerComponent],
-        providers: [AccountService, InfoService],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        InfoModule,
+        RouterTestingModule,
+        FilterPipeModule,
+        IconModule,
+        NgbPaginationModule,
+        FormsModule,
+      ],
+      declarations: [AccountListComponent, PaginationContainerComponent],
+      providers: [AccountService, InfoService],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountListComponent);
     component = fixture.componentInstance;
-    infoService = TestBed.get(InfoService);
-    router = TestBed.get(Router);
+    accountService = TestBed.inject(AccountService);
     fixture.detectChanges();
-    accountService = TestBed.get(AccountService);
   });
 
   it('should create', () => {
@@ -80,7 +69,7 @@ describe('AccountListComponent', () => {
   });
 
   it('should load accounts on NgOnInit', () => {
-    let mockAccounts: Account[] = [
+    const mockAccounts: Account[] = [
       {
         id: 'XXXXXX',
         iban: 'DE35653635635663',
@@ -100,7 +89,9 @@ describe('AccountListComponent', () => {
         balances: [],
       } as Account,
     ];
-    let getAccountsSpy = spyOn(accountService, 'getAccounts').and.returnValue(
+
+    sessionStorage.setItem(ADMIN_KEY, 'false');
+    const getAccountsSpy = spyOn(accountService, 'getAccounts').and.returnValue(
       of({
         accounts: mockAccounts,
         totalElements: mockAccounts.length,
@@ -109,7 +100,7 @@ describe('AccountListComponent', () => {
 
     component.ngOnInit();
 
-    expect(getAccountsSpy).toHaveBeenCalled();
+    expect(getAccountsSpy).toHaveBeenCalledTimes(1);
     expect(component.accounts).toEqual(mockAccounts);
   });
 
@@ -119,16 +110,26 @@ describe('AccountListComponent', () => {
       pageSize: 5,
     };
     component.searchForm.setValue({
-      query: 'foo',
       itemsPerPage: 15,
+      ibanParam: 'asdfa',
+      tppId: 'asdfa',
+      tppLogin: 'asdfa',
+      country: 'Germany',
+      blocked: false,
     });
     const getAccountsSpy = spyOn(component, 'getAccounts');
     component.pageChange(mockPageConfig);
-    expect(getAccountsSpy).toHaveBeenCalledWith(10, 5, null);
+    expect(getAccountsSpy).toHaveBeenCalledWith(10, 5, {
+      ibanParam: 'asdfa',
+      tppId: 'asdfa',
+      tppLogin: 'asdfa',
+      country: 'Germany',
+      blocked: false,
+    });
   });
 
   it('should load accounts', () => {
-    let mockAccounts: Account[] = [
+    const mockAccounts: Account[] = [
       {
         id: 'XXXXXX',
         iban: 'DE35653635635663',
@@ -169,7 +170,7 @@ describe('AccountListComponent', () => {
   });
 
   it('should return false if account is not set', () => {
-    let mockAccount: Account = {
+    const mockAccount: Account = {
       id: '123456',
       iban: 'DE35653635635663',
       bban: 'BBBAN',

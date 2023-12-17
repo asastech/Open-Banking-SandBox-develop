@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -22,13 +22,13 @@ import { NavbarComponent } from './navbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ShareDataService } from '../services/share-data.service';
+import { CurrentUserService } from '../services/current-user.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let router: Router;
   const authServiceSpy = jasmine.createSpyObj('AuthService', [
     'isLoggedIn',
     'logout',
@@ -43,7 +43,9 @@ describe('NavbarComponent', () => {
           ReactiveFormsModule,
         ],
         providers: [
-          TestBed.overrideProvider(AuthService, { useValue: authServiceSpy }),
+          { provide: AuthService, useValue: authServiceSpy },
+          ShareDataService,
+          CurrentUserService,
         ],
         declarations: [NavbarComponent],
       }).compileComponents();
@@ -54,11 +56,22 @@ describe('NavbarComponent', () => {
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
     authServiceSpy.isLoggedIn.and.returnValue(true);
+    authServiceSpy.logout.and.returnValue();
     fixture.detectChanges();
-    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call method logout from service', () => {
+    component.onLogout();
+    expect(authServiceSpy.logout).toHaveBeenCalled();
+  });
+
+  it('should toggle view after click showDropdown', () => {
+    component.toggleFlag = true;
+    component.showDropdown();
+    expect(component.toggleFlag).toBeFalsy();
   });
 });

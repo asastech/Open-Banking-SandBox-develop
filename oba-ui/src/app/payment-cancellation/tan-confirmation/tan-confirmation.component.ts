@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,9 +17,13 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { PaymentAuthorizeResponse } from '../../api/models/payment-authorize-response';
 import { RoutingPath } from '../../common/models/routing-path.model';
@@ -28,6 +32,10 @@ import { ShareDataService } from '../../common/services/share-data.service';
 
 import AuthorisePaymentUsingPOSTParams = PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService.AuthorisePaymentUsingPOSTParams;
 import { PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityService } from '../../api/services/psupiscancellation-provides-access-to-online-banking-payment-functionality.service';
+import { takeUntil } from 'rxjs/operators';
+import { ErrorDialogComponent } from '../../common/dialog/error-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../../common/services/auth.service';
 
 @Component({
   selector: 'app-tan-confirmation',
@@ -36,110 +44,117 @@ import { PSUPISCancellationProvidesAccessToOnlineBankingPaymentFunctionalityServ
 })
 export class TanConfirmationComponent implements OnInit, OnDestroy {
   public authResponse: PaymentAuthorizeResponse;
-  public tanForm: FormGroup;
+  public tanForm: UntypedFormGroup;
   public invalidTanCount = 0;
 
-  private subscriptions: Subscription[] = [];
+  private unsubscribe = new Subject<void>();
   private operation: string;
   private oauth2Param: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private pisCancellationService: PisCancellationService,
-    private shareService: ShareDataService
+    private shareService: ShareDataService,
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   public ngOnInit(): void {
     this.initTanForm();
 
-    this.shareService.currentOperation.subscribe((operation: string) => {
-      this.operation = operation;
-    });
+    this.shareService.currentOperation
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((operation: string) => {
+        this.operation = operation;
+      });
 
-    this.shareService.currentData.subscribe((data) => {
-      if (data) {
-        console.log('response object: ', data);
-        this.shareService.currentData.subscribe(
-          (authResponse) => (this.authResponse = authResponse)
-        );
-      }
-    });
+    this.shareService.currentData
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((data) => {
+        if (data) {
+          this.authResponse = data;
+          console.log('response object: ', data);
+        }
+      });
 
-    this.shareService.oauthParam.subscribe((oauth2: boolean) => {
-      this.oauth2Param = oauth2;
-    });
+    this.shareService.oauthParam
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((oauth2: boolean) => {
+        this.oauth2Param = oauth2;
+      });
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   public onSubmit(): void {
-    if (!this.authResponse) {
-      return;
-    }
+    // if (!this.authResponse) {
+    //   return;
+    // }
 
-    this.subscriptions.push(
-      this.pisCancellationService
-        .authorizePayment({
-          ...this.tanForm.value,
-          encryptedPaymentId: this.authResponse.encryptedConsentId,
-          authorisationId: this.authResponse.authorisationId,
-        } as AuthorisePaymentUsingPOSTParams)
-        .subscribe(
-          (authResponse) => {
-            this.router
-              .navigate(
-                [`${RoutingPath.PAYMENT_CANCELLATION}/${RoutingPath.RESULT}`],
-                {
-                  queryParams: {
-                    encryptedConsentId: this.authResponse.encryptedConsentId,
-                    authorisationId: this.authResponse.authorisationId,
-                    oauth2: this.oauth2Param,
-                  },
-                }
-              )
-              .then(() => {
-                this.authResponse = authResponse;
-                this.shareService.changeData(this.authResponse);
-              });
-          },
-          (error) => {
-            this.invalidTanCount++;
+    this.pisCancellationService
+      .authorizePayment({
+        ...this.tanForm.value,
+        encryptedPaymentId: this.authResponse.encryptedConsentId,
+        authorisationId: this.authResponse.authorisationId,
+      } as AuthorisePaymentUsingPOSTParams)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(
+        (authResponse) => {
+          this.router
+            .navigate(
+              [`${RoutingPath.PAYMENT_CANCELLATION}/${RoutingPath.RESULT}`],
+              {
+                queryParams: {
+                  encryptedConsentId: this.authResponse.encryptedConsentId,
+                  authorisationId: this.authResponse.authorisationId,
+                  oauth2: this.oauth2Param,
+                },
+              }
+            )
+            .then(() => {
+              this.authResponse = authResponse;
+              this.shareService.changeData(this.authResponse);
+            });
+        },
+        () => {
+          this.invalidTanCount++;
 
-            if (this.invalidTanCount >= 3) {
-              this.router
-                .navigate(
-                  [`${RoutingPath.PAYMENT_CANCELLATION}/${RoutingPath.RESULT}`],
-                  {
-                    queryParams: {
-                      encryptedConsentId: this.authResponse.encryptedConsentId,
-                      authorisationId: this.authResponse.authorisationId,
-                      oauth2: this.oauth2Param,
-                    },
-                  }
-                )
-                .then(() => {
-                  throw error;
-                });
-            }
+          if (this.invalidTanCount >= 3) {
+            this.tanForm.disable();
+
+            this.dialog.open(ErrorDialogComponent, {
+              height: '300px',
+              width: '350px',
+              data: {
+                heading: 'Wrong Tan',
+                description:
+                  "'Incorrect TAN was entered 3 times. Your authorisation is failed, please start a new one. After pushing Cancel button you will be logged out. Please restart your authorisation.",
+              },
+            });
           }
-        )
-    );
+        }
+      );
   }
 
   public onCancel(): void {
-    this.router.navigate(
-      [`${RoutingPath.PAYMENT_CANCELLATION}/${RoutingPath.RESULT}`],
-      {
-        queryParams: {
-          encryptedConsentId: this.authResponse.encryptedConsentId,
-          authorisationId: this.authResponse.authorisationId,
-        },
-      }
-    );
+    if (this.invalidTanCount >= 3) {
+      this.authService.logout();
+    } else {
+      this.router.navigate(
+        [`${RoutingPath.PAYMENT_CANCELLATION}/${RoutingPath.RESULT}`],
+        {
+          queryParams: {
+            encryptedConsentId: this.authResponse.encryptedConsentId,
+            authorisationId: this.authResponse.authorisationId,
+          },
+        }
+      );
+    }
   }
 
   private initTanForm(): void {

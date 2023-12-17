@@ -1,17 +1,21 @@
-# Copyright 2018-2018 adorsys GmbH & Co KG
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Copyright 2018-2023 adorsys GmbH & Co KG
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version. This program is distributed in the hope that
+# it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Affero General Public License for more details.
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see https://www.gnu.org/licenses/.
 #
+# This project is also available under a separate commercial license. You can
+# contact us at psd2@adorsys.com.
+#
+
 server:
   # Authorization HTTP header requires to enlarge max header size.
   max-http-header-size: 65000
@@ -25,7 +29,7 @@ server:
         path: /
 
 keycloak:
-  auth-server-url: http://localhost:8080/auth
+  auth-server-url: http://localhost:8080
   realm: ledgers
   resource: ledgers-client
   public-client: false
@@ -33,17 +37,22 @@ keycloak:
   credentials:
     secret: a61a81cd-7178-40d8-8386-ed02791e6592 #Here should be personal generated secret for client (swap public to 'private?' generate secret, swap to public again)
 
-springdoc:
-  api-docs:
-    enabled: false
+db:
+  host: localhost
+  database: consent
+  user: cms
+  password: cms
+  port: 5432
+  url: jdbc:postgresql://${db.host}:${db.port}/${db.database}
+
+cms:
+  datasource:
+    jdbc-url: ${db.url}?currentSchema=consent
+    username: ${db.user}
+    password: ${db.password}
 
 spring:
   application.name: ledgers-xs2a-oba
-  datasource:
-    hikari:
-      jdbc-url: jdbc:postgresql://localhost:5432/consent?currentSchema=consent
-      username: cms
-      password: cms
   jpa:
     open-in-view: false
     generate-ddl: false
@@ -68,10 +77,7 @@ self.url: http://localhost:8090
 
 oba.maxLoginFailedCount: 3
 
-#LOGGER
-# logging.level.org.springframework.web: DEBUG
-
-license.url: https://github.com/adorsys/xs2a/blob/master/LICENSE.md
+license.url: https://www.gnu.org/licenses/agpl-3.0.html
 
 skip.ssl.certificate.verification: true
 
@@ -103,7 +109,7 @@ management:
     web:
       cors:
         allow-credentials: true
-        allowed-origins: "*"
+        allowed-origin-patterns: "*"
         allowed-headers: "*"
         allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
         max-age: 3600

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -131,7 +131,7 @@ class ObaAisControllerTest {
     }
 
     private AccountDetailsTO getAccountDetailsTO() {
-        return new AccountDetailsTO(null, IBAN, null, null, null, null, CURRENCY, null, null, CASH, ENABLED, null, null, UsageTypeTO.PRIV, null, null, false, false, BigDecimal.ZERO, null);
+        return new AccountDetailsTO(null, IBAN, null, null, null, null, CURRENCY, null, null, null, CASH, ENABLED, null, null, UsageTypeTO.PRIV, null, null, false, false, BigDecimal.ZERO, null);
     }
 
     private List<TransactionTO> getTransactionList() {

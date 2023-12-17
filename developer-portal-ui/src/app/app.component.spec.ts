@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -89,7 +89,7 @@ describe('AppComponent', () => {
         tppDefaultNokRedirectUrl: 'https://www.google.com',
         tppDefaultRedirectUrl: 'https://adorsys-platform.de/solutions/xs2a-sandbox/',
       },
-      supportedLanguages: ['en', 'ua', 'de', 'es'],
+      supportedLanguages: ['en', 'ua', 'de'],
       pagesSettings: {
         contactPageSettings: {
           showContactCard: true,

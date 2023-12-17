@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,7 +23,6 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { AccountDetailsComponent } from './oba/accounts/account-details/account-details.component';
 import { AccountsComponent } from './oba/accounts/accounts.component';
 import { ConfirmPasswordComponent } from './oba/confirm-password/confirm-password.component';
-import { ConsentsComponent } from './oba/consents/consents.component';
 import { DashboardComponent } from './oba/dashboard/dashboard.component';
 import { LoginComponent } from './oba/login/login.component';
 import { ResetPasswordComponent } from './oba/reset-password/reset-password.component';
@@ -31,6 +30,8 @@ import { PeriodicPaymentsComponent } from './oba/periodic-payments/periodic-paym
 import { UserProfileComponent } from './oba/user-profile/user-profile.component';
 import { UserProfileUpdateComponent } from './oba/user-profile-update/user-profile-update.component';
 import { VerifyEmailComponent } from './oba/verify-email/verify-email.component';
+import { ConsentAisComponent } from './oba/consents/ais/consent-ais.component';
+import { ConsentPiisComponent } from './oba/consents/piis/consent-piis.component';
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
 
@@ -72,7 +73,16 @@ export const routes: Routes = [
       },
       {
         path: 'consents',
-        component: ConsentsComponent,
+        children: [
+          {
+            path: 'ais',
+            component: ConsentAisComponent,
+          },
+          {
+            path: 'piis',
+            component: ConsentPiisComponent,
+          },
+        ],
       },
       {
         path: 'accounts',
@@ -120,6 +130,7 @@ export const routes: Routes = [
     canActivate: [externalUrlProvider],
     component: LoginComponent,
   },
+
   {
     path: '**',
     redirectTo: '/login',
@@ -128,9 +139,7 @@ export const routes: Routes = [
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'corrected' }),
-  ],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule],
   providers: [
     {

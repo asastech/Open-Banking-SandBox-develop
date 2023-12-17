@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,10 +17,7 @@
  */
 
 import { HttpClientModule } from '@angular/common/http';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
@@ -38,8 +35,8 @@ describe('UserService', () => {
       providers: [UserService],
     });
 
-    httpMock = TestBed.get(HttpTestingController);
-    userService = TestBed.get(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
+    userService = TestBed.inject(UserService);
   });
 
   afterEach(() => {
@@ -79,7 +76,7 @@ describe('UserService', () => {
         scaUserData: [
           {
             id: 'HeJDea8LQE8rdLiJ6eKfhY',
-            scaMethod: 'EMAIL',
+            scaMethod: 'SMTP_OTP',
             methodValue: 'foo@fool.de',
             usesStaticTan: false,
             staticTan: '123456',
@@ -94,9 +91,7 @@ describe('UserService', () => {
       expect(resp.users[0].login).toEqual('test');
       expect(resp.totalElements).toEqual(mockUsers.length);
     });
-    const req = httpMock.expectOne(
-      `${url}?page=${0}&size=${25}&queryParam=${''}`
-    );
+    const req = httpMock.expectOne(`${url}?page=${0}&size=${25}&queryParam=${''}`);
     expect(req.cancelled).toBeFalsy();
     expect(req.request.responseType).toEqual('json');
     expect(req.request.method).toEqual('GET');
@@ -105,9 +100,7 @@ describe('UserService', () => {
 
   it('should get a User', () => {
     userService.getUser('J4tdJUEPQhglZAFgvo9aJc').subscribe((data: any) => {
-      expect(data.pin).toBe(
-        '$2a$10$hi7Cd4j9gd/ZBw7w.kbNVOzDNUgIEXUtG5ZJYvjjTGLjUwOR0qibu'
-      );
+      expect(data.pin).toBe('$2a$10$hi7Cd4j9gd/ZBw7w.kbNVOzDNUgIEXUtG5ZJYvjjTGLjUwOR0qibu');
     });
     const req = httpMock.expectOne(url + '/J4tdJUEPQhglZAFgvo9aJc');
     expect(req.request.method).toBe('GET');
@@ -118,7 +111,7 @@ describe('UserService', () => {
   });
 
   it('should create a User', () => {
-    let mockUser: User = {
+    const mockUser: User = {
       accountAccesses: [
         {
           id: 'bNrPhmm3SC0vwm2Tf4KknM',
@@ -146,7 +139,7 @@ describe('UserService', () => {
       scaUserData: [
         {
           id: 'HeJDea8LQE8rdLiJ6eKfhY',
-          scaMethod: 'EMAIL',
+          scaMethod: 'SMTP_OTP',
           methodValue: 'foo@fool.de',
           usesStaticTan: false,
           staticTan: '123456',
@@ -165,7 +158,7 @@ describe('UserService', () => {
   });
 
   it('should updateUserDetails', () => {
-    let mockUser: User = {
+    const mockUser: User = {
       accountAccesses: [
         {
           id: 'bNrPhmm3SC0vwm2Tf4KknM',
@@ -193,7 +186,7 @@ describe('UserService', () => {
       scaUserData: [
         {
           id: 'HeJDea8LQE8rdLiJ6eKfhY',
-          scaMethod: 'EMAIL',
+          scaMethod: 'SMTP_OTP',
           methodValue: 'foo@fool.de',
           usesStaticTan: false,
           staticTan: '123456',

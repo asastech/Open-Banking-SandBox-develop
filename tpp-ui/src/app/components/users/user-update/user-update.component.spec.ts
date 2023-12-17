@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,64 +17,39 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
 import { UserUpdateComponent } from './user-update.component';
 import { UserService } from '../../../services/user.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { InfoModule } from '../../../commons/info/info.module';
-import { FormArray, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormArray, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { InfoService } from '../../../commons/info/info.service';
 import { User } from '../../../models/user.model';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IconModule } from '../../../commons/icon/icon.module';
-import { ScaMethods } from '../../../models/scaMethods';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UserUpdateComponent', () => {
   let component: UserUpdateComponent;
   let fixture: ComponentFixture<UserUpdateComponent>;
   let userService: UserService;
-  let infoService: InfoService;
-  let activate: ActivatedRoute;
   let router: Router;
-  let de: DebugElement;
-  let el: HTMLElement;
 
-  const mockUser: User = {
-    id: 'id',
-    email: 'email',
-    login: 'login',
-    branch: 'branch',
-    branchLogin: 'branchLogin',
-    pin: 'pin',
-    scaUserData: [],
-    accountAccesses: [],
-  };
-
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          InfoModule,
-          RouterTestingModule.withRoutes([]),
-          HttpClientTestingModule,
-          IconModule,
-        ],
-        providers: [UserService, InfoService],
-        declarations: [UserUpdateComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, InfoModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule, IconModule],
+      providers: [UserService, InfoService],
+      declarations: [UserUpdateComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserUpdateComponent);
     component = fixture.componentInstance;
-    userService = TestBed.get(UserService);
-    infoService = TestBed.get(InfoService);
-    router = TestBed.get(Router);
-    activate = TestBed.get(ActivatedRoute);
+    userService = TestBed.inject(UserService);
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -125,41 +100,16 @@ describe('UserUpdateComponent', () => {
     expect(errors['required']).toBeFalsy();
   });
 
-  it('pin field validity', () => {
-    let errors = {};
-    const pin = component.updateUserForm.controls['pin'];
-    expect(pin.valid).toBeFalsy();
-
-    // pin field is required
-    errors = pin.errors || {};
-    expect(errors['required']).toBeTruthy();
-
-    // pin should have at least 5 characters
-    pin.setValue('1234');
-    errors = pin.errors || {};
-    expect(errors['required']).toBeFalsy();
-    expect(errors['minlength']).toBeTruthy();
-
-    // set pin to something correct
-    pin.setValue('12345678');
-    errors = pin.errors || {};
-    expect(errors['required']).toBeFalsy();
-  });
-
   it('validate addScaData method', () => {
-    const length = (<FormArray>component.updateUserForm.controls['scaUserData'])
-      .length;
+    const length = (<UntypedFormArray>component.updateUserForm.controls['scaUserData']).length;
     component.addScaDataItem();
-    const newLength = (<FormArray>(
-      component.updateUserForm.controls['scaUserData']
-    )).length;
+    const newLength = (<UntypedFormArray>component.updateUserForm.controls['scaUserData']).length;
     expect(newLength).toEqual(length + 1);
   });
 
   it('validate removeScaDataItem method', () => {
     component.removeScaDataItem(0);
-    const length = (<FormArray>component.updateUserForm.controls['scaUserData'])
-      .length;
+    const length = (<UntypedFormArray>component.updateUserForm.controls['scaUserData']).length;
     expect(length).toEqual(0);
   });
 
@@ -198,7 +148,7 @@ describe('UserUpdateComponent', () => {
 
   it('should init scaUserDataFrom when user has saved scaUserData', () => {
     component.setupUserFormControl();
-    let mockUser: User = {
+    const mockUser: User = {
       id: 'XXXXXX',
       email: 'tes@adorsys.de',
       login: 'bob',
@@ -227,15 +177,13 @@ describe('UserUpdateComponent', () => {
     } as User;
     spyOn(userService, 'getUser').and.returnValue(of(mockUser));
     component.getUserDetails();
-    const scaUserDataGroups = <FormArray>(
-      component.updateUserForm.get('scaUserData')
-    );
+    const scaUserDataGroups = <UntypedFormArray>component.updateUserForm.get('scaUserData');
     const length = scaUserDataGroups.length;
     expect(length).toBe(2);
   });
 
   it('should load actual user and update its details', () => {
-    let mockUser: User = {
+    const mockUser: User = {
       id: 'XXXXXX',
       email: 'tes@adorsys.de',
       login: 'bob',
@@ -250,25 +198,20 @@ describe('UserUpdateComponent', () => {
       ],
     } as User;
 
-    let getUserSpy = spyOn(userService, 'getUser').and.returnValue(
-      of(mockUser)
-    );
+    const getUserSpy = spyOn(userService, 'getUser').and.returnValue(of(mockUser));
 
     component.ngOnInit();
     expect(component.submitted).toBeFalsy();
     expect(component.updateUserForm.valid).toBeTruthy();
 
-    const scaUserData = <FormArray>component.updateUserForm.get('scaUserData');
     component.user = mockUser;
+    component.admin = 'false';
+    component.userId = 'all';
     component.updateUserForm.get('email').setValue('dart.vader@dark-side.com');
     component.updateUserForm.get('login').setValue('dart.vader');
-    component.updateUserForm.get('pin').setValue('12345678');
 
     const sampleResponse = { value: 'sample response' };
-    const updateUserDetail = spyOn(
-      userService,
-      'updateUserDetails'
-    ).and.callFake(() => of(sampleResponse));
+    const updateUserDetail = spyOn(userService, 'updateUserDetails').and.callFake(() => of(sampleResponse));
     const navigateSpy = spyOn(router, 'navigate');
     component.onSubmit();
     const submittedUser = updateUserDetail.calls.argsFor(0)[0] as User;
@@ -283,18 +226,11 @@ describe('UserUpdateComponent', () => {
 
   it('should defined getMethodsValues', () => {
     component.getMethodsValues();
-    expect(component.methods).toEqual([
-      'EMAIL',
-      'MOBILE',
-      'CHIP_OTP',
-      'PHOTO_OTP',
-      'PUSH_OTP',
-      'SMS_OTP',
-      'APP_OTP',
-    ]);
+    expect(component.methods).toEqual(['SMTP_OTP', 'MOBILE', 'CHIP_OTP', 'PHOTO_OTP', 'PUSH_OTP', 'SMS_OTP', 'APP_OTP']);
   });
 
   it('should back to users', () => {
+    component.userId = 'all';
     const navigateSpy = spyOn(router, 'navigate');
     component.onCancel();
     expect(navigateSpy).toHaveBeenCalledWith(['/users/all']);

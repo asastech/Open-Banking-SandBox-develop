@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -39,6 +39,7 @@ export class NavComponent implements OnInit {
   navBarSettings: NavigationSettings;
   @Input() supportedLanguagesDictionary;
   @Input() navigation;
+  menu: any;
 
   constructor(
     private languageService: LanguageService,
@@ -47,14 +48,15 @@ export class NavComponent implements OnInit {
     public navigationService: NavigationService
   ) {
     this.customizeService.currentTheme.subscribe((data: Theme) => {
-      if (data.pagesSettings && data.pagesSettings.navigationBarSettings) {
-        this.navBarSettings = data.pagesSettings.navigationBarSettings;
+      if (data.globalSettings.logo) {
+        this.navBarSettings = {logo: data.globalSettings.logo}
       }
     });
-
+    
     this.setLangCollapsed(true);
   }
-
+  
+  
   ngOnInit() {
     this.languageService.currentLanguage.subscribe((data) => {
       this.language = data;

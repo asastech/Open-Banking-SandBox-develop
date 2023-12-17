@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,9 +17,8 @@
  */
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormArray, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormArray, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -29,39 +28,32 @@ import { InfoService } from '../../../commons/info/info.service';
 import { UserService } from '../../../services/user.service';
 import { UserCreateComponent } from './user-create.component';
 import { ScaMethods } from '../../../models/scaMethods';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('UserCreateComponent', () => {
   let component: UserCreateComponent;
   let fixture: ComponentFixture<UserCreateComponent>;
   let userService: UserService;
-  let infoService: InfoService;
   let router: Router;
-  let de: DebugElement;
-  let el: HTMLElement;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          ReactiveFormsModule,
-          InfoModule,
-          RouterTestingModule.withRoutes([]),
-          HttpClientTestingModule,
-          IconModule,
-        ],
-        providers: [UserService, InfoService],
-        declarations: [UserCreateComponent],
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, InfoModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule, IconModule],
+      providers: [UserService, InfoService],
+      declarations: [UserCreateComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserCreateComponent);
     component = fixture.componentInstance;
-    userService = TestBed.get(UserService);
-    infoService = TestBed.get(InfoService);
-    router = TestBed.get(Router);
+    userService = TestBed.inject(UserService);
+    router = TestBed.inject(Router);
+
+    component.admin = 'false';
+    component.setupUserFormControl();
     fixture.detectChanges();
   });
 
@@ -135,10 +127,7 @@ describe('UserCreateComponent', () => {
 
   it('SCA validity', () => {
     let errors = {};
-    const sca =
-      component.userForm.controls['scaUserData']['controls'][0].controls[
-        'methodValue'
-      ];
+    const sca = component.userForm.controls['scaUserData']['controls'][0].controls['methodValue'];
     expect(sca.valid).toBeTruthy();
 
     // pin field is required
@@ -167,26 +156,24 @@ describe('UserCreateComponent', () => {
   });
 
   it('validate addScaData method', () => {
-    const length = (<FormArray>component.userForm.controls['scaUserData'])
-      .length;
+    const length = (<UntypedFormArray>component.userForm.controls['scaUserData']).length;
     component.addScaDataItem();
-    const newLength = (<FormArray>component.userForm.controls['scaUserData'])
-      .length;
+    const newLength = (<UntypedFormArray>component.userForm.controls['scaUserData']).length;
     expect(newLength).toEqual(length + 1);
   });
 
   it('validate removeScaDataItem method', () => {
     component.removeScaDataItem(0);
-    const length = (<FormArray>component.userForm.controls['scaUserData'])
-      .length;
+    const length = (<UntypedFormArray>component.userForm.controls['scaUserData']).length;
     expect(length).toEqual(0);
   });
 
-  it('validate iniScaData method', () => {
+  it('validate initScaData method', () => {
     const formGroup = component.initScaData();
     const data = {
       scaMethod: '',
       methodValue: '',
+      pushMethod: '',
       usesStaticTan: false,
     };
     expect(formGroup.value).toEqual(data);
@@ -194,6 +181,7 @@ describe('UserCreateComponent', () => {
 
   it('should call user service when form is valid and submitted', () => {
     component.ngOnInit();
+    component.admin = 'false';
     expect(component.submitted).toBeFalsy();
     expect(component.userForm.valid).toBeFalsy();
 
@@ -201,25 +189,15 @@ describe('UserCreateComponent', () => {
     component.userForm.controls['email'].setValue('dart.vader@dark-side.com');
     component.userForm.controls['login'].setValue('dart.vader');
     component.userForm.controls['pin'].setValue('12345678');
-    component.userForm.controls['scaUserData']['controls'][0].controls[
-      'methodValue'
-    ].setValue('dart.vader@dark-side.com');
-    component.userForm.controls['scaUserData']['controls'][0].controls[
-      'staticTan'
-    ].setValue('12345');
-    component.userForm.controls['scaUserData']['controls'][0].controls[
-      'usesStaticTan'
-    ].setValue(true);
-    component.userForm.controls['scaUserData']['controls'][0].controls[
-      'scaMethod'
-    ].setValue(ScaMethods.EMAIL);
+    component.userForm.controls['scaUserData']['controls'][0].controls['methodValue'].setValue('dart.vader@dark-side.com');
+    component.userForm.controls['scaUserData']['controls'][0].controls['staticTan'].setValue('12345');
+    component.userForm.controls['scaUserData']['controls'][0].controls['usesStaticTan'].setValue(true);
+    component.userForm.controls['scaUserData']['controls'][0].controls['scaMethod'].setValue(ScaMethods.SMTP_OTP);
 
     // create spies and fake call function
     const sampleResponse = { value: 'sample response' };
-    let createUserSpy = spyOn(userService, 'createUser').and.callFake(() =>
-      of(sampleResponse)
-    );
-    let navigateSpy = spyOn(router, 'navigateByUrl');
+    const createUserSpy = spyOn(userService, 'createUser').and.callFake(() => of(sampleResponse));
+    const navigateSpy = spyOn(router, 'navigateByUrl');
     component.onSubmit();
     expect(component.submitted).toBeTruthy();
     expect(component.userForm.valid).toBeTruthy();

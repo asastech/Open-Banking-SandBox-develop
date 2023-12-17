@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,8 +23,8 @@ public class PermittedResources {
     protected static final String[] SWAGGER_WHITELIST = {
         "/swagger-resources/**",
         "/swagger-resources",
-        "/swagger-ui.html**",
-        "/v2/api-docs",
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
         "/webjars/**",
         "favicon.ico",
         "/error"

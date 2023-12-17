@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,14 +17,11 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../environments/environment';
 import { TppManagementService } from './tpp-management.service';
 
-describe('TppService', () => {
+describe('TppManagementService', () => {
   let httpMock: HttpTestingController;
   let tppService: TppManagementService;
   const url = `${environment.tppBackend}`;
@@ -33,19 +30,22 @@ describe('TppService', () => {
       imports: [HttpClientTestingModule],
       providers: [TppManagementService],
     });
-    tppService = TestBed.get(TppManagementService);
-    httpMock = TestBed.get(HttpTestingController);
+    tppService = TestBed.inject(TppManagementService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should delete the Tpp user', () => {
-    tppService.deleteSelf();
+    tppService.deleteSelf().subscribe();
+    const req = httpMock.expectOne(url + '/self');
+    expect(req.request.method).toBe('DELETE');
+    httpMock.verify();
   });
 
   it('should delete the accountTransations ', () => {
     tppService.deleteAccountTransactions('accountId').subscribe((data: any) => {
       expect(data).toBe('accountId');
     });
-    const req = httpMock.expectOne(url + /account/ + 'accountId');
+    const req = httpMock.expectOne(url + /transactions/ + 'accountId');
     expect(req.request.method).toBe('DELETE');
     req.flush('accountId');
     httpMock.verify();

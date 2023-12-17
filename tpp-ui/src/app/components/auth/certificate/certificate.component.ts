@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-certificate',
@@ -27,13 +27,13 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class CertificateComponent implements OnInit {
   @Output() certificateValue = new EventEmitter();
 
-  certificateFormGroup: FormGroup;
-  rolesOptionsError: Boolean = false;
+  certificateFormGroup: UntypedFormGroup;
+  rolesOptionsError = false;
 
   public roles: Array<string> = ['PIISP', 'PISP', 'AISP'];
   selectedOptions = ['PIISP', 'PISP', 'AISP'];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: UntypedFormBuilder) {}
 
   ngOnInit() {
     this.initializeCertificateGeneratorForm();
@@ -77,20 +77,12 @@ export class CertificateComponent implements OnInit {
       organizationUnit: ['IT department', Validators.required],
       stateOrProvinceName: ['Bayern', Validators.required],
       commonName: ['XS2A Sandbox', Validators.required],
-      validity: [
-        '365',
-        [
-          Validators.required,
-          Validators.pattern('^[0-9]*$'),
-          Validators.min(1),
-          Validators.max(999),
-        ],
-      ],
+      validity: ['365', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1), Validators.max(999)]],
       roles: this.addCheckboxControls(),
     });
   }
 
   get checkboxArray() {
-    return <FormArray>this.certificateFormGroup.get('roles');
+    return <UntypedFormArray>this.certificateFormGroup.get('roles');
   }
 }

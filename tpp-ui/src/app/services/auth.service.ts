@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,8 +19,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { catchError, map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Credentials } from '../models/credentials.model';
 import { Router } from '@angular/router';
@@ -36,11 +36,7 @@ export class AuthService {
   private authTokenStorageKey = 'access_token';
   private jwtHelperService = new JwtHelperService();
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private autoLogoutService: AutoLogoutService
-  ) {}
+  constructor(private http: HttpClient, private router: Router, private autoLogoutService: AutoLogoutService) {}
 
   authorize(credentials: Credentials): Observable<string> {
     return this.http
@@ -55,16 +51,16 @@ export class AuthService {
           observe: 'response',
         }
       )
-      .pipe(
-        map((loginResponse) =>
-          loginResponse.headers.get(this.authTokenStorageKey)
-        )
-      );
+      .pipe(map((loginResponse) => loginResponse.headers.get(this.authTokenStorageKey)));
   }
 
   isLoggedIn(): boolean {
-    let authorizationToken = this.getAuthorizationToken();
-    return authorizationToken != null;
+    const authorizationToken = this.getAuthorizationToken();
+    if (authorizationToken && authorizationToken !== 'null' && authorizationToken !== null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   logout() {
@@ -105,7 +101,7 @@ export class AuthService {
 
   private setUsersAccessRights(loginResponse): void {
     let admin = false;
-    if (loginResponse['realm_access']['roles'].includes('SYSTEM')) {
+    if (loginResponse != null && loginResponse['realm_access']['roles'].includes('SYSTEM')) {
       admin = true;
     }
     sessionStorage.setItem(ADMIN_KEY, admin ? 'true' : 'false');
@@ -114,7 +110,7 @@ export class AuthService {
   public login(credentials: any) {
     return this.authorize(credentials).pipe(
       map((jwt) => {
-        if (jwt === undefined) {
+        if (jwt === undefined || jwt == null) {
           return false;
         }
         this.setAuthorisationToken(jwt);

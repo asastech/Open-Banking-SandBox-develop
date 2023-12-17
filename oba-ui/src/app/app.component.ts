@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -50,7 +50,15 @@ export class AppComponent implements OnInit {
     this.customizeService.getJSON().subscribe((data) => {
       theme = data;
       this.globalSettings = theme.globalSettings;
-      if (theme.globalSettings.logo.indexOf('/') === -1) {
+
+      if (!theme.globalSettings) {
+        return;
+      }
+
+      if (
+        theme.globalSettings.logo &&
+        theme.globalSettings.logo.indexOf('/') === -1
+      ) {
         theme.globalSettings.logo =
           '../assets/UI' +
           (this.customizeService.isCustom() ? '/custom/' : '/') +

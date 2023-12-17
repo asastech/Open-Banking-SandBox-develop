@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,12 +19,20 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ResetLedgersService } from './reset-ledgers.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UserFundsConfirmationDetailsComponent } from '../components/users/user-funds-confirmation-details/user-funds-confirmation-details.component';
 
 describe('ResetLedgersService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([]), HttpClientTestingModule],
+      declarations: [UserFundsConfirmationDetailsComponent],
+    }).compileComponents();
+  });
 
   it('should be created', () => {
-    const service: ResetLedgersService = TestBed.get(ResetLedgersService);
+    const service: ResetLedgersService = TestBed.inject(ResetLedgersService);
     expect(service).toBeTruthy();
   });
 });

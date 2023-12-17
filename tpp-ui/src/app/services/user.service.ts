@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -33,23 +33,15 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  listUsers(
-    page: number = 0,
-    size: number = 25,
-    queryParam: string = ''
-  ): Observable<UserResponse> {
-    return this.http
-      .get<PaginationResponse<User[]>>(
-        `${this.url}/users?page=${page}&size=${size}&queryParam=${queryParam}`
-      )
-      .pipe(
-        map((resp) => {
-          return {
-            users: resp.content,
-            totalElements: resp.totalElements,
-          };
-        })
-      );
+  listUsers(page = 0, size = 25, queryParam = ''): Observable<UserResponse> {
+    return this.http.get<PaginationResponse<User[]>>(`${this.url}/users?page=${page}&size=${size}&queryParam=${queryParam}`).pipe(
+      map((resp) => {
+        return {
+          users: resp.content,
+          totalElements: resp.totalElements,
+        };
+      })
+    );
   }
 
   getUser(userId: string): Observable<User> {

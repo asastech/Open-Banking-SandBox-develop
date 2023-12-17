@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -15,21 +15,21 @@
  * This project is also available under a separate commercial license. You can
  * contact us at psd2@adorsys.com.
  */
+/* eslint-disable @typescript-eslint/no-empty-function */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ScaUserDataTO } from '../../api/models/sca-user-data-to';
-import { PaymentDetailsComponent } from '../payment-details/payment-details.component';
 import { SelectScaComponent } from './select-sca.component';
 import { PisService } from '../../common/services/pis.service';
 import { ShareDataService } from '../../common/services/share-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoutingPath } from '../../common/models/routing-path.model';
 import { of } from 'rxjs';
+import { RoutingPath } from '../../common/models/routing-path.model';
+import { ScaUserDataTO } from '../../api/models/sca-user-data-to';
 
 const mockRouter = {
-  navigate: (url: string) => {},
+  navigate: () => {},
 };
 
 const mockActivatedRoute = {
@@ -38,15 +38,13 @@ const mockActivatedRoute = {
 describe('SelectScaComponent', () => {
   let component: SelectScaComponent;
   let fixture: ComponentFixture<SelectScaComponent>;
-  let pisService: PisService;
-  let shareDataService: ShareDataService;
   let router: Router;
-  let route: ActivatedRoute;
+  let pisService: PisService;
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [RouterTestingModule, ReactiveFormsModule],
-        declarations: [SelectScaComponent, PaymentDetailsComponent],
+        declarations: [SelectScaComponent],
         providers: [
           ShareDataService,
           PisService,
@@ -60,10 +58,8 @@ describe('SelectScaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectScaComponent);
     component = fixture.componentInstance;
-    pisService = TestBed.inject(PisService);
-    shareDataService = TestBed.inject(ShareDataService);
     router = TestBed.inject(Router);
-    route = TestBed.inject(ActivatedRoute);
+    pisService = TestBed.inject(PisService);
     fixture.detectChanges();
   });
 
@@ -135,16 +131,6 @@ describe('SelectScaComponent', () => {
   });
 
   it('should throwError when sca Method is no there', () => {
-    const mockScaMethod: ScaUserDataTO = {
-      decoupled: false,
-      id: '123',
-      methodValue: '',
-      scaMethod: 'EMAIL',
-      staticTan: 'foo@foo.de',
-      user: {},
-      usesStaticTan: true,
-      valid: false,
-    };
     const result = component.handleMethodSelectedEvent(null);
     expect(result).toBeUndefined();
   });

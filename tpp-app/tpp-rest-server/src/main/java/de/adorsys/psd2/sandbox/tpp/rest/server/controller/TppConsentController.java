@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -19,8 +19,8 @@
 package de.adorsys.psd2.sandbox.tpp.rest.server.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import de.adorsys.psd2.sandbox.tpp.cms.api.domain.AisConsent;
-import de.adorsys.psd2.sandbox.tpp.cms.api.service.ConsentService;
+import de.adorsys.psd2.sandbox.cms.connector.api.domain.AisConsent;
+import de.adorsys.psd2.sandbox.cms.connector.api.service.ConsentService;
 import de.adorsys.psd2.sandbox.tpp.rest.api.resource.TppConsentRestApi;
 import de.adorsys.psd2.sandbox.tpp.rest.server.exception.TppException;
 import de.adorsys.psd2.sandbox.tpp.rest.server.service.DownloadResourceService;

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -23,7 +23,7 @@
     <parent>
         <groupId>de.adorsys.psd2.sandbox</groupId>
         <artifactId>online-banking</artifactId>
-        <version>5.15-SNAPSHOT</version>
+        <version>6.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -47,6 +47,13 @@
         </dependency>
 
         <dependency>
+            <groupId>de.adorsys.psd2</groupId>
+            <artifactId>consent-core-api</artifactId>
+            <version>${xs2a.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -56,13 +63,12 @@
             <artifactId>feign-okhttp</artifactId>
         </dependency>
 
-		<!-- spring dependencies -->
-
-		<dependency>
+        <!-- spring dependencies -->
+        <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

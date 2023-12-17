@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -28,6 +28,7 @@ import { PisRoutingModule } from './pis-routing.module';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { SelectScaComponent } from './select-sca/select-sca.component';
 import { TanConfirmationComponent } from './tan-confirmation/tan-confirmation.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { TanConfirmationComponent } from './tan-confirmation/tan-confirmation.co
     FormsModule,
     PisRoutingModule,
     NotFoundModule,
+    NgMultiSelectDropDownModule,
   ],
 })
 export class PisModule {}

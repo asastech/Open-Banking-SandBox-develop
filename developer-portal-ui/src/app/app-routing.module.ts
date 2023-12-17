@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -50,9 +50,8 @@ const routes: Routes = [
   },
 ];
 const routerOptions: ExtraOptions = {
-  scrollPositionRestoration: 'top',
-  anchorScrolling: 'enabled',
-  relativeLinkResolution: 'legacy',
+    scrollPositionRestoration: 'top',
+    anchorScrolling: 'enabled'
 };
 
 @NgModule({

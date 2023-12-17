@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -52,7 +52,7 @@ public class TppAccountsController implements TppAccountsRestApi {
     private final DownloadResourceService downloadResourceService;
 
     @Override
-    public ResponseEntity<Void> createAccount(String userId, DepositAccount account) {
+    public ResponseEntity<Boolean> createAccount(String userId, DepositAccount account) {
         return accountMgmtStaffRestClient.createDepositAccountForUser(userId, accountMapper.toAccountDetailsTO(account));
     }
 

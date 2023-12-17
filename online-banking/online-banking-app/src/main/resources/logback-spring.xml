@@ -1,5 +1,5 @@
 ﻿<!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -39,10 +39,9 @@
     </appender>
 
     <logger name="org.springframework" level="WARN"/>
-    <logger name="springfox.documentation" level="OFF"/>
     <logger name="org.hibernate.validator" level="OFF"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,23 +17,15 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
+import { debounceTime, tap } from 'rxjs/operators';
 import { User, UserResponse } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
-import {
-  PageConfig,
-  PaginationConfigModel,
-} from '../../models/pagination-config.model';
+import { PageConfig, PaginationConfigModel } from '../../models/pagination-config.model';
 import { TppUserService } from '../../services/tpp.user.service';
 import { TppManagementService } from '../../services/tpp-management.service';
 import { PageNavigationService } from '../../services/page-navigation.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TppQueryParams } from '../../models/tpp-management.model';
 import { CountryService } from '../../services/country.service';
 import { ADMIN_KEY } from '../../commons/constant/constant';
@@ -47,7 +39,8 @@ import { TooltipPosition } from '@angular/material/tooltip';
   styleUrls: ['./users.component.scss'],
 })
 
-// TODO Merge UsersComponent, TppsComponent and AccountListComponent into one single component https://git.adorsys.de/adorsys/xs2a/psd2-dynamic-sandbox/-/issues/713
+// TODO Merge UsersComponent, TppsComponent and AccountListComponent into one single component
+//  https://git.adorsys.de/adorsys/xs2a/psd2-dynamic-sandbox/-/issues/713
 export class UsersComponent implements OnInit {
   admin: string;
   statusBlock: string;
@@ -58,16 +51,9 @@ export class UsersComponent implements OnInit {
     currentPageNumber: 1,
     totalItems: 0,
   };
-  positionOptions: TooltipPosition[] = [
-    'above',
-    'before',
-    'after',
-    'below',
-    'left',
-    'right',
-  ];
-  position = new FormControl(this.positionOptions[0]);
-  searchForm: FormGroup = this.formBuilder.group({
+  positionOptions: TooltipPosition[] = ['above', 'before', 'after', 'below', 'left', 'right'];
+  position = new UntypedFormControl(this.positionOptions[0]);
+  searchForm: UntypedFormGroup = this.formBuilder.group({
     userLogin: '',
     tppId: '',
     tppLogin: '',
@@ -84,7 +70,7 @@ export class UsersComponent implements OnInit {
     private pageNavigationService: PageNavigationService,
     private tppManagementService: TppManagementService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private modalService: NgbModal
   ) {}
 
@@ -116,11 +102,7 @@ export class UsersComponent implements OnInit {
         blocked: this.searchForm.get('blocked').value,
       });
     } else {
-      this.listUsers(
-        pageConfig.pageNumber,
-        pageConfig.pageSize,
-        this.searchForm.get('userLogin').value
-      );
+      this.listUsers(pageConfig.pageNumber, pageConfig.pageSize, this.searchForm.get('userLogin').value);
     }
   }
 
@@ -175,27 +157,23 @@ export class UsersComponent implements OnInit {
 
   listUsers(page: number, size: number, params: TppQueryParams) {
     if (this.admin === 'true') {
-      this.tppManagementService
-        .getAllUsers(page - 1, size, params)
-        .subscribe((response: UserResponse) => {
-          if (typeof response.users !== 'undefined') {
-            this.users = response.users;
-            this.users.reverse();
-          } else if (typeof response.users === 'undefined') {
-            this.users = response.users;
-          }
-          this.config.totalItems = response.totalElements;
-        });
+      this.tppManagementService.getAllUsers(page - 1, size, params).subscribe((response: UserResponse) => {
+        if (typeof response.users !== 'undefined') {
+          this.users = response.users;
+          this.users.reverse();
+        } else if (typeof response.users === 'undefined') {
+          this.users = response.users;
+        }
+        this.config.totalItems = response.totalElements;
+      });
     } else if (this.admin === 'false') {
-      this.userService
-        .listUsers(page - 1, size, params.userLogin)
-        .subscribe((response: UserResponse) => {
-          if (typeof response.users !== 'undefined') {
-            this.users = response.users;
-            this.users.reverse();
-            this.config.totalItems = response.totalElements;
-          }
-        });
+      this.userService.listUsers(page - 1, size, params.userLogin).subscribe((response: UserResponse) => {
+        if (typeof response.users !== 'undefined') {
+          this.users = response.users;
+          this.users.reverse();
+          this.config.totalItems = response.totalElements;
+        }
+      });
     }
   }
 
@@ -225,18 +203,15 @@ export class UsersComponent implements OnInit {
 
   openConfirmation(content, userId: string, type: string) {
     this.statusBlock = type;
-    this.modalService.open(content).result.then(
-      () => {
-        if (type === 'block') {
-          this.blockUser(userId);
-        } else if (type === 'unblock') {
-          this.blockUser(userId);
-        } else if (type === 'delete') {
-          this.delete(userId);
-        }
-      },
-      () => {}
-    );
+    this.modalService.open(content).result.then(() => {
+      if (type === 'block') {
+        this.blockUser(userId);
+      } else if (type === 'unblock') {
+        this.blockUser(userId);
+      } else if (type === 'delete') {
+        this.delete(userId);
+      }
+    });
   }
 
   private blockUser(userId: string) {
@@ -247,11 +222,7 @@ export class UsersComponent implements OnInit {
             severity: 'info',
           });
         }
-        this.listUsers(
-          this.config.currentPageNumber,
-          this.config.itemsPerPage,
-          {}
-        );
+        this.listUsers(this.config.currentPageNumber, this.config.itemsPerPage, {});
       });
       if (this.statusBlock === 'unblock') {
         this.infoService.openFeedback('User was successfully blocked!', {
@@ -259,16 +230,22 @@ export class UsersComponent implements OnInit {
         });
       }
     } else if (this.admin === 'false') {
+
       this.userService.blockTpp(userId).subscribe(() => {
+        if (this.statusBlock === 'block') {
+          this.infoService.openFeedback('User was successfully unblocked!', {
+            severity: 'info',
+          });
+        }
+        this.listUsers(this.config.currentPageNumber, this.config.itemsPerPage, {});
+
+      });
+      if (this.statusBlock === 'unblock') {
         this.infoService.openFeedback('User was successfully blocked!', {
           severity: 'info',
         });
-        this.listUsers(
-          this.config.currentPageNumber,
-          this.config.itemsPerPage,
-          {}
-        );
-      });
+        this.listUsers(this.config.currentPageNumber, this.config.itemsPerPage, {});
+      }
     }
   }
 
@@ -278,22 +255,14 @@ export class UsersComponent implements OnInit {
         this.infoService.openFeedback('User was successfully deleted!', {
           severity: 'info',
         });
-        this.listUsers(
-          this.config.currentPageNumber,
-          this.config.itemsPerPage,
-          {}
-        );
+        this.listUsers(this.config.currentPageNumber, this.config.itemsPerPage, {});
       });
     } else if (this.admin === 'false') {
       this.userService.deleteUser(userId).subscribe(() => {
         this.infoService.openFeedback('User was successfully deleted!', {
           severity: 'info',
         });
-        this.listUsers(
-          this.config.currentPageNumber,
-          this.config.itemsPerPage,
-          {}
-        );
+        this.listUsers(this.config.currentPageNumber, this.config.itemsPerPage, {});
       });
     }
   }

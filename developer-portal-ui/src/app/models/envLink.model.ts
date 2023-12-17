@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,6 +23,7 @@ export interface EnvLink {
 export interface ServicesAvailable {
   ledgers: Ledgers;
   XS2AInterfaceSwagger: XS2AInterfaceSwagger;
+  XS2AInterfaceSwagger2: XS2AInterfaceSwagger2;
   developerPortal: DeveloperPortal;
   consentManagementSystem: ConsentManagementSystem;
   ASPSPProfileSwagger: ASPSPProfileSwagger;
@@ -42,6 +43,10 @@ export interface Ledgers {
 }
 
 export interface XS2AInterfaceSwagger {
+  environmentLink: string;
+}
+
+export interface XS2AInterfaceSwagger2 {
   environmentLink: string;
 }
 

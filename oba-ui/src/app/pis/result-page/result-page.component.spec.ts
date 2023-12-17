@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -23,15 +23,12 @@ import { ResultPageComponent } from './result-page.component';
 import { ShareDataService } from '../../common/services/share-data.service';
 import { PisService } from '../../common/services/pis.service';
 import { SettingsService } from '../../common/services/settings.service';
-import { of } from 'rxjs';
 import { ConsentAuthorizeResponse } from '../../api/models/consent-authorize-response';
 
 describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
   let fixture: ComponentFixture<ResultPageComponent>;
   let shareDataService: ShareDataService;
-  let settingsService: SettingsService;
-  let pisService: PisService;
 
   beforeEach(
     waitForAsync(() => {
@@ -47,8 +44,6 @@ describe('ResultPageComponent', () => {
     fixture = TestBed.createComponent(ResultPageComponent);
     component = fixture.componentInstance;
     shareDataService = TestBed.inject(ShareDataService);
-    settingsService = TestBed.inject(SettingsService);
-    pisService = TestBed.inject(PisService);
     fixture.detectChanges();
   });
 
@@ -65,7 +60,7 @@ describe('ResultPageComponent', () => {
     const mockConsentAuthorization: ConsentAuthorizeResponse = {
       scaStatus: 'received',
     };
-    shareDataService.currentData = of(mockConsentAuthorization);
+    shareDataService.changeData(mockConsentAuthorization);
     component.authResponse = mockResponse;
     component.ngOnInit();
     expect(component.scaStatus).toEqual(mockConsentAuthorization.scaStatus);

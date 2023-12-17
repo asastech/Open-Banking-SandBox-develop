@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -16,22 +16,26 @@
  * contact us at psd2@adorsys.com.
  */
 
-/* tslint:disable */
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
+  HttpHeaders,
   HttpRequest,
   HttpResponse,
-  HttpHeaders,
 } from '@angular/common/http';
 import { BaseService as __BaseService } from '../base-service';
 import { ApiConfiguration as __Configuration } from '../api-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
-import { Observable as __Observable } from 'rxjs';
-import { map as __map, filter as __filter } from 'rxjs/operators';
+import { Observable, Observable as __Observable } from 'rxjs';
+import { filter as __filter, map as __map, map } from 'rxjs/operators';
 
 import { AuthorizeResponse } from '../models/authorize-response';
 import { PaymentAuthorizeResponse } from '../models/payment-authorize-response';
+import { IPaginatorInterface } from '../../common/interfaces/paginator.interface';
+import { AuthService } from '../../common/services/auth.service';
+import {
+  IPiisConsent
+} from '../../common/interfaces/piisConsent.interface';
 
 /**
  * PIS Controller
@@ -54,8 +58,38 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   static readonly failPaymentAuthorisationUsingDELETEPath =
     '/pis/{encryptedPaymentId}/{authorisationId}';
 
-  constructor(config: __Configuration, http: HttpClient) {
+  constructor(
+    config: __Configuration,
+    http: HttpClient,
+    private authService: AuthService
+  ) {
     super(config, http);
+  }
+
+  getPiisConsents(
+    config: Partial<IPaginatorInterface>
+  ): Observable<IPiisConsent> {
+    const login = this.authService.getAuthorizedUser();
+
+    return this.http
+      .get<IPiisConsent>(
+        this.rootUrl +
+          `/api/v1/piis-consents/${login}/paged?size=${config.itemsPerPage}&page=${config.currentPage}`
+      )
+      .pipe(
+        map((item) => {
+          return item;
+        })
+      );
+  }
+
+  revokePiisConsents(consentId: string) {
+    const login = this.authService.getAuthorizedUser();
+    const body = null;
+    return this.http.put(
+      this.rootUrl + `/api/v1/piis-consents/${login}/${consentId}/revoke`,
+      body
+    );
   }
 
   /**
@@ -74,7 +108,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   ): __Observable<__StrictHttpResponse<AuthorizeResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
     if (params.redirectId != null)
       __params = __params.set('redirectId', params.redirectId.toString());
     if (params.encryptedPaymentId != null)
@@ -87,11 +121,16 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
         'Authorization',
         params.Authorization.toString()
       );
-    let req = new HttpRequest<any>('GET', this.rootUrl + `/pis/auth`, __body, {
-      headers: __headers,
-      params: __params,
-      responseType: 'json',
-    });
+    const req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/pis/auth`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      }
+    );
 
     return this.http.request<any>(req).pipe(
       __filter((_r) => _r instanceof HttpResponse),
@@ -100,6 +139,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.PisAuthUsingGETParams` containing the following parameters:
    *
@@ -137,13 +177,13 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.authCode != null)
       __params = __params.set('authCode', params.authCode.toString());
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'POST',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/authorisation/${params.authorisationId}/authCode`,
@@ -162,6 +202,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.AuthrizedPaymentUsingPOSTParams` containing the following parameters:
    *
@@ -204,7 +245,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.oauth2 != null)
       __params = __params.set('oauth2', params.oauth2.toString());
@@ -215,7 +256,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       );
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'GET',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/authorisation/${params.authorisationId}/done`,
@@ -234,6 +275,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * This call provides the server with the opportunity to close this session and redirect the PSU to the TPP or close the application window.
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.PisDoneUsingGET1Params` containing the following parameters:
@@ -272,13 +314,13 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   initiatePaymentUsingPOSTResponse(
     params: PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.InitiatePaymentUsingPOSTParams
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
-    let __params = this.newParams();
+    const __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'POST',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/authorisation/${params.authorisationId}/initiate`,
@@ -297,6 +339,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.InitiatePaymentUsingPOSTParams` containing the following parameters:
    *
@@ -336,7 +379,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.pin != null)
       __params = __params.set('pin', params.pin.toString());
@@ -344,7 +387,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       __params = __params.set('login', params.login.toString());
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'POST',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/authorisation/${params.authorisationId}/login`,
@@ -363,6 +406,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.LoginUsingPOST3Params` containing the following parameters:
    *
@@ -402,13 +446,13 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   selectMethodUsingPOST2Response(
     params: PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.SelectMethodUsingPOST2Params
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
-    let __params = this.newParams();
+    const __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'POST',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/authorisation/${params.authorisationId}/methods/${params.scaMethodId}`,
@@ -427,6 +471,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.SelectMethodUsingPOST2Params` containing the following parameters:
    *
@@ -463,13 +508,13 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   failPaymentAuthorisationUsingDELETEResponse(
     params: PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.FailPaymentAuthorisationUsingDELETEParams
   ): __Observable<__StrictHttpResponse<PaymentAuthorizeResponse>> {
-    let __params = this.newParams();
+    const __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
+    const __body: any = null;
 
     if (params.Cookie != null)
       __headers = __headers.set('Cookie', params.Cookie.toString());
-    let req = new HttpRequest<any>(
+    const req = new HttpRequest<any>(
       'DELETE',
       this.rootUrl +
         `/pis/${params.encryptedPaymentId}/${params.authorisationId}`,
@@ -488,6 +533,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
       })
     );
   }
+
   /**
    * This call provides the server with the opportunity to close this session and revoke consent.
    * @param params The `PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService.FailPaymentAuthorisationUsingDELETEParams` containing the following parameters:
@@ -509,7 +555,7 @@ class PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService extends __B
   }
 }
 
-module PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService {
+namespace PSUPISProvidesAccessToOnlineBankingPaymentFunctionalityService {
   /**
    * Parameters for pisAuthUsingGET
    */

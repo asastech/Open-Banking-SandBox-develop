@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2022 adorsys GmbH & Co KG
+  ~ Copyright 2018-2023 adorsys GmbH & Co KG
   ~
   ~ This program is free software: you can redistribute it and/or modify it
   ~ under the terms of the GNU Affero General Public License as published
@@ -20,7 +20,7 @@
   <!-- First-->
   <div class="col-md-4 p-0 bg-light">
     <div class="d-md-flex align-items-center h-100 justify-content-center">
-      <app-payment-details></app-payment-details>
+      <app-payment-details class="payment"></app-payment-details>
     </div>
   </div>
 
@@ -75,7 +75,9 @@
                   <button
                     type="submit"
                     class="btn btn-primary btn-block"
-                    [disabled]="tanForm.invalid"
+                    [disabled]="
+                      (tanForm.invalid && !authResponse) || invalidTanCount >= 3
+                    "
                   >
                     Next
                   </button>

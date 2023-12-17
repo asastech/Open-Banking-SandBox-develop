@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -17,18 +17,17 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../../services/auth.service';
 import { CustomizeService } from '../../../services/customize.service';
-import { ADMIN_KEY } from 'src/app/commons/constant/constant';
+import { ADMIN_KEY, ERROR_MESSAGE } from 'src/app/commons/constant/constant';
 import browser from 'browser-detect';
-import {
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-  MatSnackBar,
-} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { InfoService } from '../../../commons/info/info.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from '../../../commons/dialog/error-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,7 @@ import {
   styleUrls: ['../auth.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   errorMessage: string;
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -44,20 +43,18 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     public customizeService: CustomizeService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private infoService: InfoService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     const result = browser();
-    if (
-      result.name !== 'chrome' &&
-      result.name !== 'edge' &&
-      result.name !== 'safari' &&
-      result.name !== 'firefox'
-    ) {
+    if (result.name !== 'chrome' && result.name !== 'edge' && result.name !== 'safari' && result.name !== 'firefox') {
       this._snackBar.open(
         `Unfortunately, you are using an outdated browser. Our website may not look quite right in it. Please consider updating your browser to enjoy an optimal experience.`,
         'Close',
@@ -72,6 +69,8 @@ export class LoginComponent implements OnInit {
       login: ['', Validators.required],
       pin: ['', Validators.required],
     });
+
+    this.showErrorMessageIfLoggedOutByTimeout();
   }
 
   onSubmit() {
@@ -88,15 +87,40 @@ export class LoginComponent implements OnInit {
       },
       (data) => {
         if (data.status === 401) {
-          this.errorMessage = 'Invalid credentials';
+          this.dialog.open(ErrorDialogComponent, {
+            height: '200px',
+            width: '350px',
+            data: { heading: 'Wrong credentials', description: 'You have entered wrong credentials.' },
+          });
+        }
+        if (data.status === 403) {
+          this.dialog.open(ErrorDialogComponent, {
+            height: '200px',
+            width: '350px',
+            data: { heading: 'Wrong roles', description: 'You have the wrong role.' },
+          });
         }
       }
     );
+    this.showErrorMessageIfLoggedOutByTimeout();
+  }
+
+  private showErrorMessageIfLoggedOutByTimeout() {
+    const message = sessionStorage.getItem(ERROR_MESSAGE);
+    if (message != null && message != 'null') {
+      this.infoService.openFeedback(sessionStorage.getItem(ERROR_MESSAGE), {
+        severity: 'error',
+      });
+      sessionStorage.setItem(ERROR_MESSAGE, null);
+    }
   }
 
   navigateOnLogin() {
     if (sessionStorage.getItem(ADMIN_KEY) === 'true') {
-      this.router.navigate(['/management']);
+      this.authService.logout();
+      this.infoService.openFeedback('Admin doe not have access to this system', {
+        severity: 'error',
+      });
     } else {
       this.router.navigate(['/']);
     }

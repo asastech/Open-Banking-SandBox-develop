@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -36,13 +36,23 @@ import { ShareDataService } from './common/services/share-data.service';
 import { InternalServerErrorComponent } from './internal-server-error/internal-server-error.component';
 import { ObaModule } from './oba/oba.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { ErrorDialogComponent } from './common/dialog/error-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function app_Init(settingsHttpService: SettingsHttpService) {
   return () => settingsHttpService.initializeApp();
 }
 
 @NgModule({
-  declarations: [AppComponent, InternalServerErrorComponent],
+  declarations: [
+    AppComponent,
+    InternalServerErrorComponent,
+    ErrorDialogComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -55,6 +65,11 @@ export function app_Init(settingsHttpService: SettingsHttpService) {
     NgHttpLoaderModule.forRoot(),
     ObaModule,
     MatSnackBarModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatDialogModule,
+    MatIconModule,
+    MatButtonModule,
+    NgbModule,
   ],
   providers: [
     AisService,

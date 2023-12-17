@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -39,7 +39,7 @@ export class CustomNgbDateAdapter extends NgbDateAdapter<Date> {
   }
 }
 
-export function stringToNgbDate(value: string, format: string = 'yyyy-MM-dd') {
+export function stringToNgbDate(value: string, format = 'yyyy-MM-dd') {
   if (!value) {
     return null;
   }
@@ -59,7 +59,7 @@ export function stringToNgbDate(value: string, format: string = 'yyyy-MM-dd') {
 
 export function ngbDateToString(
   date: NgbDateStruct,
-  format: string = 'yyyy-MM-dd'
+  format = 'yyyy-MM-dd'
 ): string {
   if (!date) {
     return '';

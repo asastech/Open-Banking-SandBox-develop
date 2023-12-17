@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResultPageComponent } from './result-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { SettingsService } from '../../common/services/settings.service';
 import { ShareDataService } from '../../common/services/share-data.service';
 import { AisService } from '../../common/services/ais.service';
@@ -30,8 +29,6 @@ describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
   let fixture: ComponentFixture<ResultPageComponent>;
   let shareDataService: ShareDataService;
-  let settingsService: SettingsService;
-  let aisService: AisService;
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -46,8 +43,6 @@ describe('ResultPageComponent', () => {
     fixture = TestBed.createComponent(ResultPageComponent);
     component = fixture.componentInstance;
     shareDataService = TestBed.inject(ShareDataService);
-    settingsService = TestBed.inject(SettingsService);
-    aisService = TestBed.inject(AisService);
     fixture.detectChanges();
   });
 
@@ -64,7 +59,7 @@ describe('ResultPageComponent', () => {
     const mockConsentAuthorization: ConsentAuthorizeResponse = {
       scaStatus: 'received',
     };
-    shareDataService.currentData = of(mockConsentAuthorization);
+    shareDataService.changeData(mockConsentAuthorization);
     component.authResponse = mockResponse;
     component.ngOnInit();
     expect(component.scaStatus).toEqual(mockConsentAuthorization.scaStatus);

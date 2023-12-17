@@ -1,5 +1,5 @@
 /*!
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -43,7 +43,7 @@
   width: 100%;
 
   .nav-bar-content {
-    position: fixed;
+    position: relative;
     width: var(--headerWidth);
     height: 7.5vw;
     display: flex;
@@ -52,7 +52,7 @@
     align-items: center;
     z-index: 100;
     top: 0;
-    color: var(--headerFontColor);
+    color: var(--headerFontColor) !important;
     background-color: var(--headerBG);
     border-top: var(--headerBorderTop);
     box-shadow: var(--headerBoxShadowBottom);
@@ -118,7 +118,7 @@
   }
 
   .header-item {
-    color: var(--headerFontColor);
+    color: var(--headerFontColor) !important;
     background-color: var(--headerBG);
     margin-right: 1.5em;
     text-decoration: none;
@@ -264,4 +264,12 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
+}
+
+button,
+a.redirect-btn,
+.btn,
+.btn-light {
+  background: white !important;
+  color: black !important;
 }

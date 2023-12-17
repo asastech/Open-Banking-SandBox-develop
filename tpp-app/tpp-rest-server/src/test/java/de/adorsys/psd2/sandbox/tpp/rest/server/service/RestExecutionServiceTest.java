@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 adorsys GmbH & Co KG
+ * Copyright 2018-2023 adorsys GmbH & Co KG
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published
@@ -37,7 +37,7 @@ import de.adorsys.ledgers.middleware.client.mappers.PaymentMapperTO;
 import de.adorsys.ledgers.middleware.client.rest.DataRestClient;
 import de.adorsys.ledgers.middleware.client.rest.UserMgmtRestClient;
 import de.adorsys.ledgers.middleware.client.rest.UserMgmtStaffRestClient;
-import de.adorsys.psd2.sandbox.tpp.cms.api.service.CmsDbNativeService;
+import de.adorsys.psd2.sandbox.cms.connector.api.service.CmsDbNativeService;
 import de.adorsys.psd2.sandbox.tpp.rest.server.mapper.BalanceMapper;
 import de.adorsys.psd2.sandbox.tpp.rest.server.model.AccountBalance;
 import de.adorsys.psd2.sandbox.tpp.rest.server.model.DataPayload;
@@ -54,7 +54,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static de.adorsys.ledgers.middleware.api.domain.payment.PaymentTypeTO.SINGLE;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -155,7 +154,7 @@ class RestExecutionServiceTest {
         target.setCreditorAgent("AAAADEBBXXX");
         target.setCreditorAddress(new AddressTO("WBG Straße", "56", "Nürnberg", "90543", "DE", null, null));
         target.setCreditorName("WBG");
-        target.setRemittanceInformationUnstructured("Ref. Number WBG-1222");
+        target.setRemittanceInformationUnstructuredArray(List.of("Ref. Number WBG-1222"));
         ArrayList<PaymentTargetTO> targets = new ArrayList<>();
         targets.add(target);
         return targets;
